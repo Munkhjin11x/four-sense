@@ -7,8 +7,8 @@ export const OrangeSection = () => {
       className="h-screen relative flex w-full items-center z-0 justify-center bg-cover px-20"
       style={{ backgroundImage: "url(/images/3.jpeg)" }}
     >
-      <div className="flex flex-col md:flex-row justify-between w-full items-center gap-6 md:gap-12">
-        <div className="flex flex-col lg:flex-row items-center gap-10 w-full">
+      <div className="flex flex-col lg:flex-row justify-between w-full items-center gap-6 md:gap-12">
+        <div className="flex flex-col lg:flex-row items-center lg:gap-10 w-full">
           <div className="w-full relative text-white font-semibold gap-2 h-14 bg-no-repeat flex items-center justify-center ">
             <Image
               src={"/images/bookmark2.svg"}
@@ -21,7 +21,7 @@ export const OrangeSection = () => {
             <AboutIcon color="white" />
             Our Mission
           </div>
-          <div className=" text-white  rounded-lg text-2xl leading-relaxed">
+          <div className=" text-white  rounded-lg lg:text-2xl leading-relaxed">
             <p>
               Mongolian nomadic culture is a way of life that works in harmony
               with nature, uses resources wisely, and is sustainable. We are

@@ -9,15 +9,31 @@ import { useNavbarConfig } from "./nav-data";
 import Link from "next/link";
 import { AboutIcon, BarIcon, HelpIcon, HomeIcon, TeamIcon } from "@/icons";
 import Image from "next/image";
+import useLoading from "@/hook/use-loading";
 
 export const Navbar = () => {
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [openIndex, setOpenIndex] = useState<number>();
   const listNavItems = useNavbarConfig();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const loading = useLoading(4000);
 
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [navTop, setNavTop] = useState("top-5");
   const [navTopBorder, setNavTopBorder] = useState("");
+
+  const handleScroll = () => {
+    const offset = window.pageYOffset;
+    setIsScrolled(offset > 0);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,6 +67,10 @@ export const Navbar = () => {
     };
   }, [lastScrollTop, openIndex]);
 
+  if (loading) {
+    return null;
+  }
+
   return (
     <div className=" flex w-full flex-col items-center">
       <div
@@ -60,7 +80,8 @@ export const Navbar = () => {
       >
         <div
           className={cn(
-            "flex items-center justify-between gap-6 rounded-xl  bg-transparent p-3",
+            isScrolled ? "!bg-white border" : "bg-transparent",
+            "flex items-center justify-between gap-6 rounded-xl p-3",
             openIndex && "xl:rounded-bl-none xl:rounded-br-none",
             navTopBorder
           )}

@@ -7,7 +7,7 @@ export const YellowSection = () => {
       className="h-screen relative flex w-full items-center z-0 justify-center bg-cover px-20"
       style={{ backgroundImage: "url(/images/2.jpeg)" }}
     >
-          <div className="flex flex-col md:flex-row justify-between w-full items-center gap-6 md:gap-12">
+          <div className="flex flex-col lg:flex-row justify-between w-full items-center gap-6 md:gap-12">
         <div className="flex flex-col lg:flex-row items-center gap-10 w-full">
           <div className="w-full relative text-white gap-2 h-14 bg-no-repeat flex items-center justify-center ">
             <Image
