@@ -1,0 +1,5 @@
+export * from './home'
+export * from './about'
+export * from './team'
+export * from './bar'
+export * from './help'
