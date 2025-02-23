@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui';
 import { HamburgerPropsType } from './types';
 
-export const Hamburger = ({ toggleHamburger, hamburgerOpen }: HamburgerPropsType) => {
+export const Hamburger = ({ toggleHamburger }: HamburgerPropsType) => {
   return (
     <Button
 

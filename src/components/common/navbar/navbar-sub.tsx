@@ -1,4 +1,4 @@
-import { cloneElement } from 'react';
+
 import { Typography } from '@/components/ui';
 import { NavSubPropsType } from './types';
 
@@ -17,7 +17,7 @@ export const NavbarSub = ({ subMenus, subNavTop }: NavSubPropsType) => {
       <div className="flex w-full gap-14 rounded-bl-xl rounded-br-xl border border-t-0 bg-white p-5 transition-all duration-300">
         <div className="w-full max-w-[156px]" />
         <div className="flex w-full flex-1 items-center gap-5">
-          {subMenus.map(({ title, icon, href, hiddenLanguages, img, comp }, index) => {
+          {subMenus.map(({ title, icon, href, img, comp }, index) => {
         
             return (
               <Link className="flex items-center gap-2" key={index} href={href}>

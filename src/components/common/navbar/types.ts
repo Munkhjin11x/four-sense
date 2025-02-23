@@ -1,4 +1,4 @@
-import { Dispatch, ElementType, SetStateAction } from 'react';
+import { Dispatch, ElementType, JSX, SetStateAction } from 'react';
 
 export type NavbarItemPropsType = {
   text: string;
