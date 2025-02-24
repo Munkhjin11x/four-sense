@@ -50,10 +50,10 @@ export const Navbar = () => {
             );
           } else {
             setNavTopBorder("");
-            setNavTop("xl:top-5");
+            setNavTop("xl:top-0");
           }
         } else {
-          setNavTop("top-5");
+          setNavTop("top-0");
           setNavTopBorder("");
         }
       }
@@ -75,14 +75,13 @@ export const Navbar = () => {
     <div className=" flex w-full flex-col items-center">
       <div
         className={cn(
-          `fixed z-50 w-full transition-all duration-300 max-lg:px-2 lg:px-8 ${navTop}`
+          `fixed z-50 w-full transition-all duration-300  ${navTop}`
         )}
       >
         <div
           className={cn(
             isScrolled ? "!bg-white border" : "bg-transparent",
-            "flex items-center justify-between gap-6 rounded-xl p-3",
-            openIndex && "xl:rounded-bl-none xl:rounded-br-none",
+            "flex items-center justify-between  gap-6 rounded-br-[45px]  p-3",
             navTopBorder
           )}
         >
