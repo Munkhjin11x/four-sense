@@ -7,7 +7,7 @@ import { useCallback, useState } from "react";
 
 export const Home = () => {
   const { scrollXProgress } = useScroll();
-  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [, setVideoLoaded] = useState(false);
 
   const smoothConfig = { stiffness: 50, damping: 30, mass: 1.2 };
   const smoothConfigLogo = { stiffness: 20, damping: 20, mass: 2 };
@@ -28,9 +28,6 @@ export const Home = () => {
     setVideoLoaded(true);
   }, []);
 
-  if (videoLoaded) {
-    return <>sss</>;
-  }
 
 
   return (
