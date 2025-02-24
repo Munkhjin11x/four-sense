@@ -2,21 +2,31 @@
 
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useState } from "react";
 
 
 export const Home = () => {
-  const {  scrollXProgress } = useScroll();
+  const { scrollXProgress } = useScroll();
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const smoothConfig = { stiffness: 50, damping: 30, mass: 1.2 };
   const smoothConfigLogo = { stiffness: 20, damping: 20, mass: 2 };
 
-
-
-
-  const yBigMouth = useSpring(useTransform(scrollXProgress, [0, 1], ["40%", "5%"]), smoothConfig);
-  const yLogo = useSpring(useTransform(scrollXProgress, [0, 1], ["160%", "-30%"]), smoothConfigLogo);
-  const yLittle = useSpring(useTransform(scrollXProgress, [0, 1], ["10%", "25%"]), smoothConfig);
-
+  const yBigMouth = useSpring(
+    useTransform(scrollXProgress, [0, 1], ["40%", "5%"]),
+    smoothConfig
+  );
+  const yLogo = useSpring(
+    useTransform(scrollXProgress, [0, 1], ["160%", "-30%"]),
+    smoothConfigLogo
+  );
+  const yLittle = useSpring(
+    useTransform(scrollXProgress, [0, 1], ["10%", "25%"]),
+    smoothConfig
+  );
+  if (!videoLoaded) {
+    return <>sss</>;
+  }
   return (
     <div className=" relative w-full overflow-hidden">
       <video
@@ -26,6 +36,7 @@ export const Home = () => {
         playsInline
         loop
         muted
+        onLoadedData={() => setVideoLoaded(true)}
       >
         <source src={"/home/sky.webm"} type="video/webm" />
         Your browser does not support the video tag.
@@ -43,7 +54,6 @@ export const Home = () => {
           />
         </motion.div>
 
-
         <motion.div
           style={{ y: yLogo }}
           className="absolute top-1/2 left-[38%] flex justify-center -translate-x-1/2 -translate-y-1/2"
@@ -56,7 +66,6 @@ export const Home = () => {
             sizes="100vw"
           />
         </motion.div>
-
 
         <motion.div style={{ y: yLittle }} className="absolute top-0 w-full">
           <Image
