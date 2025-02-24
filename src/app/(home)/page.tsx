@@ -8,9 +8,14 @@ import {
   TeamSection,
   YellowSection,
 } from "@/components";
-import { Home } from "@/components";
-import useLoading from "@/hook/use-loading";
 
+import useLoading from "@/hook/use-loading";
+import dynamic from "next/dynamic";
+
+const Home = dynamic(
+  () => import('@/components/common/home').then((mod) => mod.Home),
+  { ssr: false }
+);
 const HomePage = () => {
   const loading = useLoading(4000);
   if (loading) {
