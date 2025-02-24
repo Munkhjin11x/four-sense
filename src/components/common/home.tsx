@@ -19,7 +19,7 @@ export const Home = () => {
 
   return (
     <div className=" relative w-full overflow-hidden">
-      {/* <video
+      <video
         preload="none"
         className="absolute -z-10 h-full w-full object-cover"
         autoPlay
@@ -27,9 +27,9 @@ export const Home = () => {
         loop
         muted
       >
-        <source src={"/home/smoke.mp4"} type="video/webm" />
+        <source src={"/home/sky.webm"} type="video/webm" />
         Your browser does not support the video tag.
-      </video> */}
+      </video>
 
       <div className="relative h-full">
         <motion.div style={{ y: yBigMouth }} className="w-full">
