@@ -1,15 +1,20 @@
 "use client";
 import { useEffect, useState } from "react";
-
 import { NavbarItemsMobile } from "./navbar-item-mobile";
 import { cn } from "@/lib/utils";
-
 import { useNavbarConfig } from "./nav-data";
-
 import Link from "next/link";
-import { AboutIcon, BarIcon, HelpIcon, HomeIcon, TeamIcon } from "@/icons";
+import {
+  AboutIcon,
+  BarIcon,
+  HelpIcon,
+  HomeIcon,
+  TeamIcon,
+  VolumeIcon,
+} from "@/icons";
 import Image from "next/image";
 import useLoading from "@/hook/use-loading";
+import useBackgroundAudio from "@/hook/use-sound";
 
 export const Navbar = () => {
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
@@ -17,7 +22,8 @@ export const Navbar = () => {
   const listNavItems = useNavbarConfig();
   const [isScrolled, setIsScrolled] = useState(false);
   const loading = useLoading(4000);
-
+  const { play, pause } = useBackgroundAudio("/backsound.mp3");
+  const [isPlaying, setIsPlaying] = useState(false)
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [navTop, setNavTop] = useState("top-5");
   const [navTopBorder, setNavTopBorder] = useState("");
@@ -26,6 +32,16 @@ export const Navbar = () => {
     const offset = window.pageYOffset;
     setIsScrolled(offset > 0);
   };
+
+  const toggleAudio = () => {
+    if (isPlaying) {
+      pause();
+    } else {
+      play();
+    }
+    setIsPlaying(!isPlaying); // Toggle the isPlaying state
+  };
+
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -71,8 +87,10 @@ export const Navbar = () => {
     return null;
   }
 
+
   return (
     <div className=" flex w-full flex-col items-center">
+   
       <div
         className={cn(
           `fixed z-50 w-full transition-all duration-300  ${navTop}`
@@ -115,6 +133,12 @@ export const Navbar = () => {
                 </div>
               </Link>
             ))}
+            <div onClick={toggleAudio} className="flex gap-3">
+              <div className="size-6">
+                <VolumeIcon />
+              </div>
+              <p className="text-[#D9864E]"> Volume</p>
+            </div>
             <Link
               href={""}
               className="border text-[#D9864E] hover:bg-[#D9864E]/50 border-[#D9864E] px-10 rounded-tl-full py-2"
