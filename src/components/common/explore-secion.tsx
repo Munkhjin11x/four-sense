@@ -8,7 +8,7 @@ export const ExploreSection = () => {
             <Image src={'/images/explore.png'} width={495} height={0}  alt=""/>
             <p className="text-xl text-[#E78140] max-w-[800px] text-center">Our {"bar's"} content is unique in that it innovates its menu and branding based on the four human senses, four elements, and four seasons.</p>
         </div>
-        <div className="flex  overflow-x-auto">
+        <div className="flex overflow-x-auto">
           {data.map((e, i) => (
             <Image
               key={i}
@@ -17,7 +17,7 @@ export const ExploreSection = () => {
               width={836}
               height={0}
               sizes="100vw"
-              className="object-cover w-full "
+              className="object-cover  "
             />
           ))}
         </div>

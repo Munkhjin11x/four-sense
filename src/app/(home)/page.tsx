@@ -2,6 +2,7 @@
 import {
   ExploreSection,
   GreenSection,
+  InstagramNewsSection,
   Loader,
   OrangeSection,
   TeamSection,
@@ -24,6 +25,7 @@ const HomePage = () => {
       <OrangeSection />
       <TeamSection />
       <ExploreSection />
+      <InstagramNewsSection/>
     </div>
   );
 };
