@@ -1,22 +1,21 @@
-'use client'
+"use client";
 import {
   ExploreSection,
   FooterSection,
   GreenSection,
+  Home,
   InstagramNewsSection,
   Loader,
-  OrangeSection,
-  TeamSection,
-  YellowSection,
 } from "@/components";
+import { ParallaxSection } from "@/components/common/parallax-section";
 
 import useLoading from "@/hook/use-loading";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 
-const Home = dynamic(
-  () => import('@/components/common/home').then((mod) => mod.Home),
-  { ssr: false }
-);
+// const Home = dynamic(
+//   () => import("@/components/common/home").then((mod) => mod.Home),
+//   { ssr: false }
+// );
 const HomePage = () => {
   const loading = useLoading(4000);
   if (loading) {
@@ -27,12 +26,12 @@ const HomePage = () => {
     <div className="w-full h-full">
       <Home />
       <GreenSection />
-      <YellowSection />
-      <OrangeSection />
-      <TeamSection />
+      <div>
+        <ParallaxSection />
+      </div>
       <ExploreSection />
-      <InstagramNewsSection/>
-      <FooterSection/>
+      <InstagramNewsSection />
+      <FooterSection />
     </div>
   );
 };
