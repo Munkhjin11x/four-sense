@@ -22,8 +22,8 @@ export const GreenSection = () => {
           Your browser does not support the video tag.
         </video>
         <Image src={'/images/welcome.png'} alt="" width={1000} height={0} className=" absolute top-1/2 left-1/2 flex justify-center -translate-x-1/2 -translate-y-1/2" sizes="100vw"/>
-        <div className="absolute -z-10  w-full max-w-[1300px] top-1/2 left-1/2 flex justify-center -translate-x-1/2 -translate-y-1/2 ">
-        {/* <Image src={'/images/arrow.png'} alt="" width={0} height={0} className="w-full h-full" sizes="100vw"/> */}
+        <div className="absolute -z-10  w-full max-w-[1300px] top-1/2 left-[41%] items-center flex justify-center -translate-x-1/2 -translate-y-1/2 ">
+        <Image src={'/images/arrow.png'} alt="" width={0} height={0} className="w-full h-full" sizes="100vw"/>
 
         <Image src={'/images/frame.png'} alt="" width={0} height={0} className="w-full" sizes="100vw"/>
 

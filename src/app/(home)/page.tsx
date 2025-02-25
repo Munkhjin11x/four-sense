@@ -1,6 +1,7 @@
 'use client'
 import {
   ExploreSection,
+  FooterSection,
   GreenSection,
   InstagramNewsSection,
   Loader,
@@ -31,6 +32,7 @@ const HomePage = () => {
       <TeamSection />
       <ExploreSection />
       <InstagramNewsSection/>
+      <FooterSection/>
     </div>
   );
 };
