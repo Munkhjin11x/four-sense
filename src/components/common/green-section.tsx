@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export const GreenSection = () => {
   return (
-    <div className="h-screen relative flex w-full items-center z-0 justify-center bg-cover">
+    <div className="h-screen relative flex w-full max-sm:px-5 items-center z-0 justify-center bg-cover">
       <Image
         src={CDN_URL + "/images/1.jpeg"}
         alt=""
@@ -17,7 +17,7 @@ export const GreenSection = () => {
         <div className=" relative flex justify-center  z-50 w-full">
           <video
             preload="none"
-            className="rounded-tr-[50px] max-w-[1224px]  rounded-bl-[50px]  h-[670px]  w-full object-cover"
+            className="rounded-tr-[50px] max-w-[1224px]  rounded-bl-[50px] max-sm:h-[400px]  h-[670px]  w-full object-cover"
             autoPlay
             playsInline
             loop

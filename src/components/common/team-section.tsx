@@ -12,7 +12,7 @@ import Image from "next/image";
 export const TeamSection = () => {
   return (
     <div
-      className="h-screen relative flex w-full z-0 justify-center bg-cover p-14"
+      className="h-screen relative flex w-full z-0 justify-center max-sm:bg-contain bg-no-repeat  bg-cover p-14"
       style={{ backgroundImage: "url(/images/team-photo.png)" }}
     >
       <div className="flex flex-col  justify-start items-center w-full  gap-6 md:gap-12">
