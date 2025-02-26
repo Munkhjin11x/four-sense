@@ -4,24 +4,38 @@ import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useCallback, useState } from "react";
 import { CDN_URL } from "@/constants/contant";
+import useLoading from "@/hook/use-loading";
 
 export const Home = () => {
   const { scrollXProgress } = useScroll();
   const [, setVideoLoaded] = useState(false);
+  const loading = useLoading(4050);
 
   const smoothConfig = { stiffness: 50, damping: 30, mass: 1.2 };
   const smoothConfigLogo = { stiffness: 20, damping: 20, mass: 2 };
 
   const yBigMouth = useSpring(
-    useTransform(scrollXProgress, [0, 1], ["40%", "5%"]),
+    useTransform(
+      scrollXProgress,
+      [0, 1],
+      !loading ? ["40%", "5%"] : ["0%", "0%"]
+    ),
     smoothConfig
   );
   const yLogo = useSpring(
-    useTransform(scrollXProgress, [0, 1], ["160%", "-30%"]),
+    useTransform(
+      scrollXProgress,
+      [0, 1],
+      !loading ? ["160%", "-30%"] : ["0%", "0%"]
+    ),
     smoothConfigLogo
   );
   const yLittle = useSpring(
-    useTransform(scrollXProgress, [0, 1], ["10%", "25%"]),
+    useTransform(
+      scrollXProgress,
+      [0, 1],
+      !loading ? ["10%", "25%"] : ["0%", "0%"]
+    ),
     smoothConfig
   );
   const handleLoading = useCallback(() => {
