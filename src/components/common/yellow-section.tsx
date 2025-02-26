@@ -22,7 +22,7 @@ export const YellowSection = () => {
             <AboutIcon color="white" />
             About Us
           </div>
-          <p className="text-[#488457] text-2xl max-w-[800px]">
+          <p className="text-[#488457] max-sm:text-sm text-2xl max-w-[800px]">
             Four Senses is the first Nomad-Ability bar that combines the
             traditional Mongolian nomadic culture with modern sustainable
             development principles.We based on the {"nomadic way of life"} and

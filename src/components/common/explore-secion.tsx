@@ -2,7 +2,7 @@ import Image from "next/image";
 import { CDN_URL } from "@/constants/contant";
 export const ExploreSection = () => {
   return (
-    <div className="bg-[#F9D9B1] w-full h-full flex justify-center mt-[80px]">
+    <div className="bg-[#F9D9B1] w-full h-full max-sm:px-5 flex justify-center mt-[80px]">
       <div className="w-full flex flex-col items-center pt-24">
         <div className="flex flex-col gap-2 items-center w-full pb-10">
           <Image
@@ -11,13 +11,13 @@ export const ExploreSection = () => {
             height={0}
             alt=""
           />
-          <p className="text-xl text-[#E78140] max-w-[800px] text-center">
+          <p className="max-sm:text-sm text-xl text-[#E78140] max-w-[800px] text-center">
             Our {"bar's"} content is unique in that it innovates its menu and
             branding based on the four human senses, four elements, and four
             seasons.
           </p>
         </div>
-        <div className="flex overflow-x-auto">
+        <div className="flex max-sm  max-sm:w-[360px] overflow-x-auto">
           {data.map((e, i) => (
             <Image
               key={i}

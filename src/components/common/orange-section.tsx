@@ -22,7 +22,7 @@ export const OrangeSection = () => {
             <AboutIcon color="white" />
             Our Mission
           </div>
-          <div className=" text-white  rounded-lg lg:text-2xl leading-relaxed">
+          <div className=" text-white  rounded-lg max-sm:text-sm lg:text-2xl leading-relaxed">
             <p>
               Mongolian nomadic culture is a way of life that works in harmony
               with nature, uses resources wisely, and is sustainable. We are
