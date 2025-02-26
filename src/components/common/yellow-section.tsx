@@ -1,3 +1,4 @@
+import { CDN_URL } from "@/constants/contant";
 import { AboutIcon } from "@/icons";
 import Image from "next/image";
 
@@ -7,11 +8,11 @@ export const YellowSection = () => {
       className="h-screen relative flex w-full items-center z-0 justify-center bg-cover px-20"
       style={{ backgroundImage: "url(/images/2.jpeg)" }}
     >
-          <div className="flex flex-col lg:flex-row justify-between w-full items-center gap-6 md:gap-12">
+      <div className="flex flex-col lg:flex-row justify-between w-full items-center gap-6 md:gap-12">
         <div className="flex flex-col lg:flex-row items-center gap-10 w-full">
           <div className="w-full relative text-white gap-2 h-14 bg-no-repeat flex items-center justify-center ">
             <Image
-              src={"/images/bookmark.svg"}
+              src={CDN_URL + "/images/bookmark.svg"}
               alt=""
               width={0}
               height={0}
@@ -30,7 +31,7 @@ export const YellowSection = () => {
           </p>
         </div>
         <Image
-          src={"/images/group.png"}
+          src={CDN_URL + "/images/group.png"}
           alt=""
           width={650}
           height={610}

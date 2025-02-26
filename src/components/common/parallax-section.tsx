@@ -8,8 +8,8 @@ export const ParallaxSection = () => {
   const { scrollYProgress } = useScroll();
 
   const yellowY = useTransform(scrollYProgress, [0, 1], ["-10%", "0%"]);
-  const orangeY = useTransform(scrollYProgress, [0, 1], ["-15%", "25%"]);
-  const teamY = useTransform(scrollYProgress, [0, 1], ["-20%", "35%"]);
+  const orangeY = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
+  const teamY = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
 
   return (
     <div className="relative mt-14 h-full">

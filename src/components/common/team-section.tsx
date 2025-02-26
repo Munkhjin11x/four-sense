@@ -1,3 +1,4 @@
+import { CDN_URL } from "@/constants/contant";
 import {
   HelpIcon,
   HomeIcon,
@@ -7,7 +8,6 @@ import {
   WavyIcon,
 } from "@/icons";
 import Image from "next/image";
-import React from "react";
 
 export const TeamSection = () => {
   return (
@@ -17,7 +17,7 @@ export const TeamSection = () => {
     >
       <div className="flex flex-col  justify-start items-center w-full  gap-6 md:gap-12">
         <Image
-          src={"/images/team-member-logo.png"}
+          src={CDN_URL + "/images/team-member-logo.png"}
           alt=""
           width={215}
           height={215}
@@ -45,31 +45,31 @@ const icons = [
   {
     icon: <WavyIcon />,
     x: "12%",
-    y: "65%",
+    y: "70%",
   },
   {
     icon: <HomeIcon color="#D9864E" />,
     x: "26%",
-    y: "65%",
+    y: "70%",
   },
   {
     icon: <TriangleIcon />,
     x: "42%",
-    y: "65%",
+    y: "70%",
   },
   {
     icon: <RounderIcon />,
     x: "57%",
-    y: "65%",
+    y: "70%",
   },
   {
     icon: <LeafIcon />,
     x: "72%",
-    y: "65%",
+    y: "70%",
   },
   {
     icon: <HelpIcon />,
     x: "85%",
-    y: "65%",
+    y: "70%",
   },
 ];

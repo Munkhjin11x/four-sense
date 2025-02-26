@@ -1,15 +1,16 @@
+import { CDN_URL } from "@/constants/contant";
 import { BookMarkIcon, CommentIcon, HeartIcon, ShareIcon } from "@/icons";
 import Image from "next/image";
 import Link from "next/link";
 
 export const InstagramNewsSection = () => {
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center bg-white">
       <div className="bg-white h-full w-full max-w-[1740px] px-10  py-7">
         <div className="flex flex-col gap-7 w-full">
           <div>
             <Image
-              src={"/images/title-instagram.png"}
+              src={CDN_URL + "/images/title-instagram.png"}
               width={600}
               height={200}
               alt=""
@@ -32,7 +33,7 @@ const InstragramCard = ({ data }: { data: InstagramType }) => {
       <div className="flex justify-between items-center p-2">
         <div className="flex gap-2">
           <Image
-            src={"/images/instagram/logo.svg"}
+            src={CDN_URL + "/images/instagram/logo.svg"}
             width={32}
             height={32}
             alt=""
@@ -47,7 +48,7 @@ const InstragramCard = ({ data }: { data: InstagramType }) => {
         </Link>
       </div>
       <Image
-        src={data.img}
+        src={CDN_URL + data.img}
         width={800}
         height={200}
         alt=""

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useCallback, useState } from "react";
-
+import { CDN_URL } from "@/constants/contant";
 
 export const Home = () => {
   const { scrollXProgress } = useScroll();
@@ -28,8 +28,6 @@ export const Home = () => {
     setVideoLoaded(true);
   }, []);
 
-
-
   return (
     <div className=" relative w-full overflow-hidden">
       <video
@@ -41,14 +39,14 @@ export const Home = () => {
         muted
         onLoadedData={handleLoading}
       >
-        <source src={"/home/sky.webm"} type="video/webm" />
+        <source src={CDN_URL + "/home/sky.webm"} type="video/webm" />
         Your browser does not support the video tag.
       </video>
 
       <div className="relative h-full">
         <motion.div style={{ y: yBigMouth }} className="w-full">
           <Image
-            src={"/home/big-mounth.png"}
+            src={CDN_URL + "/home/big-mounth.png"}
             alt="Big Mouth"
             width={0}
             height={0}
@@ -72,7 +70,7 @@ export const Home = () => {
 
         <motion.div style={{ y: yLittle }} className="absolute top-0 w-full">
           <Image
-            src={"/home/little.png"}
+            src={CDN_URL + "/home/little.png"}
             alt="Little"
             width={0}
             height={0}

@@ -18,10 +18,10 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body
-      suppressHydrationWarning
-      className={cn(fonts.className,"")}
+        suppressHydrationWarning
+        className={cn(fonts.className, "bg-[#F9D9B1]")}
       >
-        <Navbar/>
+        <Navbar />
         {children}
       </body>
     </html>

@@ -1,3 +1,4 @@
+import { CDN_URL } from "@/constants/contant";
 import { AboutIcon } from "@/icons";
 import Image from "next/image";
 
@@ -11,7 +12,7 @@ export const OrangeSection = () => {
         <div className="flex flex-col lg:flex-row items-center lg:gap-10 w-full">
           <div className="w-full relative text-white font-semibold gap-2 h-14 bg-no-repeat flex items-center justify-center ">
             <Image
-              src={"/images/bookmark2.svg"}
+              src={CDN_URL + "/images/bookmark2.svg"}
               alt=""
               width={0}
               height={0}
@@ -47,7 +48,12 @@ export const OrangeSection = () => {
             </p>
           </div>
         </div>
-        <Image src={"/images/group2.png"} alt="" width={650} height={610} />
+        <Image
+          src={CDN_URL + "/images/group2.png"}
+          alt=""
+          width={650}
+          height={610}
+        />
       </div>
     </div>
   );
