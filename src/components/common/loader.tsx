@@ -18,9 +18,8 @@ export const Loader = () => {
   return (
     <div
       className="absolute h-screen flex flex-col items-center justify-between w-full bg-cover bg-center bg-no-repeat z-[1000000000]"
-      style={{ backgroundImage: "url(/images/loading.png)" }}
+      style={{ backgroundImage: "url(/images/loading2.png)" }}
     >
-      {/* <div className="  flex flex-col items-center justify-between"> */}
       <div></div>
       <div className="w-full flex flex-col items-center">
         <Image
@@ -41,6 +40,5 @@ export const Loader = () => {
         className="pb-20"
       />
     </div>
-    // </div>
   );
 };
