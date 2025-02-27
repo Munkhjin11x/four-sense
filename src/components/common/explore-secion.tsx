@@ -1,6 +1,10 @@
 import Image from "next/image";
 import { CDN_URL } from "@/constants/contant";
+
 export const ExploreSection = () => {
+  // Double the data array to create seamless loop
+  const scrollingImages = [...data, ...data];
+
   return (
     <div className="bg-[#F9D9B1] w-full h-full max-sm:px-5 flex justify-center mt-[80px]">
       <div className="w-full flex flex-col items-center pt-24">
@@ -17,21 +21,30 @@ export const ExploreSection = () => {
             seasons.
           </p>
         </div>
-        <div className="flex max-sm  max-sm:w-[360px] overflow-x-auto">
-          {data.map((e, i) => (
-            <Image
-              key={i}
-              src={CDN_URL + e}
-              alt={e}
-              width={836}
-              height={0}
-              sizes="100vw"
-              className="object-cover  "
-            />
-          ))}
+        <div className="relative w-full overflow-hidden">
+          <div
+            className="flex animate-scroll "
+            style={{
+              animation: "scroll 50s linear infinite",
+              width: "fit-content",
+            }}
+          >
+            {scrollingImages.map((e, i) => (
+              <Image
+                key={i}
+                src={CDN_URL + e}
+                alt={e}
+                width={836}
+                height={0}
+                sizes="100vw"
+                className="object-cover min-w-[836px] h-[600px]"
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
 const data = ["/images/room1.png", "/images/room2.png", "/images/room3.png"];
