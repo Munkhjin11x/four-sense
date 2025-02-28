@@ -26,7 +26,7 @@ export default function RootLayout({
         <meta property="og:title" content={`${metadata.title}`} />
         <meta
           property="og:image"
-          content={"https://www.motforex.com/background/banner-1.png"}
+          content={"https://four-sense.vercel.app/cover.jpg"}
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@F2aldi" />
@@ -34,7 +34,7 @@ export default function RootLayout({
         <meta name="twitter:description" content={`${metadata.description}`} />
         <meta
           name="twitter:image"
-          content={"https://www.motforex.com/background/banner-1.png"}
+          content={"https://four-sense.vercel.app/cover.jpg"}
         />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
