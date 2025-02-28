@@ -28,6 +28,8 @@ export default function RootLayout({
           property="og:image"
           content={"https://four-sense.vercel.app/cover.jpg"}
         />
+        <meta property="og:url" content="https://four-sense.vercel.app" />
+        <meta property="fb:app_id" content="your_fb_app_id_here" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@F2aldi" />
         <meta name="twitter:title" content={`${metadata.title}`} />
