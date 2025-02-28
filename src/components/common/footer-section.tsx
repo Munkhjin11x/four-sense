@@ -57,28 +57,28 @@ export const FooterSection = () => {
               name="fullName"
               value={formData.fullName}
               onChange={handleInputChange}
-              className="border-b rounded-none border-[#488457] bg-transparent placeholder:text-[#488457] placeholder:text-lg sm:placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              className="border-b rounded-none border-[#488457] placeholder:opacity-50 bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
               placeholder="FULL NAME"
             />
             <Input
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="border-b rounded-none border-[#488457] bg-transparent placeholder:text-[#488457] placeholder:text-lg sm:placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              className="border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
               placeholder="EMAIL ADDRESS"
             />
             <Input
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className="border-b rounded-none border-[#488457] bg-transparent placeholder:text-[#488457] placeholder:text-lg sm:placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              className="border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
               placeholder="PHONE NUMBER"
             />
             <Input
               name="message"
               value={formData.message}
               onChange={handleInputChange}
-              className="border-b rounded-none border-[#488457] bg-transparent placeholder:text-[#488457] placeholder:text-lg sm:placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              className="border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
               placeholder="Message"
             />
           </div>

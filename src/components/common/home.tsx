@@ -88,7 +88,7 @@ export const Home = () => {
 
         <motion.div style={{ y: yLittle }} className="absolute top-0 w-full">
           <Image
-            src={CDN_URL + "/home/little.png"}
+            src={CDN_URL + "/home/little.webp"}
             alt="Little"
             width={0}
             height={0}
