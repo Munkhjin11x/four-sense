@@ -30,8 +30,8 @@ export const TeamMemberModal = ({
           width={500}
           height={200}
         />
-        <div>
-          <p className="text-lg  text-[#488457] bg-[]  ">{data.description}</p>
+        <div className="h-[40vh] overflow-y-auto">
+          <p className="text-lg  text-[#488457]">{data.description}</p>
         </div>
       </div>
     </Modal>
