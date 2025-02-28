@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { CDN_URL } from "@/constants/contant";
 
-import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
+import localFont from "next/font/local";
 
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",

@@ -134,7 +134,7 @@ export const FooterSection = () => {
               <br /> Ulaanbaatar, Mongolia
             </p>
             <div
-              className="text-[#E78140] text-base sm:text-xl flex items-center gap-2"
+              className="text-[#E78140] cursor-pointer text-base sm:text-xl flex items-center gap-2"
               onClick={handleModal}
             >
               View on map <ArrowUpRight />
