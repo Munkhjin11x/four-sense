@@ -115,10 +115,10 @@ export const Navbar = () => {
               />
             </Link>
           </div>
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex  items-center gap-2 md:gap-4">
             {data.map((e, i) => (
               <Link
-                className="group flex gap-3"
+                className="group hidden lg:flex gap-3"
                 key={i}
                 href={e.href}
                 onClick={e.onClick}
@@ -134,7 +134,7 @@ export const Navbar = () => {
                 </div>
               </Link>
             ))}
-            <div onClick={toggleAudio} className="flex gap-3">
+            <div onClick={toggleAudio} className="md:flex hidden gap-3">
               <div className="size-6">
                 <VolumeIcon />
               </div>
@@ -142,7 +142,7 @@ export const Navbar = () => {
             </div>
             <Link
               href={""}
-              className="border text-[#D9864E] hover:bg-[#D9864E]/50 border-[#D9864E] px-10 rounded-tl-full py-2"
+              className="border text-nowrap text-[#D9864E] hover:bg-[#D9864E]/50 border-[#D9864E] px-10 rounded-tl-full py-2"
             >
               BOOK A TABLE
             </Link>
