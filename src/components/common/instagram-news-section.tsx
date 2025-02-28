@@ -1,20 +1,28 @@
 import { CDN_URL } from "@/constants/contant";
 import { BookMarkIcon, CommentIcon, HeartIcon, ShareIcon } from "@/icons";
+import { cn } from "@/lib/utils";
+import localFont from "next/font/local";
 import Image from "next/image";
 import Link from "next/link";
-
+const font = localFont({
+  src: "../../fonts/roba/Roba-Regular.otf",
+  style: "normal",
+  weight: "200",
+});
 export const InstagramNewsSection = () => {
   return (
     <div className="flex justify-center bg-white">
       <div className="bg-white h-full w-full max-w-[1740px] px-10  py-7">
         <div className="flex flex-col gap-7 w-full">
           <div>
-            <Image
-              src={CDN_URL + "/images/title-instagram.png"}
-              width={600}
-              height={200}
-              alt=""
-            />
+            <p
+              className={cn(
+                font.className,
+                "text-4xl text-[#E78140] font-roba"
+              )}
+            >
+              INSTAGRAM NEWS @FOURSENSES
+            </p>
           </div>
           <div className="flex gap-7 overflow-x-auto w-full max-w-full pb-4">
             {data.map((e, i) => (

@@ -37,7 +37,7 @@ export const Home = () => {
       [0, 1],
       width < 500
         ? !loading
-          ? ["40%", "10%"]
+          ? ["40%", "5%"]
           : ["40%", "40%"]
         : !loading
         ? ["120%", "-30%"]
@@ -66,13 +66,14 @@ export const Home = () => {
   return (
     <div
       className={cn(
-        "relative w-full max-sm:h-[500px] overflow-hidden",
+        width < 360 && "!h-[400px]",
+        "relative w-full max-sm:h-[500px] 2xl:h-screen overflow-hidden",
         loading && "h-screen"
       )}
     >
       <video
         preload="none"
-        className="absolute -z-10 max-sm:h-[400px] h-full w-full object-cover"
+        className="absolute -z-10 max-sm:h-[400px]  h-full w-full object-cover"
         autoPlay
         playsInline
         loop
@@ -105,7 +106,7 @@ export const Home = () => {
             width={480}
             height={480}
             sizes="100vw"
-            className="max-sm:w-[100px]  md:w-[250px] lg:w-[400px]"
+            className="max-sm:w-[200px]  md:w-[250px] lg:w-[400px]"
           />
         </motion.div>
 

@@ -3,9 +3,17 @@ import { Input } from "../ui/input";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "../ui";
-import { CDN_URL } from "@/constants/contant";
 import { useState } from "react";
+import { MapModal } from "./map-modal";
 
+import localFont from "next/font/local";
+import { cn } from "@/lib/utils";
+
+const font = localFont({
+  src: "../../fonts/roba/Roba-Regular.otf",
+  style: "normal",
+  weight: "200",
+});
 const links = [
   { icon: "/social/facebook.svg", href: "/" },
   { icon: "/social/instagram.svg", href: "/" },
@@ -14,12 +22,17 @@ const links = [
 ];
 
 export const FooterSection = () => {
+  const [modal, setModal] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
     message: "",
   });
+
+  const handleModal = () => {
+    setModal(!modal);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,46 +59,65 @@ export const FooterSection = () => {
       style={{ backgroundImage: "url(/images/footer.webp)" }}
     >
       <div className="flex flex-col gap-10 sm:gap-20 justify-start w-full max-w-[1740px] px-4 sm:px-10 mt-10 sm:mt-20">
-        <Image
-          src={`${CDN_URL}/images/footer-title.webp`}
-          alt="Footer Title"
-          width={782}
-          height={500}
-        />
+        <p
+          className={cn(
+            " text-3xl md:text-5xl 2xl:text-7xl text-[#E78140] font-roba",
+            font.className
+          )}
+        >
+          CONTACT FOURSENSES
+          <br />
+          COCKTAILS BAR
+        </p>
         <div className="w-full flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 w-full gap-2">
             <Input
               name="fullName"
               value={formData.fullName}
               onChange={handleInputChange}
-              className="border-b rounded-none border-[#488457] placeholder:opacity-50 bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              className={cn(
+                font.className,
+                "border-b rounded-none border-[#488457] placeholder:opacity-50 bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              )}
               placeholder="FULL NAME"
             />
             <Input
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              className={cn(
+                font.className,
+                "border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              )}
               placeholder="EMAIL ADDRESS"
             />
             <Input
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className="border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              className={cn(
+                font.className,
+                "border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              )}
               placeholder="PHONE NUMBER"
             />
             <Input
               name="message"
               value={formData.message}
               onChange={handleInputChange}
-              className="border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              className={cn(
+                font.className,
+                "border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+              )}
               placeholder="Message"
             />
           </div>
           <Button
             variant="ghost"
-            className="w-fit text-[#488457] font-semibold text-2xl"
+            className={cn(
+              font.className,
+              "w-fit text-[#488457] font-semibold text-2xl"
+            )}
             onClick={handleSubmit}
           >
             Send <ArrowRight />
@@ -101,14 +133,12 @@ export const FooterSection = () => {
               ALTAN JOLOO TOWER B1,
               <br /> Ulaanbaatar, Mongolia
             </p>
-            <Link
+            <div
               className="text-[#E78140] text-base sm:text-xl flex items-center gap-2"
-              href="https://maps.app.goo.gl/mo7UawLVTtprHxiR8"
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={handleModal}
             >
               View on map <ArrowUpRight />
-            </Link>
+            </div>
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 w-full gap-4 sm:gap-0">
@@ -138,6 +168,7 @@ export const FooterSection = () => {
           </div>
         </div>
       </div>
+      <MapModal isOpen={modal} onClose={handleModal} />
     </div>
   );
 };

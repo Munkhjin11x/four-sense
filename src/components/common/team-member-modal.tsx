@@ -1,7 +1,13 @@
 import Image from "next/image";
 import { Modal } from "./modal";
 import { cn } from "@/lib/utils";
+import localFont from "next/font/local";
 
+const font = localFont({
+  src: "../../fonts/roba/Roba-Regular.otf",
+  style: "normal",
+  weight: "200",
+});
 export const TeamMemberModal = ({
   isOpen,
   onClose,
@@ -19,7 +25,10 @@ export const TeamMemberModal = ({
     <Modal containerClassname="py-2" title="" isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col gap-4">
         <p
-          className={cn("font-semibold text-2xl text-[#F0B381] tracking-wide")}
+          className={cn(
+            font.className,
+            "font-semibold text-2xl text-[#F0B381] tracking-wide"
+          )}
         >
           {data.name}
         </p>

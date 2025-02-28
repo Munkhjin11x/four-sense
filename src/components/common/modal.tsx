@@ -52,7 +52,7 @@ export const Modal: React.FC<ModalProps> = ({
             "flex h-screen flex-col !p-0 sm:grid sm:h-auto",
             className
           )}
-          onWheel={onWheel}
+          onWheel={onWheel} // Pass the onWheel prop
         >
           <DialogHeader className="flex h-fit w-full flex-row items-center justify-between gap-1.5 space-y-0 border-b border-gray-200 p-4">
             <div>
@@ -71,7 +71,7 @@ export const Modal: React.FC<ModalProps> = ({
           <div
             className={cn(
               "overflow-auto",
-              defaultPadding && `px-4`,
+              defaultPadding && `p-4`,
               containerClassname
             )}
           >

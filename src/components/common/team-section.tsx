@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import { TeamMemberModal } from "./team-member-modal";
+import useScreenSize from "@/hook/use-screen";
 
 const icons = [
   {
@@ -75,6 +76,7 @@ export const TeamSection = () => {
     image: string;
     description: string;
   } | null>(null);
+  const { width } = useScreenSize();
 
   const handleModal = useCallback((data: typeof selectedMember) => {
     setSelectedMember(data);
@@ -104,8 +106,9 @@ export const TeamSection = () => {
         <div
           key={index}
           onClick={() => handleModal(item)}
+          onMouseEnter={() => setSelectedMember(item)}
           className="absolute bg-white p-1 rounded-md border-4 border-[#3C9660] cursor-pointer"
-          style={{ left: item.x, top: item.y }}
+          style={{ left: item.x, top: width > 1280 ? "60%" : "70%" }}
         >
           {item.icon}
         </div>
