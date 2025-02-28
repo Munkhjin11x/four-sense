@@ -41,6 +41,7 @@ export const FooterSection = () => {
 
   return (
     <div
+      id="contact"
       className="h-full flex w-full flex-col items-center bg-cover p-4 sm:p-10 justify-center"
       style={{ backgroundImage: "url(/images/footer.webp)" }}
     >

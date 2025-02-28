@@ -82,6 +82,7 @@ export const TeamSection = () => {
 
   return (
     <div
+      id="team"
       className="h-screen relative flex w-full z-0 justify-center bg-cover p-14"
       style={{ backgroundImage: "url(/images/team-photo.png)" }}
     >

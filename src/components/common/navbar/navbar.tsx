@@ -15,7 +15,6 @@ import {
 import Image from "next/image";
 import useLoading from "@/hook/use-loading";
 import useBackgroundAudio from "@/hook/use-sound";
-
 export const Navbar = () => {
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [openIndex, setOpenIndex] = useState<number>();
@@ -23,7 +22,7 @@ export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const loading = useLoading(4000);
   const { play, pause } = useBackgroundAudio("/backsound.mp3");
-  const [isPlaying, setIsPlaying] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [navTop, setNavTop] = useState("top-5");
   const [navTopBorder, setNavTopBorder] = useState("");
@@ -39,9 +38,8 @@ export const Navbar = () => {
     } else {
       play();
     }
-    setIsPlaying(!isPlaying); // Toggle the isPlaying state
+    setIsPlaying(!isPlaying);
   };
-
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -87,10 +85,8 @@ export const Navbar = () => {
     return null;
   }
 
-
   return (
     <div className=" flex w-full flex-col items-center">
-   
       <div
         className={cn(
           `fixed z-50 w-full transition-all duration-300  ${navTop}`
@@ -121,7 +117,12 @@ export const Navbar = () => {
           </div>
           <div className="flex items-center gap-2 md:gap-4">
             {data.map((e, i) => (
-              <Link className="group flex gap-3" key={i} href={e.href}>
+              <Link
+                className="group flex gap-3"
+                key={i}
+                href={e.href}
+                onClick={e.onClick}
+              >
                 <div
                   className={cn(
                     0 === i ? "text-[#2F8652]" : "text-[#D9864E]",
@@ -164,27 +165,31 @@ export const Navbar = () => {
 const data = [
   {
     title: "Home",
-    href: "/feature",
+    href: "#home",
     icon: <HomeIcon />,
   },
   {
     title: "About",
-    href: "/pricing",
+    href: "#about",
     icon: <AboutIcon />,
   },
   {
     title: "Team",
-    href: "/pricing",
+    href: "#team",
     icon: <TeamIcon />,
+    onClick: (e: React.MouseEvent) => {
+      e.preventDefault();
+      document.getElementById("team")?.scrollIntoView({ behavior: "smooth" });
+    },
   },
   {
     title: "Bar Menu",
-    href: "/blog",
+    href: "#bar-menu",
     icon: <BarIcon />,
   },
   {
     title: "Concats",
-    href: "/Concats",
+    href: "#contact",
     icon: <HelpIcon />,
   },
 ];
