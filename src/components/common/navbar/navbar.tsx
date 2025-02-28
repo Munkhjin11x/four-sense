@@ -26,6 +26,7 @@ export const Navbar = () => {
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [navTop, setNavTop] = useState("top-5");
   const [navTopBorder, setNavTopBorder] = useState("");
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const handleScroll = () => {
     const offset = window.pageYOffset;
@@ -81,6 +82,43 @@ export const Navbar = () => {
     };
   }, [lastScrollTop, openIndex]);
 
+  const data = [
+    {
+      title: "Home",
+      href: "#home",
+      icon: <HomeIcon color={hoveredIndex === 0 ? "#2F8652" : "#D9864E"} />,
+    },
+    {
+      title: "About",
+      href: "#about",
+      icon: <AboutIcon color={hoveredIndex === 1 ? "#2F8652" : "#D9864E"} />,
+    },
+    {
+      title: "Team",
+      href: "#team",
+      icon: <TeamIcon color={hoveredIndex === 2 ? "#2F8652" : "#D9864E"} />,
+      onClick: (e: React.MouseEvent) => {
+        e.preventDefault();
+        document.getElementById("team")?.scrollIntoView({ behavior: "smooth" });
+      },
+    },
+    {
+      title: "Bar Menu",
+      href: "#bar-menu",
+      icon: <BarIcon color={hoveredIndex === 3 ? "#2F8652" : "#D9864E"} />,
+    },
+    {
+      title: "Contact",
+      href: "#contact",
+      icon: <HelpIcon color={hoveredIndex === 4 ? "#2F8652" : "#D9864E"} />,
+    },
+    {
+      title: "Volume",
+      onClick: toggleAudio,
+      icon: <VolumeIcon color={hoveredIndex === 5 ? "#2F8652" : "#D9864E"} />,
+    },
+  ];
+
   if (loading) {
     return null;
   }
@@ -110,7 +148,7 @@ export const Navbar = () => {
               <Image
                 src={"/navbar/logo.png"}
                 alt="logo"
-                width={200}
+                width={240}
                 height={50}
               />
             </Link>
@@ -118,31 +156,28 @@ export const Navbar = () => {
           <div className="flex  items-center gap-2 md:gap-4">
             {data.map((e, i) => (
               <Link
+                onMouseEnter={() => setHoveredIndex(i)}
+                onMouseLeave={() => setHoveredIndex(null)}
                 className="group hidden lg:flex gap-3"
                 key={i}
-                href={e.href}
+                href={e.href || ""}
                 onClick={e.onClick}
               >
                 <div
                   className={cn(
-                    0 === i ? "text-[#2F8652]" : "text-[#D9864E]",
-                    " gap-2 flex items-center "
+                    "gap-2 flex items-center text-[#D9864E] group-hover:text-[#2F8652]"
                   )}
                 >
-                  <div className="size-6">{e.icon}</div>
+                  <div className="size-6 group-hover:scale-110 transition-transform duration-200">
+                    {e.icon}
+                  </div>
                   <p>{e.title}</p>
                 </div>
               </Link>
             ))}
-            <div onClick={toggleAudio} className="md:flex hidden gap-3">
-              <div className="size-6">
-                <VolumeIcon />
-              </div>
-              <p className="text-[#D9864E]"> Volume</p>
-            </div>
             <Link
               href={""}
-              className="border text-nowrap text-[#D9864E] hover:bg-[#D9864E]/50 border-[#D9864E] px-10 rounded-tl-full py-2"
+              className="border max-sm:text-sm max-sm:px-5 text-nowrap text-[#D9864E] hover:bg-[#D9864E]/50 border-[#D9864E] px-10 rounded-tl-full py-2"
             >
               BOOK A TABLE
             </Link>
@@ -161,35 +196,3 @@ export const Navbar = () => {
     </div>
   );
 };
-
-const data = [
-  {
-    title: "Home",
-    href: "#home",
-    icon: <HomeIcon />,
-  },
-  {
-    title: "About",
-    href: "#about",
-    icon: <AboutIcon />,
-  },
-  {
-    title: "Team",
-    href: "#team",
-    icon: <TeamIcon />,
-    onClick: (e: React.MouseEvent) => {
-      e.preventDefault();
-      document.getElementById("team")?.scrollIntoView({ behavior: "smooth" });
-    },
-  },
-  {
-    title: "Bar Menu",
-    href: "#bar-menu",
-    icon: <BarIcon />,
-  },
-  {
-    title: "Concats",
-    href: "#contact",
-    icon: <HelpIcon />,
-  },
-];

@@ -68,6 +68,10 @@ export default {
             height: "var(--radix-accordion-content-height)",
           },
         },
+        blink: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
         "accordion-up": {
           from: {
             height: "var(--radix-accordion-content-height)",
@@ -80,6 +84,7 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "blink-border": "blink 2s infinite alternate",
       },
     },
   },

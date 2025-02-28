@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useCallback, useState } from "react";
 import { TeamMemberModal } from "./team-member-modal";
 import useScreenSize from "@/hook/use-screen";
+import Animation from "../ui/animation";
 
 const icons = [
   {
@@ -85,34 +86,39 @@ export const TeamSection = () => {
   return (
     <div
       id="team"
-      className="h-screen relative flex w-full z-0 justify-center bg-cover p-14"
+      className="min-h-screen relative flex w-full z-0 justify-center bg-cover p-14"
       style={{ backgroundImage: "url(/images/team-photo.png)" }}
     >
-      <div className="flex flex-col justify-start items-center w-full gap-6 md:gap-12">
-        <Image
-          src={CDN_URL + "/images/team-member-logo.png"}
-          alt="Team Logo"
-          width={215}
-          height={215}
-        />
-        <p className="text-white text-center max-w-3xl">
-          Our expert mixologists craft cocktails that engage four senses of
-          sight, sound, smell, and taste, using their fifth sense to create
-          truly unique experiences for our guests, which allows us to meet your
-          needs in the best way possible.
-        </p>
-      </div>
-      {icons.map((item, index) => (
-        <div
-          key={index}
-          onClick={() => handleModal(item)}
-          onMouseEnter={() => setSelectedMember(item)}
-          className="absolute bg-white p-1 rounded-md border-4 border-[#3C9660] cursor-pointer"
-          style={{ left: item.x, top: width > 1280 ? "60%" : "70%" }}
-        >
-          {item.icon}
+      <Animation>
+        <div className="flex flex-col justify-start items-center w-full gap-6 md:gap-12">
+          <Image
+            src={CDN_URL + "/images/team-member-logo.png"}
+            alt="Team Logo"
+            width={215}
+            height={215}
+          />
+          <p className="text-white text-center max-w-3xl">
+            Our expert mixologists craft cocktails that engage four senses of
+            sight, sound, smell, and taste, using their fifth sense to create
+            truly unique experiences for our guests, which allows us to meet
+            your needs in the best way possible.
+          </p>
         </div>
-      ))}
+        <div className=" w-full h-full">
+          {icons.map((item, index) => (
+            <div
+              key={index}
+              onClick={() => handleModal(item)}
+              onMouseEnter={() => setSelectedMember(item)}
+              className="absolute bg-white p-1 rounded-md border-4 border-[#3C9660] cursor-pointer animate-blink-border"
+              style={{ left: item.x, top: width > 1280 ? "65%" : "70%" }}
+            >
+              {item.icon}
+            </div>
+          ))}
+        </div>
+      </Animation>
+
       {selectedMember && (
         <TeamMemberModal
           isOpen={!!selectedMember}

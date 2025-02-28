@@ -31,14 +31,15 @@ export const Loader = () => {
 
         <Slider value={[progress]} className="h-0.5 mt-24" />
       </div>
-
-      <Image
-        src={CDN_URL + "/images/bottom.png"}
-        width={200}
-        height={200}
-        alt="Bottom Decoration"
-        className="pb-20"
-      />
+      <div className="flex flex-col pb-20 gap-2 items-center">
+        <Image
+          src={CDN_URL + "/images/bottom.png"}
+          width={140}
+          height={140}
+          alt="Bottom Decoration"
+        />
+        <p className="text-[#E78140]">Nomad-Ability Bar</p>
+      </div>
     </div>
   );
 };

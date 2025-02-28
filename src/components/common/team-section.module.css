@@ -1,0 +1,15 @@
+@keyframes borderBlink {
+  0% {
+    border-color: #3c9660;
+  }
+  50% {
+    border-color: transparent;
+  }
+  100% {
+    border-color: #3c9660;
+  }
+}
+
+.blinkBorder {
+  animation: borderBlink 2s infinite;
+}

@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
 import Image from "next/image";
 import Link from "next/link";
+import Animation from "../ui/animation";
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
   style: "normal",
@@ -15,20 +16,24 @@ export const InstagramNewsSection = () => {
       <div className="bg-white h-full w-full max-w-[1740px] px-10  py-7">
         <div className="flex flex-col gap-7 w-full">
           <div>
-            <p
-              className={cn(
-                font.className,
-                "text-4xl text-[#E78140] font-roba"
-              )}
-            >
-              INSTAGRAM NEWS @FOURSENSES
-            </p>
+            <Animation>
+              <p
+                className={cn(
+                  font.className,
+                  "text-4xl text-[#E78140] font-roba"
+                )}
+              >
+                INSTAGRAM NEWS @FOURSENSES
+              </p>
+            </Animation>
           </div>
-          <div className="flex gap-7 overflow-x-auto w-full max-w-full pb-4">
-            {data.map((e, i) => (
-              <InstragramCard key={i} data={e} />
-            ))}
-          </div>
+          <Animation>
+            <div className="flex gap-7 overflow-x-auto w-full max-w-full pb-4">
+              {data.map((e, i) => (
+                <InstragramCard key={i} data={e} />
+              ))}
+            </div>
+          </Animation>
         </div>
       </div>
     </div>
