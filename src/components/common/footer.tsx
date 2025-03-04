@@ -34,7 +34,7 @@ export const FooterVideo = () => {
         Your browser does not support the video tag.
       </video>
       <div className="w-full h-full flex flex-col items-center justify-between gap-5 p-4">
-        <Animation className="w-full text-center">
+        <Animation viewPortAmount={1} className="w-full text-center">
           <p
             className={cn(
               font.className,
@@ -44,7 +44,7 @@ export const FooterVideo = () => {
             WELCOME TO FOURSENSES
           </p>
         </Animation>
-        <Animation className="flex justify-center">
+        <Animation viewPortAmount={1} className="flex justify-center">
           <Image
             src={"/navbar/footer-logo.png"}
             alt="Big Mouth"
@@ -54,7 +54,7 @@ export const FooterVideo = () => {
             className="w-[200px] sm:w-[300px] md:w-[400px] h-auto"
           />
         </Animation>
-        <Animation>
+        <Animation viewPortAmount={1}>
           <div className="flex flex-col pb-5 gap-3 md:gap-5 items-center">
             <div className="flex flex-wrap justify-center gap-4 md:gap-10 px-2">
               {links.map((e, i) => (
