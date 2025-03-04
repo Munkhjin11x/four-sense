@@ -11,7 +11,7 @@ export const FooterParallax = () => {
       {data.map((item, ind) => (
         <div
           key={ind}
-          className="sticky bottom-[1%]"
+          className="sticky bottom-[0.01%]"
           style={{ zIndex: data.length - ind }}
         >
           {item.child}
