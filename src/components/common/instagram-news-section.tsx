@@ -44,7 +44,7 @@ const InstragramCard = ({ data }: { data: InstagramType }) => {
   return (
     <div className="border min-w-[360px] rounded-md pb-2.5">
       <div className="flex justify-between items-center p-2">
-        <div className="flex gap-2">
+        <div className="flex gap-2 mb-2">
           <Image
             src={CDN_URL + "/images/instagram/logo.svg"}
             width={32}
@@ -56,7 +56,10 @@ const InstragramCard = ({ data }: { data: InstagramType }) => {
             <span className="text-[10px]">Foursenses</span>
           </div>
         </div>
-        <Link href={""} className="py-1.5 px-2 text-white bg-[#0095F6]">
+        <Link
+          href={""}
+          className="py-1.5 px-3 text-white rounded-sm bg-[#0095F6]"
+        >
           View profile
         </Link>
       </div>
