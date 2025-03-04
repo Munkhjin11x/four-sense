@@ -10,6 +10,7 @@ import { MapModal } from "./map-modal";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import Animation from "../ui/animation";
+import useLoading from "@/hook/use-loading";
 
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
@@ -31,6 +32,7 @@ export const FooterSection = () => {
     phone: "",
     message: "",
   });
+  const loading = useLoading(4000);
 
   const handleModal = () => {
     setModal(!modal);
@@ -53,6 +55,9 @@ export const FooterSection = () => {
 
     window.location.href = mailtoLink;
   };
+  if (loading) {
+    return null;
+  }
 
   return (
     <div

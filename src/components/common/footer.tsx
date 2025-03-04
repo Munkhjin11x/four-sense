@@ -1,9 +1,11 @@
+"use client";
 import { CDN_URL } from "@/constants/contant";
 import Image from "next/image";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Animation from "../ui/animation";
+import useLoading from "@/hook/use-loading";
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
   style: "normal",
@@ -11,11 +13,18 @@ const font = localFont({
 });
 
 export const FooterVideo = () => {
+  const loading = useLoading(4000);
+
+  if (loading) {
+    return null;
+  }
+
   return (
     <div className="w-full relative md:h-screen">
+      <div className="absolute inset-0 h-full -z-10 bg-black/40" />
       <video
         preload="none"
-        className="w-full absolute inset-0 h-full -z-10 object-cover"
+        className="w-full  absolute inset-0 h-full -z-20 object-cover"
         autoPlay
         playsInline
         loop
@@ -37,7 +46,7 @@ export const FooterVideo = () => {
         </Animation>
         <Animation className="flex justify-center">
           <Image
-            src={CDN_URL + "/home/logo.webp"}
+            src={"/navbar/footer-logo.png"}
             alt="Big Mouth"
             width={400}
             height={400}

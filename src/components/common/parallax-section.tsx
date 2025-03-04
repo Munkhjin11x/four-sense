@@ -16,18 +16,21 @@ export const ParallaxSection = () => {
       <motion.div
         className="sticky top-0 w-full overflow-hidden"
         style={{ y: yellowY }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
         <YellowSection />
       </motion.div>
       <motion.div
         className="sticky top-0 w-full overflow-hidden"
         style={{ y: orangeY }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
         <OrangeSection />
       </motion.div>
       <motion.div
         className="sticky top-0 w-full overflow-hidden"
         style={{ y: teamY }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >
         <TeamSection />
       </motion.div>

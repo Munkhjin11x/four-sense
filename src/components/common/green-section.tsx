@@ -50,7 +50,7 @@ export const GreenSection = () => {
                 alt=""
                 width={0}
                 height={0}
-                className="w-full"
+                className="w-full object-cover"
                 sizes="100vw"
               />
             </div>

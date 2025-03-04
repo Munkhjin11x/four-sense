@@ -143,7 +143,7 @@ export const Navbar = () => {
     },
     {
       title: "Bar Menu",
-      href: "#bar-menu",
+      href: "/bar-menu",
       icon: (
         <BarIcon
           color={
