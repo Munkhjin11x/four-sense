@@ -8,3 +8,5 @@ export * from "./explore-secion";
 export * from "./instagram-news-section";
 export * from "./footer-section";
 export * from "./footer";
+export * from "./menu-section";
+export * from "./footer-parallax";
