@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { NavbarItemsMobile } from "./navbar-item-mobile";
 import { cn } from "@/lib/utils";
-import { useNavbarConfig } from "./nav-data";
 import Link from "next/link";
 import {
   AboutIcon,
@@ -15,10 +14,10 @@ import {
 import Image from "next/image";
 import useLoading from "@/hook/use-loading";
 import useBackgroundAudio from "@/hook/use-sound";
+import { Hamburger } from "./hamburger";
 export const Navbar = () => {
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [openIndex, setOpenIndex] = useState<number>();
-  const listNavItems = useNavbarConfig();
   const [isScrolled, setIsScrolled] = useState(false);
   const loading = useLoading(4000);
   const { play, pause } = useBackgroundAudio("/backsound.mp3");
@@ -27,6 +26,7 @@ export const Navbar = () => {
   const [navTop, setNavTop] = useState("top-5");
   const [navTopBorder, setNavTopBorder] = useState("");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const handleScroll = () => {
     const offset = window.pageYOffset;
@@ -82,40 +82,91 @@ export const Navbar = () => {
     };
   }, [lastScrollTop, openIndex]);
 
+  const toggleHamburger = () => {
+    setHamburgerOpen((prev) => !prev);
+  };
+
   const data = [
     {
       title: "Home",
       href: "#home",
-      icon: <HomeIcon color={hoveredIndex === 0 ? "#2F8652" : "#D9864E"} />,
+      icon: (
+        <HomeIcon
+          color={
+            hoveredIndex === 0 || selectedItem == "Home" ? "#2F8652" : "#D9864E"
+          }
+        />
+      ),
     },
     {
       title: "About",
       href: "#about",
-      icon: <AboutIcon color={hoveredIndex === 1 ? "#2F8652" : "#D9864E"} />,
+      icon: (
+        <AboutIcon
+          color={
+            hoveredIndex === 1 || selectedItem === "About"
+              ? "#2F8652"
+              : "#D9864E"
+          }
+        />
+      ),
     },
     {
       title: "Team",
       href: "#team",
-      icon: <TeamIcon color={hoveredIndex === 2 ? "#2F8652" : "#D9864E"} />,
+      icon: (
+        <TeamIcon
+          color={
+            hoveredIndex === 2 || selectedItem === "Team"
+              ? "#2F8652"
+              : "#D9864E"
+          }
+        />
+      ),
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
         document.getElementById("team")?.scrollIntoView({ behavior: "smooth" });
       },
     },
     {
-      title: "Bar Menu",
-      href: "#bar-menu",
-      icon: <BarIcon color={hoveredIndex === 3 ? "#2F8652" : "#D9864E"} />,
-    },
-    {
       title: "Contact",
       href: "#contact",
-      icon: <HelpIcon color={hoveredIndex === 4 ? "#2F8652" : "#D9864E"} />,
+      icon: (
+        <HelpIcon
+          color={
+            hoveredIndex === 3 || selectedItem === "Contact"
+              ? "#2F8652"
+              : "#D9864E"
+          }
+        />
+      ),
     },
+    {
+      title: "Bar Menu",
+      href: "#bar-menu",
+      icon: (
+        <BarIcon
+          color={
+            hoveredIndex === 4 || selectedItem === "Bar Menu"
+              ? "#2F8652"
+              : "#D9864E"
+          }
+        />
+      ),
+    },
+
     {
       title: "Volume",
       onClick: toggleAudio,
-      icon: <VolumeIcon color={hoveredIndex === 5 ? "#2F8652" : "#D9864E"} />,
+      icon: (
+        <VolumeIcon
+          color={
+            hoveredIndex === 5 || selectedItem === "Volume"
+              ? "#2F8652"
+              : "#D9864E"
+          }
+        />
+      ),
     },
   ];
 
@@ -161,11 +212,19 @@ export const Navbar = () => {
                 className="group hidden lg:flex gap-3"
                 key={i}
                 href={e.href || ""}
-                onClick={e.onClick}
+                onClick={(event) => {
+                  if (e.onClick) {
+                    e.onClick(event);
+                  }
+                  setSelectedItem(e.title);
+                }}
               >
                 <div
                   className={cn(
-                    "gap-2 flex items-center text-[#D9864E] group-hover:text-[#2F8652]"
+                    "gap-2 flex items-center",
+                    selectedItem === e.title
+                      ? "text-[#2F8652]"
+                      : "text-[#D9864E] group-hover:text-[#2F8652]"
                   )}
                 >
                   <div className="size-6 group-hover:scale-110 transition-transform duration-200">
@@ -175,9 +234,13 @@ export const Navbar = () => {
                 </div>
               </Link>
             ))}
+            <Hamburger
+              toggleHamburger={toggleHamburger}
+              hamburgerOpen={hamburgerOpen}
+            />
             <Link
               href={""}
-              className="border max-sm:text-sm max-sm:px-5 text-nowrap text-[#D9864E] hover:bg-[#D9864E]/50 border-[#D9864E] px-10 rounded-tl-full py-2"
+              className="border hidden lg:flex max-sm:text-sm max-sm:px-5 text-nowrap text-[#D9864E] hover:bg-[#D9864E]/50 border-[#D9864E] px-10 rounded-tl-full py-2"
             >
               BOOK A TABLE
             </Link>
@@ -187,9 +250,10 @@ export const Navbar = () => {
 
       {hamburgerOpen && (
         <NavbarItemsMobile
-          list={listNavItems}
+          list={data}
+          selectedItem={selectedItem}
           openIndex={openIndex}
-          setOpenIndex={setOpenIndex}
+          setSelectedItem={setSelectedItem}
           setHamburgerOpen={setHamburgerOpen}
         />
       )}

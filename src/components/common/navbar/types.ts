@@ -1,4 +1,4 @@
-import { Dispatch, ElementType, JSX, SetStateAction } from 'react';
+import { Dispatch, ElementType, JSX, SetStateAction } from "react";
 
 export type NavbarItemPropsType = {
   text: string;
@@ -24,14 +24,17 @@ export type SubMenuType = {
 export type NavbarItemMobilePropsType = {
   list: NavItemType[];
   openIndex?: number;
-  setOpenIndex: Dispatch<SetStateAction<number | undefined>>;
+  setSelectedItem: Dispatch<SetStateAction<string | null>>;
   setHamburgerOpen: Dispatch<SetStateAction<boolean>>;
+  selectedItem: string | null;
 };
 
 export type NavItemType = {
   title: string;
   show?: boolean;
-  subMenus: SubMenuType[];
+  href?: string;
+  icon?: JSX.Element;
+  onClick?: (event: React.MouseEvent) => void;
 };
 
 export type HamburgerPropsType = {

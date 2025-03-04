@@ -107,13 +107,23 @@ export const TeamSection = () => {
         <div className=" w-full h-full">
           {icons.map((item, index) => (
             <div
+              className="absolute"
               key={index}
               onClick={() => handleModal(item)}
               onMouseEnter={() => setSelectedMember(item)}
-              className="absolute bg-white p-1 rounded-md border-4 border-[#3C9660] cursor-pointer animate-blink-border"
               style={{ left: item.x, top: width > 1280 ? "65%" : "70%" }}
             >
-              {item.icon}
+              <div className="relative inline-flex items-center justify-center rounded-md overflow-hidden p-1">
+                <div className="absolute inset-[-1000%] animate-[spin_5s_linear_infinite] rounded-md bg-[conic-gradient(from_0deg_at_50%_50%,#488457_0%,#488457_10%,#4E4E4E4D_10%,#4E4E4E4D_90%,#488457_90%,#488457_100%)]"></div>
+                <div className="absolute inset-[-1000%] animate-[spin_5s_linear_infinite] rounded-md bg-[conic-gradient(from_0deg_at_50%_50%,#488457_0%,#488457_10%,#4E4E4E4D_10%,#4E4E4E4D_90%,#488457_90%,#488457_100%)]"></div>
+                <div className="relative h-full w-full overflow-hidden rounded-md ">
+                  <div className=" p-2 max-sm:py-2 bg-white  text-white h-full">
+                    <div className="max-sm:text-xs text-lg relative text-nowrap font-semibold">
+                      {item.icon}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>

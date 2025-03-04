@@ -1,8 +1,5 @@
-
-
-import { ElementType } from 'react';
-import { SubMenuType } from './types';
-import { HomeIcon } from '@/icons';
+import { ElementType } from "react";
+import { SubMenuType } from "./types";
 
 interface NavbarItem {
   title: string;
@@ -17,23 +14,19 @@ export const useNavbarConfig = (): UseNavbarConfigReturnType => {
 
   // const locale = useLocale();
 
-  
-
   return [
     {
-      title: ('trading.title'),
+      title: "trading.title",
       subMenus: [
-        { title: ('trading.accounts.accounts'), href: '/trading-accounts', icon:<HomeIcon/>  },
-        { title: ('trading.conditions.deposit'), href: '/deposit',  },
+        { title: "trading.accounts.accounts", href: "/trading-accounts" },
+        { title: "trading.conditions.deposit", href: "/deposit" },
         {
-          title: ('trading.conditions.withdraw'),
-          href: '/withdraw',
-      
+          title: "trading.conditions.withdraw",
+          href: "/withdraw",
         },
-        { title: ('trading.accounts.vipProgram'), href: '/loyalty-program', },
-        { title: ('trading.conditions.security'), href: '/security'  }
-      ]
+        { title: "trading.accounts.vipProgram", href: "/loyalty-program" },
+        { title: "trading.conditions.security", href: "/security" },
+      ],
     },
-   
   ];
 };

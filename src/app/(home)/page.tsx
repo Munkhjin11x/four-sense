@@ -1,7 +1,6 @@
 "use client";
 import {
   ExploreSection,
-  FooterSection,
   GreenSection,
   Home,
   InstagramNewsSection,
@@ -26,7 +25,6 @@ const HomePage = () => {
           </div>
           <ExploreSection />
           <InstagramNewsSection />
-          <FooterSection />
         </>
       )}
     </div>

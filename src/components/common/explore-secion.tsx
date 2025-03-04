@@ -15,7 +15,7 @@ export const ExploreSection = () => {
 
   return (
     <div className="bg-[#F9D9B1] w-full h-full max-sm:px-5 flex justify-center mt-[80px]">
-      <div className="w-full flex flex-col items-center pt-24">
+      <div className="w-full flex pb-10 flex-col items-center pt-24">
         <div className="flex flex-col gap-2 justify-center items-center w-full pb-10">
           <Animation>
             <p

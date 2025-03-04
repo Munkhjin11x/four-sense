@@ -10,7 +10,7 @@ export const GreenSection = () => {
         alt=""
         width={0}
         height={0}
-        className="w-full h-full mdobject-cover absolute inset-0 -z-10 "
+        className="w-full h-full object-cover absolute inset-0 -z-10 "
         sizes="100vw"
       />
       <Animation>
