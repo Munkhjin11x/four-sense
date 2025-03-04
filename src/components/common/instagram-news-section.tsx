@@ -57,7 +57,8 @@ const InstragramCard = ({ data }: { data: InstagramType }) => {
           </div>
         </div>
         <Link
-          href={""}
+          target="_blank"
+          href={"https://www.instagram.com/foursenses.ub"}
           className="py-1.5 px-3 text-white rounded-sm bg-[#0095F6]"
         >
           View profile
