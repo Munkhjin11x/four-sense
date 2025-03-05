@@ -15,6 +15,7 @@ import Image from "next/image";
 import useLoading from "@/hook/use-loading";
 import useBackgroundAudio from "@/hook/use-sound";
 import { Hamburger } from "./hamburger";
+import { usePathname } from "next/navigation";
 export const Navbar = () => {
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [openIndex, setOpenIndex] = useState<number>();
@@ -85,6 +86,7 @@ export const Navbar = () => {
   const toggleHamburger = () => {
     setHamburgerOpen((prev) => !prev);
   };
+  const pathname = usePathname();
 
   const data = [
     {
@@ -184,8 +186,9 @@ export const Navbar = () => {
         <div
           className={cn(
             isScrolled ? "!bg-white border" : "bg-transparent",
-            "flex items-center justify-between  gap-6 rounded-br-[45px]  p-3",
-            navTopBorder
+            "flex items-center justify-between  gap-6 rounded-br-[45px] px-3 pr-8",
+            navTopBorder,
+            pathname === "/bar-menu" && "!bg-white"
           )}
         >
           <div className="flex items-center gap-14">

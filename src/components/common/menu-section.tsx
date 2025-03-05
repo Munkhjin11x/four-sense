@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { Menu } from "./menu";
+import { Menu } from "../food/menu";
 
 export const MenuSection = () => {
   return (
-    <div className="w-full grid grid-cols-2">
+    <div className="w-full grid h-full grid-cols-1 md:grid-cols-2">
       <Menu title="MEALS" data={data} />
       <div className="w-full h-full">
         <Image
