@@ -13,7 +13,7 @@ export const WineMenu = () => {
       className="bg-cover bg-center flex flex-col gap-14 items-center bg-no-repeat px-16"
       style={{ backgroundImage: "url(/menu/bg-yellow.png)" }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 w-full pt-14">
+      <div className="grid grid-cols-1 lg:grid-cols-2 w-full pt-14">
         <Menu
           priceClassName="text-[#E7813F]"
           titleClassName="!text-[#E7813F]"

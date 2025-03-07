@@ -13,7 +13,7 @@ export const ShimMenu = () => {
       className="bg-cover bg-center flex flex-col gap-14 items-center bg-no-repeat px-16"
       style={{ backgroundImage: "url(/menu/bg-orange.png)" }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 w-full pt-14">
+      <div className="grid grid-cols-1 lg:grid-cols-2 w-full pt-14">
         <Menu priceClassName="text-[#488457]" title="Shim Menu" data={data} />
         <Menu priceClassName="text-[#488457]" title="Wine menu" data={data2} />
       </div>

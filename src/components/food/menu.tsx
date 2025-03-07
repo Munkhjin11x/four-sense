@@ -6,14 +6,16 @@ export const Menu = ({
   title,
   titleClassName,
   priceClassName,
+  className,
 }: {
   data: MenuProps[];
   title: string;
   titleClassName?: string;
   priceClassName?: string;
+  className?: string;
 }) => {
   return (
-    <Animation className="flex flex-col gap-4 py-5 px-5">
+    <Animation className={cn("flex flex-col gap-4 py-5 px-5", className)}>
       <p
         className={cn(
           titleClassName,

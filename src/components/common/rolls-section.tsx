@@ -4,7 +4,7 @@ import Animation from "../ui/animation";
 
 export const RollsSection = () => {
   return (
-    <div className="w-full grid h-full grid-cols-1 md:grid-cols-2">
+    <div className="w-full grid h-full grid-cols-1 lg:grid-cols-2">
       <div className="w-full h-full">
         <Image
           className="w-full h-full"

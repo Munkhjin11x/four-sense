@@ -3,9 +3,9 @@ import { Menu } from "../food/menu";
 
 export const MenuSection = () => {
   return (
-    <div className="w-full grid h-full grid-cols-1 md:grid-cols-2">
-      <Menu title="MEALS" data={data} />
-      <div className="w-full h-full">
+    <div className="w-full grid h-full grid-cols-1 lg:grid-cols-2">
+      <Menu className="max-lg:order-2" title="MEALS" data={data} />
+      <div className="w-full order-1 h-full">
         <Image
           className="w-full h-full"
           src={"/food/1.png"}

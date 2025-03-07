@@ -3,8 +3,8 @@ import { Menu } from "../food";
 
 export const ZeroMenu = () => {
   return (
-    <div className="w-full grid h-full grid-cols-1 md:grid-cols-2">
-      <div className="w-full h-full">
+    <div className="w-full grid h-full grid-cols-1 lg:grid-cols-2">
+      <div className="w-full h-full max-lg:order-2">
         <Image
           className="w-full h-full"
           src={"/food/3.png"}
@@ -14,7 +14,7 @@ export const ZeroMenu = () => {
           height={0}
         />
       </div>
-      <div>
+      <div className="max-lg:order-1">
         <Menu titleClassName="!text-[#D9864E]" title="Zero avc" data={data} />
         <div className="flex justify-start">
           <Image

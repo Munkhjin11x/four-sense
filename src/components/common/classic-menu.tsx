@@ -3,7 +3,7 @@ import { Menu } from "../food/menu";
 
 export const ClassicMenu = () => {
   return (
-    <div className="w-full grid h-full grid-cols-1 md:grid-cols-2">
+    <div className="w-full grid h-full grid-cols-1 lg:grid-cols-2">
       <div>
         <Menu titleClassName="!text-[#D9864E]" title="Highballs" data={data} />
         <Menu titleClassName="!text-[#D9864E]" title="Classics" data={data} />
