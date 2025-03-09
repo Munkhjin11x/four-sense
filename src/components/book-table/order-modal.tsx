@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
 import { Seat } from "./seat";
 import { Button } from "../ui";
+import { toast } from "sonner";
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
   style: "normal",
@@ -30,6 +31,10 @@ export const OrderModal = ({
   });
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleOrder = () => {
+    toast.success("Order placed successfully");
+    onClose();
   };
   console.log(seats);
   return (
@@ -75,7 +80,7 @@ export const OrderModal = ({
           ))}
         </div>
         <Button
-          onClick={onClose}
+          onClick={handleOrder}
           className="bg-[#E78140] hover:bg-[#E78140]/90 text-white rounded-none rounded-tl-3xl"
         >
           Order
