@@ -47,7 +47,7 @@ export const Position = ({
               <div className="border-4 w-fit rounded-full">
                 <div className="border-[3px] size-5 border-[#E78140] rounded-full bg-[#F9DAB2]" />
               </div>
-              <p className="text-[#F9DAB2] text-xl absolute top-8 left-5 font-semibold w-[140px]">
+              <p className="text-[#F9DAB2] text-sm sm:text-xl absolute top-8 left-5 font-semibold sm:w-[140px]">
                 {title}
               </p>
             </div>

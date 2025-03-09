@@ -188,7 +188,8 @@ export const Navbar = () => {
             isScrolled ? "!bg-white border" : "bg-transparent",
             "flex items-center justify-between  gap-6 rounded-br-[45px] px-3 pr-8",
             navTopBorder,
-            pathname === "/bar-menu" && "!bg-white"
+            (pathname === "/bar-menu" || pathname === "/book-table") &&
+              "!bg-white"
           )}
         >
           <div className="flex items-center gap-14">
@@ -242,7 +243,7 @@ export const Navbar = () => {
               hamburgerOpen={hamburgerOpen}
             />
             <Link
-              href={""}
+              href={"/book-table"}
               className="border hidden lg:flex max-sm:text-sm max-sm:px-5 text-nowrap text-[#D9864E] hover:bg-[#D9864E]/50 border-[#D9864E] px-10 rounded-tl-full py-2"
             >
               BOOK A TABLE

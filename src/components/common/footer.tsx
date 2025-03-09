@@ -38,7 +38,7 @@ export const FooterVideo = () => {
           <p
             className={cn(
               font.className,
-              "text-white text-3xl sm:text-5xl md:text-7xl lg:text-9xl"
+              "text-white text-3xl mt-24 sm:text-5xl md:text-7xl lg:text-9xl"
             )}
           >
             WELCOME TO FOURSENSES
