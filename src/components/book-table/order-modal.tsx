@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client";
+import { useState } from "react";
 import { Modal } from "../common/modal";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
@@ -6,6 +7,10 @@ import localFont from "next/font/local";
 import { Seat } from "./seat";
 import { Button } from "../ui";
 import { toast } from "sonner";
+
+import { FormProvider, useForm } from "react-hook-form";
+import { FormFieldDatePicker } from "../common/custom-calendar";
+
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
   style: "normal",
@@ -32,11 +37,13 @@ export const OrderModal = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const form = useForm();
+  const { control } = useForm();
+  const [selectedTime, setSelectedTime] = useState("");
   const handleOrder = () => {
     toast.success("Order placed successfully");
     onClose();
   };
-  console.log(seats);
   return (
     <Modal title={`${tableName} Table `} isOpen={isOpen} onClose={onClose}>
       <div className="grid w-full gap-10">
@@ -70,6 +77,21 @@ export const OrderModal = ({
           )}
           placeholder="PHONE NUMBER"
         />
+        <Input
+          type="time"
+          value={selectedTime}
+          onChange={(e) => setSelectedTime(e.target.value)}
+          className="border-b border-[#488457] bg-transparent text-[#488457] text-2xl font-semibold placeholder:text-[#488457]"
+          placeholder="SELECT TIME"
+        />
+        <FormProvider {...form}>
+          <FormFieldDatePicker
+            control={control}
+            name="date"
+            label="Date"
+            className="w-full"
+          />
+        </FormProvider>
 
         <div
           key={tableName}
