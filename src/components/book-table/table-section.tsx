@@ -60,8 +60,8 @@ export const TableSection = () => {
       <div className="flex flex-col justify-between h-full gap-24 items-center w-full">
         <Animation>
           <div className="flex justify-center relative items-center w-full h-[500px]">
-            <div className="relative  w-full h-full max-xl:overflow-auto">
-              {(width > 1340 ? data2 : data).map((item) => (
+            <div className="relative  w-full h-full max-2xl:overflow-auto">
+              {(width > 1580 ? data2 : data).map((item) => (
                 <div
                   key={item.id}
                   className="absolute"
