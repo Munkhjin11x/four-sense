@@ -14,7 +14,7 @@ export const Position = ({
   y,
   content,
 }: {
-  title: string;
+  title?: string;
   x: string;
   y: string;
   content?: {
@@ -44,10 +44,10 @@ export const Position = ({
               onMouseEnter={() => setIsOpen(true)}
               onMouseLeave={() => setIsOpen(false)}
             >
-              <div className="border-4 w-fit rounded-full">
-                <div className="border-[3px] size-5 border-[#E78140] rounded-full bg-[#F9DAB2]" />
+              <div className="border-2 sm:border-4 w-fit rounded-full">
+                <div className="border-[3px] size-1 sm:size-5 border-[#E78140] rounded-full bg-[#F9DAB2]" />
               </div>
-              <p className="text-[#F9DAB2] text-sm sm:text-xl absolute top-8 left-5 font-semibold sm:w-[140px]">
+              <p className="text-[#F9DAB2] hidden sm:block sm:text-xl absolute top-8 left-5 font-semibold sm:w-[140px]">
                 {title}
               </p>
             </div>

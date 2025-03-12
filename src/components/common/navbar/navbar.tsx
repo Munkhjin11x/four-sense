@@ -91,7 +91,8 @@ export const Navbar = () => {
   const data = [
     {
       title: "Home",
-      href: "#home",
+      href:
+        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#home",
       icon: (
         <HomeIcon
           color={
@@ -102,7 +103,8 @@ export const Navbar = () => {
     },
     {
       title: "About",
-      href: "#about",
+      href:
+        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#about",
       icon: (
         <AboutIcon
           color={
@@ -115,7 +117,8 @@ export const Navbar = () => {
     },
     {
       title: "Team",
-      href: "#team",
+      href:
+        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#team",
       icon: (
         <TeamIcon
           color={
@@ -132,7 +135,8 @@ export const Navbar = () => {
     },
     {
       title: "Contact",
-      href: "#contact",
+      href:
+        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#contact",
       icon: (
         <HelpIcon
           color={
@@ -145,7 +149,10 @@ export const Navbar = () => {
     },
     {
       title: "Bar Menu",
-      href: "/bar-menu",
+      href:
+        pathname == "/book-table" || pathname == "/bar-menu"
+          ? "/bar-menu"
+          : "/bar-menu",
       icon: (
         <BarIcon
           color={

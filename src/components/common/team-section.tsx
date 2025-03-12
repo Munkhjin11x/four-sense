@@ -18,7 +18,7 @@ const icons = [
   {
     icon: <WavyIcon />,
     x: "12%",
-    y: "70%",
+    y: "75%",
     name: " Mixologist: BOLD AMGALAN",
     image: "/images/team/3.jpg",
     description:
@@ -27,7 +27,7 @@ const icons = [
   {
     icon: <HomeIcon color="#D9864E" />,
     x: "26%",
-    y: "70%",
+    y: "75%",
     name: "Mixologist: SERJEE SHINEBAYAR",
     image: "/images/team/2.jpg",
     description:
@@ -36,7 +36,7 @@ const icons = [
   {
     icon: <TriangleIcon />,
     x: "42%",
-    y: "70%",
+    y: "75%",
     name: "Mixologist: ZORIGOO TUMENJARGAL",
     image: "/images/team/1.jpg",
     description:
@@ -45,7 +45,7 @@ const icons = [
   {
     icon: <RounderIcon />,
     x: "57%",
-    y: "70%",
+    y: "75%",
     name: "Founder - Leader: ZAYA GANBAT",
     image: "/images/team/5.jpg",
     description:
@@ -54,7 +54,7 @@ const icons = [
   {
     icon: <LeafIcon />,
     x: "72%",
-    y: "70%",
+    y: "75%",
     name: "Mixologist: NOMI DOV ",
     image: "/images/team/4.jpg",
     description:
@@ -63,7 +63,7 @@ const icons = [
   {
     icon: <HelpIcon />,
     x: "85%",
-    y: "70%",
+    y: "75%",
     name: "Head Mixologist: BOBBY PUREVDORJ ",
     image: "/images/team/6.jpg",
     description:
