@@ -18,7 +18,9 @@ const SeatTooltip = ({
   selectedSeats,
   setSelectedSeats,
   handleOrder,
+  all,
 }: {
+  all: boolean;
   tableId: string;
   seats: {
     title: string;
@@ -45,6 +47,9 @@ const SeatTooltip = ({
     });
   };
 
+  if (all) {
+    return <>{children}</>;
+  }
   return (
     <>
       <TooltipProvider>

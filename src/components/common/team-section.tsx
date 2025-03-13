@@ -90,7 +90,7 @@ export const TeamSection = () => {
       style={{ backgroundImage: "url(/images/team-photo.png)" }}
     >
       <Animation>
-        <div className="flex flex-col justify-start items-center w-full gap-6 md:gap-12">
+        <div className="flex relative flex-col justify-start items-center w-full gap-6 md:gap-12">
           <Image
             src={CDN_URL + "/images/team-member-logo.png"}
             alt="Team Logo"
@@ -104,14 +104,14 @@ export const TeamSection = () => {
             your needs in the best way possible.
           </p>
         </div>
-        <div className=" w-full h-full">
+        <div className="relative w-full h-full">
           {icons.map((item, index) => (
             <div
               className="absolute"
               key={index}
               onClick={() => handleModal(item)}
               onMouseEnter={() => setSelectedMember(item)}
-              style={{ left: item.x, top: width > 1280 ? "65%" : "70%" }}
+              style={{ left: item.x, top: width > 1280 ? "33%" : "40%" }}
             >
               <div className="relative inline-flex items-center justify-center rounded-md overflow-hidden p-1">
                 <div className="absolute inset-[-1000%] animate-[spin_5s_linear_infinite] rounded-md bg-[conic-gradient(from_0deg_at_50%_50%,#488457_0%,#488457_10%,#4E4E4E4D_10%,#4E4E4E4D_90%,#488457_90%,#488457_100%)]"></div>

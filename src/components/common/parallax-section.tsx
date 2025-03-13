@@ -28,7 +28,7 @@ export const ParallaxSection = () => {
         <OrangeSection />
       </motion.div>
       <motion.div
-        className="sticky top-0 w-full overflow-hidden"
+        className="sticky max-md:hidden top-0 w-full overflow-hidden"
         style={{ y: teamY }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
       >

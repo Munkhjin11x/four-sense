@@ -95,10 +95,14 @@ export const OrderModal = ({
 
         <div
           key={tableName}
-          className="flex border  gap-2 py-5 border-[#488457]  pb-10 rounded-lg px-4"
+          className="flex border  flex-wrap gap-6 py-5 border-[#488457]  pb-10 rounded-lg px-4"
         >
-          {seats.map((seat) => (
-            <Seat key={seat} seatNumber={seat + 1} rotate="rotate-0" />
+          {seats.map((seat, index) => (
+            <Seat
+              key={`${tableName}-${seat}-${index}`}
+              seatNumber={seat + 1}
+              rotate="rotate-0"
+            />
           ))}
         </div>
         <Button

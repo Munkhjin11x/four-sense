@@ -20,8 +20,15 @@ export const TableSection = () => {
     [key: string]: number[];
   }>({});
   const [isOpen, setIsOpen] = useState(false);
+  const [all, setAll] = useState(false);
+
+  const nonSelectableTables = ["dj-left", "dj-right", "mixologist"];
 
   const handleSeatSelect = (tableId: string, seatIndex: number) => {
+    if (nonSelectableTables.includes(tableId)) {
+      return;
+    }
+
     setSelectedSeats((prev) => {
       const tableSeats = prev[tableId] || [];
       if (tableSeats.includes(seatIndex)) {
@@ -35,6 +42,22 @@ export const TableSection = () => {
         [tableId]: [...tableSeats, seatIndex],
       };
     });
+  };
+  const currentData = width > 1580 ? data2 : data;
+
+  const handleSelectAll = () => {
+    setAll(true);
+    const allSeatsSelected = {};
+
+    currentData.forEach((table) => {
+      if (table.seats && table.seats.length > 0) {
+        (allSeatsSelected as { [key: string]: number[] })[table.id] =
+          Array.from({ length: table.seats.length }, (_, i) => i);
+      }
+    });
+
+    setSelectedSeats(allSeatsSelected);
+    setIsOpen(true);
   };
 
   const handleOrder = (tableId: string) => {
@@ -69,6 +92,7 @@ export const TableSection = () => {
                 >
                   <div className="relative cursor-pointer">
                     <SeatTooltip
+                      all={all}
                       handleOrder={handleOrder}
                       setSelectedSeats={setSelectedSeats}
                       selectedSeats={selectedSeats}
@@ -106,6 +130,7 @@ export const TableSection = () => {
 
         <div className="flex flex-col mb-24 gap-3 max-w-[300px] justify-center items-center w-full">
           <Button
+            onClick={() => handleSelectAll()}
             variant="ghost"
             className="w-full border hover:bg-white/50 text-white rounded-tl-3xl"
           >
@@ -120,9 +145,13 @@ export const TableSection = () => {
         </div>
       </div>
       <OrderModal
-        tableName={Object.keys(selectedSeats)[0]}
+        tableName={all ? " Organizing events" : Object.keys(selectedSeats)[0]}
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={() => {
+          setIsOpen(false);
+          setSelectedSeats({});
+          setAll(false);
+        }}
         seats={Object.values(selectedSeats).flat()}
       />
     </div>
