@@ -210,8 +210,10 @@ export const Ability = () => {
             Spring Menu
           </p>
           <Link
+            href={"/menu.pdf"}
             className="border hidden gap-2 lg:flex max-sm:text-sm max-sm:px-5 text-nowrap text-white border-white px-10 rounded-tl-full py-3"
-            href={"/bar-menu"}
+            target="_blank"
+            download={"menu.pdf"}
           >
             <DownloadIcon />
             BAR Menu Download
