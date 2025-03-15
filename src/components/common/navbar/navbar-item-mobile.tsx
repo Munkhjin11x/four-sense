@@ -59,7 +59,7 @@ export const NavbarItemsMobile = ({
         <AccordionItem value="book-a-table">
           <AccordionTrigger className="px-3">
             <Link
-              href={""}
+              href={"/book-table"}
               className="border  lg:flex max-sm:text-sm max-sm:px-5 text-nowrap text-[#D9864E] hover:bg-[#D9864E]/50 border-[#D9864E] px-10 rounded-tl-full py-2"
             >
               BOOK A TABLE
