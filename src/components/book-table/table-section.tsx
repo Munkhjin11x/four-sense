@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { DjTable } from "./dj-table";
@@ -8,11 +9,12 @@ import { Button } from "../ui";
 import { DownloadIcon } from "@/icons";
 import { Seat } from "./seat";
 import useScreenSize from "@/hook/use-screen";
-import { useState } from "react";
+import { Key, useState } from "react";
 import SeatTooltip from "./table-tooltip";
 import { OrderModal } from "./order-modal";
 import Animation from "../ui/animation";
 import { CalendarIcon } from "@/icons/calendar-icon";
+import { useTable } from "@/store/store";
 
 export const TableSection = () => {
   const { width } = useScreenSize();
@@ -22,24 +24,55 @@ export const TableSection = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [all, setAll] = useState(false);
 
+  const { data: tables, isLoading, refetch } = useTable();
+
+  const mapSeatData = (existingTables: any, newData: any) => {
+    return existingTables.map((table: { id: any; seats: any[] }) => {
+      const newTableData = newData?.find(
+        (newTable: { tableName: any }) => newTable.tableName === table.id
+      );
+      if (newTableData) {
+        return {
+          ...table,
+          seats:
+            table.seats?.map((seat, index) => {
+              const newSeatData = newTableData.seats[index];
+              return newSeatData
+                ? {
+                    ...seat,
+                    status: newSeatData.status,
+                    _id: newSeatData._id,
+                  }
+                : seat;
+            }) || [],
+        };
+      }
+      return table;
+    });
+  };
+
+  const updatedData = mapSeatData(width > 1580 ? data2 : data, tables);
+
   const nonSelectableTables = ["dj-left", "dj-right", "mixologist"];
 
-  const handleSeatSelect = (tableId: string, seatIndex: number) => {
+  const handleSeatSelect = (tableId: any, seatId: any) => {
     if (nonSelectableTables.includes(tableId)) {
       return;
     }
 
     setSelectedSeats((prev) => {
       const tableSeats = prev[tableId] || [];
-      if (tableSeats.includes(seatIndex)) {
+      const seatIdString = seatId.toString();
+
+      if (tableSeats.includes(seatIdString)) {
         return {
           ...prev,
-          [tableId]: tableSeats.filter((i) => i !== seatIndex),
+          [tableId]: tableSeats.filter((id) => id !== seatIdString),
         };
       }
       return {
         ...prev,
-        [tableId]: [...tableSeats, seatIndex],
+        [tableId]: [...tableSeats, seatIdString],
       };
     });
   };
@@ -68,6 +101,19 @@ export const TableSection = () => {
     setIsOpen(true);
   };
 
+  if (isLoading) {
+    return (
+      <div className="h-screen w-full">
+        <div className="flex justify-center items-center h-full flex-col gap-10">
+          <Image src={"/home/logo.webp"} alt="" width={200} height={300} />
+          <p className="text-white text-2xl font-bold animate-pulse">
+            Loading...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[url('/menu/bg.png')] min-h-screen flex flex-col justify-between items-center bg-cover bg-center bg-no-repeat w-full">
       <Animation className="w-full flex justify-center items-center">
@@ -84,46 +130,65 @@ export const TableSection = () => {
         <Animation>
           <div className="flex justify-center relative items-center w-full h-[500px]">
             <div className="relative  w-full h-full max-2xl:overflow-auto">
-              {(width > 1580 ? data2 : data).map((item) => (
-                <div
-                  key={item.id}
-                  className="absolute"
-                  style={{ left: item.x, top: item.y }}
-                >
-                  <div className="relative cursor-pointer">
-                    <SeatTooltip
-                      all={all}
-                      handleOrder={handleOrder}
-                      setSelectedSeats={setSelectedSeats}
-                      selectedSeats={selectedSeats}
-                      tableId={item.id}
-                      seats={item.seats || []}
-                    >
-                      <div onClick={() => handleSeatSelect(item.id, 0)}>
-                        {item.children}
-                      </div>
-                      {item.seats?.map((seat, i) => (
+              {(width > 1580 ? updatedData : updatedData).map(
+                (item: {
+                  id: Key | null | undefined;
+                  x: any;
+                  y: any;
+                  seats: any[];
+                  children: any;
+                }) => (
+                  <div
+                    key={item.id}
+                    className="absolute"
+                    style={{ left: item.x, top: item.y }}
+                  >
+                    <div className="relative cursor-pointer">
+                      <SeatTooltip
+                        all={all}
+                        handleOrder={handleOrder}
+                        setSelectedSeats={setSelectedSeats}
+                        selectedSeats={selectedSeats}
+                        tableId={item.id as string}
+                        seats={item.seats || []}
+                      >
                         <div
-                          key={i}
-                          style={{ left: seat.x, top: seat.y }}
-                          className="absolute"
+                          onClick={() =>
+                            handleSeatSelect(
+                              item.id as string,
+                              item.seats?.[0]._id
+                            )
+                          }
                         >
-                          <div
-                            onClick={() => handleSeatSelect(item.id, i)}
-                            className={`cursor-pointer ${
-                              selectedSeats[item.id]?.includes(i)
-                                ? "opacity-50"
-                                : ""
-                            }`}
-                          >
-                            <Seat seatNumber={i + 1} rotate={seat.rotate} />
-                          </div>
+                          {item.children}
                         </div>
-                      ))}
-                    </SeatTooltip>
+                        {item.seats?.map((seat, i) => (
+                          <div
+                            key={i}
+                            style={{ left: seat.x, top: seat.y }}
+                            className="absolute"
+                          >
+                            <div
+                              onClick={() =>
+                                handleSeatSelect(item.id as string, seat._id)
+                              }
+                              className={`cursor-pointer ${
+                                selectedSeats[item.id as string]?.includes(
+                                  seat._id
+                                ) || seat.status === "ordered"
+                                  ? "opacity-50"
+                                  : ""
+                              }`}
+                            >
+                              <Seat seatNumber={i + 1} rotate={seat.rotate} />
+                            </div>
+                          </div>
+                        ))}
+                      </SeatTooltip>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
           </div>
         </Animation>
@@ -145,6 +210,7 @@ export const TableSection = () => {
         </div>
       </div>
       <OrderModal
+        refetch={refetch}
         tableName={all ? " Organizing events" : Object.keys(selectedSeats)[0]}
         isOpen={isOpen}
         onClose={() => {
@@ -157,8 +223,6 @@ export const TableSection = () => {
     </div>
   );
 };
-
-export default TableSection;
 
 const data = [
   {
@@ -182,7 +246,7 @@ const data = [
       {
         title: "Seat 1",
         image: "/table/seat.png",
-        status: "available",
+        status: "ordered",
         x: "10%",
         y: "105%",
         rotate: "rotate-0",

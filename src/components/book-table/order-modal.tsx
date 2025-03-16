@@ -7,9 +7,10 @@ import localFont from "next/font/local";
 import { Seat } from "./seat";
 import { Button } from "../ui";
 import { toast } from "sonner";
-
 import { FormProvider, useForm } from "react-hook-form";
 import { FormFieldDatePicker } from "../common/custom-calendar";
+import { useMutation } from "@tanstack/react-query";
+import { apiCreateOrder } from "@/store/api";
 
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
@@ -17,101 +18,167 @@ const font = localFont({
   weight: "200",
 });
 
+interface OrderFormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  date: Date;
+}
+
 export const OrderModal = ({
   isOpen,
   onClose,
   seats,
   tableName,
+  refetch,
 }: {
   isOpen: boolean;
   onClose: () => void;
   seats: number[];
   tableName: string;
+  refetch: () => void;
 }) => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    message: "",
+  const [isLoading, setIsLoading] = useState(false);
+  const form = useForm<OrderFormData>({
+    defaultValues: {
+      fullName: "",
+      email: "",
+      phone: "",
+      date: new Date(),
+    },
   });
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const { mutate: createOrder } = useMutation<
+    unknown,
+    unknown,
+    {
+      name: string;
+      phone: string;
+      email: string;
+      tableName: string;
+      seatIds: string[];
+      date: Date;
+    }
+  >({
+    mutationFn: (data) =>
+      apiCreateOrder({
+        ...data,
+        seatIds: data.seatIds.map(String),
+      }),
+
+    onSuccess: () => {
+      setIsLoading(false);
+      toast.success("Order placed successfully");
+      form.reset();
+      onClose();
+      refetch();
+    },
+    onError: () => {
+      toast.error("Order placement failed");
+    },
+  });
+
+  const onSubmit = (data: OrderFormData) => {
+    createOrder({
+      name: data.fullName,
+      phone: data.phone,
+      email: data.email,
+      tableName: tableName,
+      seatIds: seats.map(String),
+      date: data.date,
+    });
   };
-  const form = useForm();
-  const { control } = useForm();
-  const [selectedTime, setSelectedTime] = useState("");
-  const handleOrder = () => {
-    toast.success("Order placed successfully");
-    onClose();
-  };
+
   return (
-    <Modal title={`${tableName} Table `} isOpen={isOpen} onClose={onClose}>
-      <div className="grid w-full gap-10">
-        <Input
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleInputChange}
-          className={cn(
-            font.className,
-            "border-b rounded-none border-[#488457] placeholder:opacity-50 bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+    <Modal title={`${tableName} Table`} isOpen={isOpen} onClose={onClose}>
+      <FormProvider {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid w-full gap-10"
+        >
+          <Input
+            {...form.register("fullName", {
+              required: "Full name is required",
+            })}
+            className={cn(
+              font.className,
+              "border-b rounded-none border-[#488457] placeholder:opacity-50 bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+            )}
+            placeholder="FULL NAME"
+          />
+          {form.formState.errors.fullName && (
+            <span className="text-red-500 text-sm">
+              {form.formState.errors.fullName.message}
+            </span>
           )}
-          placeholder="FULL NAME"
-        />
-        <Input
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          className={cn(
-            font.className,
-            "border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+
+          <Input
+            {...form.register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            })}
+            className={cn(
+              font.className,
+              "border-b rounded-none border-[#488457] placeholder:opacity-50 bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+            )}
+            placeholder="EMAIL ADDRESS"
+          />
+          {form.formState.errors.email && (
+            <span className="text-red-500 text-sm">
+              {form.formState.errors.email.message}
+            </span>
           )}
-          placeholder="EMAIL ADDRESS"
-        />
-        <Input
-          name="phone"
-          value={formData.phone}
-          onChange={handleInputChange}
-          className={cn(
-            font.className,
-            "border-b rounded-none border-[#488457] placeholder:opacity-50  bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+
+          <Input
+            {...form.register("phone", {
+              required: "Phone number is required",
+            })}
+            className={cn(
+              font.className,
+              "border-b rounded-none border-[#488457] placeholder:opacity-50 bg-transparent placeholder:text-[#488457] placeholder:text-2xl placeholder:font-semibold placeholder:font-roba"
+            )}
+            placeholder="PHONE NUMBER"
+          />
+          {form.formState.errors.phone && (
+            <span className="text-red-500 text-sm">
+              {form.formState.errors.phone.message}
+            </span>
           )}
-          placeholder="PHONE NUMBER"
-        />
-        <Input
-          type="time"
-          value={selectedTime}
-          onChange={(e) => setSelectedTime(e.target.value)}
-          className="border-b border-[#488457] bg-transparent text-[#488457] text-2xl font-semibold placeholder:text-[#488457]"
-          placeholder="SELECT TIME"
-        />
-        <FormProvider {...form}>
+
           <FormFieldDatePicker
-            control={control}
+            control={form.control}
             name="date"
             label="Date"
             className="w-full"
           />
-        </FormProvider>
 
-        <div
-          key={tableName}
-          className="flex border  flex-wrap gap-6 py-5 border-[#488457]  pb-10 rounded-lg px-4"
-        >
-          {seats.map((seat, index) => (
-            <Seat
-              key={`${tableName}-${seat}-${index}`}
-              seatNumber={seat + 1}
-              rotate="rotate-0"
-            />
-          ))}
-        </div>
-        <Button
-          onClick={handleOrder}
-          className="bg-[#E78140] hover:bg-[#E78140]/90 text-white rounded-none rounded-tl-3xl"
-        >
-          Order
-        </Button>
-      </div>
+          <div
+            key={tableName}
+            className="flex border flex-wrap gap-6 py-5 border-[#488457] pb-10 rounded-lg px-4"
+          >
+            {seats.map((seat, index) => (
+              <>
+                <Seat
+                  key={`${tableName}-${seat}-${index}`}
+                  seatNumber={index + 1}
+                  rotate="rotate-0"
+                />
+              </>
+            ))}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="bg-[#E78140] hover:bg-[#E78140]/90 text-white rounded-none rounded-tl-3xl"
+          >
+            {isLoading ? "Processing..." : "Order"}
+          </Button>
+        </form>
+      </FormProvider>
     </Modal>
   );
 };

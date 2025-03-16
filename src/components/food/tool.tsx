@@ -7,7 +7,10 @@ import {
 } from "../ui";
 import Image from "next/image";
 import { TagIcon } from "@/icons/tag";
-
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import { ToolMobileModal } from "./tool-mobile-modal";
+import useScreenSize from "@/hook/use-screen";
 export const Position = ({
   title,
   x,
@@ -27,22 +30,29 @@ export const Position = ({
     sour: number;
     herbal: number;
     umami: number;
-    img: string;
+    img: string[];
     ingredients: string;
     by: string;
   };
 }) => {
+  const { width } = useScreenSize();
+  const mobile = width < 768;
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
     <div className="absolute" style={{ left: x, top: y }}>
       <TooltipProvider>
-        <Tooltip open={isOpen} onOpenChange={setIsOpen}>
+        <Tooltip
+          open={isOpen}
+          onOpenChange={mobile ? setIsMobileOpen : setIsOpen}
+        >
           <TooltipTrigger asChild>
             <div
               className="relative z-20 cursor-pointer"
-              onMouseEnter={() => setIsOpen(true)}
-              onMouseLeave={() => setIsOpen(false)}
+              onClick={() => (mobile ? setIsMobileOpen(true) : setIsOpen(true))}
+              onMouseEnter={() => (mobile ? "" : setIsOpen(true))}
+              onMouseLeave={() => (mobile ? "" : setIsOpen(false))}
             >
               <div className="border-2 sm:border-4 w-fit rounded-full">
                 <div className="border-[3px] size-1 sm:size-5 border-[#E78140] rounded-full bg-[#F9DAB2]" />
@@ -54,6 +64,8 @@ export const Position = ({
           </TooltipTrigger>
           {content && (
             <TooltipContent
+              onMouseEnter={() => setIsOpen(true)}
+              onMouseLeave={() => setIsOpen(false)}
               side="right"
               className="z-30 w-fit bg-white text-black  p-4 rounded-none !rounded-tr-[50px]"
             >
@@ -70,13 +82,23 @@ export const Position = ({
                   <p className="text-sm sm:text-lg text-black">{content.tag}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2 h-full">
-                  <Image
-                    className="size-[200px] object-cover rounded-br-lg rounded-tl-lg"
-                    src={content.img}
-                    alt=""
-                    width={200}
-                    height={200}
-                  />
+                  <Swiper
+                    spaceBetween={1}
+                    slidesPerView={1}
+                    className="w-[200px] h-[200px]"
+                  >
+                    {content.img.map((img, index) => (
+                      <SwiperSlide key={index}>
+                        <Image
+                          className=" size-[200px] object-cover rounded-br-lg rounded-tl-lg"
+                          src={img}
+                          alt={`Slide ${index}`}
+                          width={200}
+                          height={200}
+                        />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
                   <div className="flex flex-col justify-between h-full">
                     <div className="flex items-center gap-2">
                       <p>By</p>
@@ -135,6 +157,12 @@ export const Position = ({
           )}
         </Tooltip>
       </TooltipProvider>
+      <ToolMobileModal
+        title={title || ""}
+        content={content}
+        isOpen={isMobileOpen}
+        setIsOpen={mobile ? setIsMobileOpen : setIsOpen}
+      />
     </div>
   );
 };

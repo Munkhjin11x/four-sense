@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { XIcon } from "lucide-react";
@@ -23,6 +24,7 @@ const SeatTooltip = ({
   all: boolean;
   tableId: string;
   seats: {
+    _id: string;
     title: string;
     image: string;
     status: string;
@@ -31,19 +33,19 @@ const SeatTooltip = ({
     rotate: string;
   }[];
   children: React.ReactNode;
-  selectedSeats: { [key: string]: number[] };
-  setSelectedSeats: (seats: { [key: string]: number[] }) => void;
+  selectedSeats: any;
+  setSelectedSeats: any;
 
   handleOrder: (tableId: string) => void;
 }) => {
   const handleSelectAll = () => {
     const allSeatIndices = seats
       .map((_, index) => index)
-      .filter((index) => seats[index].status !== "unavailable");
+      .filter((index) => seats[index].status !== "ordered");
 
     setSelectedSeats({
       ...selectedSeats,
-      [tableId]: allSeatIndices,
+      [tableId]: allSeatIndices.map((index) => seats[index]._id),
     });
   };
 
@@ -72,13 +74,13 @@ const SeatTooltip = ({
                     <Checkbox
                       id={`seat-${tableId}-${index}`}
                       className="cursor-pointer size-4"
-                      checked={selectedSeats[tableId]?.includes(index)}
+                      checked={selectedSeats[tableId]?.includes(seat._id)}
                       disabled={seat.status === "unavailable"}
                       onCheckedChange={(checked) => {
                         const newSelected = checked
-                          ? [...(selectedSeats[tableId] || []), index]
+                          ? [...(selectedSeats[tableId] || []), seat._id]
                           : selectedSeats[tableId]?.filter(
-                              (i) => i !== index
+                              (id: string) => id !== seat._id
                             ) || [];
                         setSelectedSeats({
                           ...selectedSeats,
@@ -99,6 +101,10 @@ const SeatTooltip = ({
                     onClick={handleSelectAll}
                     id={`seat-${tableId}-all`}
                     className="size-4"
+                    checked={
+                      selectedSeats[tableId]?.length ===
+                      seats.filter((seat) => seat.status !== "ordered").length
+                    }
                   />
                   <label htmlFor={`seat-${tableId}-all`} className="text-sm">
                     {`Order table ${tableId}.`}

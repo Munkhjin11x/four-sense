@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { cn } from "@/lib/utils";
 import fonts from "@/constants/fonts";
-import { Navbar } from "@/components/common/navbar";
-import { FooterParallax } from "@/components/common";
 import { Toaster } from "sonner";
 import { QueryProvider } from "@/hook/provider";
 export const metadata: Metadata = {
@@ -55,15 +53,10 @@ export default function RootLayout({
           sizes="<generated>"
         />
       </head>
-      <body
-        suppressHydrationWarning
-        className={cn(fonts.className, "bg-[#F9D9B1]")}
-      >
+      <body suppressHydrationWarning className={cn(fonts.className, "")}>
         <QueryProvider>
           <Toaster />
-          <Navbar />
           {children}
-          <FooterParallax />
         </QueryProvider>
       </body>
     </html>

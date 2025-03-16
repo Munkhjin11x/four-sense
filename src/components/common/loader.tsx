@@ -26,6 +26,7 @@ export const Loader = () => {
           src={CDN_URL + "/images/load-logo.png"}
           width={400}
           height={400}
+          className="max-sm:size-[300px] object-contain"
           alt="Loading Logo"
         />
 
