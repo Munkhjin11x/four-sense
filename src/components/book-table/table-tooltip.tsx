@@ -57,7 +57,7 @@ const SeatTooltip = ({
       <TooltipProvider>
         <Tooltip open={selectedSeats[tableId]?.length > 0}>
           <TooltipTrigger asChild>
-            <div> {children}</div>
+            <div className="cursor-pointer">{children}</div>
           </TooltipTrigger>
           {selectedSeats && (
             <TooltipContent className="bg-white p-2 rounded shadow-lg w-48">
@@ -75,7 +75,7 @@ const SeatTooltip = ({
                       id={`seat-${tableId}-${index}`}
                       className="cursor-pointer size-4"
                       checked={selectedSeats[tableId]?.includes(seat._id)}
-                      disabled={seat.status === "unavailable"}
+                      disabled={seat.status === "ordered"}
                       onCheckedChange={(checked) => {
                         const newSelected = checked
                           ? [...(selectedSeats[tableId] || []), seat._id]

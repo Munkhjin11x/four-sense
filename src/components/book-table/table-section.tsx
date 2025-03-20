@@ -59,7 +59,6 @@ export const TableSection = () => {
     if (nonSelectableTables.includes(tableId)) {
       return;
     }
-
     setSelectedSeats((prev) => {
       const tableSeats = prev[tableId] || [];
       const seatIdString = seatId.toString();
