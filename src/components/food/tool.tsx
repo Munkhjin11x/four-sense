@@ -8,6 +8,7 @@ import {
 import Image from "next/image";
 import { TagIcon } from "@/icons/tag";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { ToolMobileModal } from "./tool-mobile-modal";
 import useScreenSize from "@/hook/use-screen";
@@ -86,6 +87,12 @@ export const Position = ({
                     spaceBetween={1}
                     slidesPerView={1}
                     className="w-[200px] h-[200px]"
+                    modules={[Autoplay]}
+                    autoplay={{
+                      delay: 2000,
+                      disableOnInteraction: false,
+                    }}
+                    loop={true}
                   >
                     {content.img.map((img, index) => (
                       <SwiperSlide key={index}>

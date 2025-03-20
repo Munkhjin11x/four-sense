@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "next/image";
 import { TagIcon } from "@/icons/tag";
 import "swiper/css";
-
+import { Autoplay } from "swiper/modules";
 export const ToolMobileModal = ({
   isOpen,
   setIsOpen,
@@ -33,7 +33,16 @@ export const ToolMobileModal = ({
             <p className="text-sm sm:text-lg text-black">{content.tag}</p>
           </div>
           <div className="grid  gap-2 h-full">
-            <Swiper spaceBetween={1} slidesPerView={1} className="w-full">
+            <Swiper
+              spaceBetween={1}
+              slidesPerView={1}
+              className="w-full"
+              modules={[Autoplay]}
+              autoplay={{
+                delay: 2000,
+                disableOnInteraction: false,
+              }}
+            >
               {content.img.map((img: string, index: number) => (
                 <SwiperSlide className="w-full" key={index}>
                   <Image
