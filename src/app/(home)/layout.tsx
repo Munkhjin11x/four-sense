@@ -8,7 +8,7 @@ import { FooterParallax } from "@/components/common";
 import { Toaster } from "sonner";
 import { QueryProvider } from "@/hook/provider";
 export const metadata: Metadata = {
-  title: "Four Sense",
+  title: "FourSenses",
   description: "Nomad-ability bar ",
 };
 
