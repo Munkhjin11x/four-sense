@@ -261,6 +261,7 @@ export const Navbar = () => {
 
       {hamburgerOpen && (
         <NavbarItemsMobile
+          toggleHamburger={toggleHamburger}
           list={data}
           selectedItem={selectedItem}
           openIndex={openIndex}

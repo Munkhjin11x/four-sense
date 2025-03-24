@@ -12,6 +12,7 @@ export const NavbarItemsMobile = ({
   openIndex,
   setSelectedItem,
   selectedItem,
+  toggleHamburger,
 }: NavbarItemMobilePropsType) => {
   return (
     <div
@@ -35,6 +36,7 @@ export const NavbarItemsMobile = ({
                     href={href}
                     onClick={() => {
                       setSelectedItem(title);
+                      toggleHamburger();
                     }}
                     className={cn(
                       selectedItem == title && "text-[#2F8652]",

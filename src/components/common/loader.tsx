@@ -28,6 +28,8 @@ export const Loader = () => {
           height={400}
           className="max-sm:size-[300px] object-contain"
           alt="Loading Logo"
+          priority={true}
+          quality={75}
         />
 
         <Slider value={[progress]} className="h-0.5 mt-24" />
@@ -38,6 +40,8 @@ export const Loader = () => {
           width={140}
           height={140}
           alt="Bottom Decoration"
+          loading="eager"
+          quality={75}
         />
         <p className="text-[#E78140]">Nomad-Ability Bar</p>
       </div>

@@ -27,6 +27,7 @@ export type NavbarItemMobilePropsType = {
   setSelectedItem: Dispatch<SetStateAction<string | null>>;
   setHamburgerOpen: Dispatch<SetStateAction<boolean>>;
   selectedItem: string | null;
+  toggleHamburger: () => void;
 };
 
 export type NavItemType = {

@@ -7,8 +7,8 @@ import { Position } from "../food/tool";
 export const Ability = () => {
   const position = [
     {
-      x: "74%",
-      y: "40%",
+      x: "75%",
+      y: "39%",
       title: "Cocktails form HERE-E TAL",
       content: {
         title: "OH-RUM (urum)",
@@ -27,7 +27,7 @@ export const Ability = () => {
       },
     },
     {
-      x: "86%",
+      x: "85%",
       y: "50%",
       content: {
         title: "OH-RUM (urum)",
@@ -46,7 +46,7 @@ export const Ability = () => {
       },
     },
     {
-      x: "38%",
+      x: "39.8%",
       y: "34%",
       title: "Cocktails form KHANGAI",
       content: {
@@ -66,7 +66,7 @@ export const Ability = () => {
       },
     },
     {
-      x: "45%",
+      x: "46%",
       y: "54%",
       content: {
         title: "Voila",
@@ -85,7 +85,7 @@ export const Ability = () => {
     },
     {
       x: "6%",
-      y: "34%",
+      y: "35%",
       title: "Cocktails form ALTAI",
       content: {
         title: "Tegri Eternal blue sky",
@@ -103,8 +103,8 @@ export const Ability = () => {
       },
     },
     {
-      x: "21%",
-      y: "54%",
+      x: "22%",
+      y: "52%",
       content: {
         title: "Mountain whisper",
         desc: "Sip the serenity of the mountains-a drink that speaks to your soul Уулсын амгаланг шимнэ үү- таны сэтгэл рүү өнгийдөг ундаа.",
@@ -121,7 +121,7 @@ export const Ability = () => {
       },
     },
     {
-      x: "50%",
+      x: "46%",
       y: "80%",
       title: "Cocktails form GOBI",
       content: {
@@ -142,7 +142,7 @@ export const Ability = () => {
     },
     {
       x: "62%",
-      y: "80%",
+      y: "82%",
       content: {
         title: "OH-RUM (urum)",
         desc: "This cocktial,inspired by the Mongolia nomad break-fast of fesh cream (urum),Blends smoky, savory fla-vors. Pronounce its name very fast,and leam a Mongo-lian word",
