@@ -19,18 +19,10 @@ export default function OrderTable({
   const totalCustomers = invoices
     ? new Set(invoices.map((order) => order.email)).size
     : 0;
-  const recentOrders =
-    invoices?.filter((order) => {
-      const orderDate = new Date(order.orderDate);
-      const today = new Date();
-      const diffTime = today.getTime() - orderDate.getTime();
-      const diffDays = diffTime / (1000 * 3600 * 24);
-      return diffDays <= 7;
-    }).length || 0;
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="border-0 shadow-sm bg-gradient-to-r from-blue-50 to-blue-100">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
@@ -61,24 +53,6 @@ export default function OrderTable({
                 </p>
                 <p className="text-2xl font-bold text-green-900">
                   {totalCustomers}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-sm bg-gradient-to-r from-purple-50 to-purple-100">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 bg-purple-500 rounded-lg">
-                <Calendar className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-purple-600">
-                  Recent Orders
-                </p>
-                <p className="text-2xl font-bold text-purple-900">
-                  {recentOrders}
                 </p>
               </div>
             </div>

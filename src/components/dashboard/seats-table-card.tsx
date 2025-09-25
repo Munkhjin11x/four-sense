@@ -215,11 +215,19 @@ export const SeatsTableCard = ({
                             )
                           }
                         />
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-3">
                           {getStatusIcon(seat.status)}
-                          <span className="font-medium text-gray-900">
-                            {seat.title}
-                          </span>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center">
+                              <span className="font-bold text-blue-700 text-sm">
+                                {seat.title?.match(/\d+/)?.[0] ||
+                                  seat.title?.substring(0, 2)}
+                              </span>
+                            </div>
+                            <span className="font-medium text-gray-900">
+                              {seat.title}
+                            </span>
+                          </div>
                         </div>
                       </div>
                       {getStatusBadge(seat.status)}

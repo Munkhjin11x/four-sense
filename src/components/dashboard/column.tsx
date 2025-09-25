@@ -117,15 +117,9 @@ export const columns: ColumnDef<Order>[] = [
       </div>
     ),
     accessorKey: "tableName",
-    size: 100,
-    maxSize: 120,
-    minSize: 80,
     cell: ({ row }) => (
-      <Badge
-        variant="outline"
-        className="font-medium text-xs whitespace-nowrap"
-      >
-        {row.original.tableName}
+      <Badge variant="outline" className="font-medium">
+        {row.original.tableName} Table
       </Badge>
     ),
   },
@@ -137,32 +131,39 @@ export const columns: ColumnDef<Order>[] = [
       </div>
     ),
     accessorKey: "seats",
-    size: 150,
-    maxSize: 200,
-    minSize: 100,
     cell: ({ row }) => {
       const seats = row.original.seats;
+
       if (!seats || seats.length === 0) {
-        return (
-          <Badge variant="secondary" className="text-xs">
-            No seats
-          </Badge>
-        );
+        return <Badge variant="secondary">No seats</Badge>;
       }
+
+      // Limit displayed badges (e.g. show only 3, rest as "+X more")
+      const visibleSeats = seats.slice(0, 3);
+      const extraSeats = seats.length - visibleSeats.length;
+
       return (
-        <div className="flex flex-wrap gap-1 max-w-[150px]">
-          {seats.slice(0, 1).map((seat, index) => (
+        <div className="flex flex-wrap gap-1">
+          {visibleSeats.map((seat, index) => (
             <Badge
               key={index}
               variant="outline"
-              className="text-xs whitespace-nowrap"
+              className="rounded-full border-gray-300 bg-gray-50 px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-100"
             >
-              {seat.title}
+              {seat.TableSeats.title}
             </Badge>
           ))}
-          {seats.length > 1 && (
-            <Badge variant="secondary" className="text-xs">
-              +{seats.length - 1}
+
+          {extraSeats > 0 && (
+            <Badge
+              variant="secondary"
+              className="rounded-full px-2 py-0.5 text-xs text-gray-600"
+              title={seats
+                .slice(3)
+                .map((s) => s.TableSeats.title)
+                .join(", ")}
+            >
+              +{extraSeats} more
             </Badge>
           )}
         </div>

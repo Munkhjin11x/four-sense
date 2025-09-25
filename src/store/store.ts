@@ -17,8 +17,13 @@ export type Table = {
   tableId: { $oid: string };
   tableName: string;
   tableStatus?: string;
-  seats: Seat[];
+  seats: Seat2[];
   __v: { $numberInt: string };
+};
+export type Seat2 = {
+  _id: { $oid: string };
+  title: string;
+  status: string;
 };
 
 export type OrderList = {
@@ -44,8 +49,18 @@ export type Order = {
   seats?: Seat[];
 };
 
-type Seat = {
-  _id: { $oid: string };
-  title: string;
-  status: string;
+export type Seat = {
+  OrderSeats: {
+    id: number;
+    orderId: number;
+    seatId: number;
+  };
+  TableSeats: {
+    id: number;
+    tableId: number;
+    tableName: string;
+    title: string;
+    status: string;
+    createdAt: string;
+  };
 };
