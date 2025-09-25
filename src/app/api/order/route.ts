@@ -1,16 +1,11 @@
-import {
-  createOrderWithSeats,
-  getDatabase,
-  Orders,
-  Tables,
-  OrderSeats,
-  TableSeats,
-} from "@/lib/db";
+import { createOrderWithSeats } from "@/store/db";
+import { getDb } from "@/lib/db";
+import { Orders, Tables, OrderSeats, TableSeats } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { eq, desc, count } from "drizzle-orm";
 
 export async function POST(req: Request) {
-  const db = getDatabase();
+  const db = getDb();
   try {
     const { name, phone, email, tableName, seatIds, tableId, date } =
       await req.json();
@@ -94,7 +89,7 @@ export async function POST(req: Request) {
 }
 
 export async function GET(request: Request) {
-  const db = getDatabase();
+  const db = getDb();
   const url = new URL(request.url);
 
   const page = parseInt(url.searchParams.get("page") || "1");

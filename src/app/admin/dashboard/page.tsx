@@ -1,19 +1,20 @@
 "use client";
 import { Button, SeatsTableCard } from "@/components";
-import { OrderListTable } from "@/components/dashboard/table-order-list";
+import OrderTable from "@/components/dashboard/table";
+
+import { useSearchParamsWithDefaults } from "@/hook/use-search-params";
 import { Table, useOrderList, useTable } from "@/store/store";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const AdminPage = () => {
   const { data, refetch } = useTable();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const { data: orderList } = useOrderList({
-    page: currentPage,
-    limit: pageSize,
-  });
 
+  const { page, pageLimit } = useSearchParamsWithDefaults();
+  const { data: orderList } = useOrderList({
+    page: page,
+    limit: pageLimit,
+  });
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -42,13 +43,10 @@ const AdminPage = () => {
       </div>
       <div className="w-full h-full mt-4">
         {activeTab === "Order list" && (
-          <OrderListTable
-            data={orderList?.orders ?? []}
-            pagination={orderList?.pagination}
-            currentPage={currentPage}
-            onPageChange={setCurrentPage}
-            pageSize={pageSize}
-            onPageSizeChange={setPageSize}
+          <OrderTable
+            invoices={orderList?.orders ?? []}
+            page={page}
+            pageCount={orderList?.pagination.totalPages}
           />
         )}
         {activeTab === "Table Seats" && (

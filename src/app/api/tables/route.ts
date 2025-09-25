@@ -1,9 +1,10 @@
-import { getDatabase, Tables, TableSeats } from "@/lib/db";
+import { getDb } from "@/lib/db";
+import { Tables, TableSeats } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 
 export async function GET() {
-  const db = getDatabase();
+  const db = getDb();
 
   const tables = await db.select().from(Tables);
 
@@ -31,20 +32,20 @@ export async function GET() {
   return NextResponse.json(tablesWithSeats);
 }
 export async function POST(req: Request) {
-  const db = getDatabase();
+  const db = getDb();
   const { tableName } = await req.json();
   const table = await db.insert(Tables).values({ tableName });
   return NextResponse.json(table);
 }
 export async function DELETE(req: Request) {
-  const db = getDatabase();
+  const db = getDb();
   const { id } = await req.json();
   await db.delete(Tables).where(eq(Tables.id, id));
   return NextResponse.json({ message: "Table deleted" });
 }
 
 export async function PUT(req: Request) {
-  const db = getDatabase();
+  const db = getDb();
   const { id, tableName } = await req.json();
   await db.update(Tables).set({ tableName }).where(eq(Tables.id, id));
   return NextResponse.json({ message: "Table updated" });

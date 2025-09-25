@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { AdminUsers } from "@/db/schema";
-import { getDatabase } from "@/lib/db";
+import { getDb } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
 
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const db = getDatabase();
+    const db = getDb();
 
     const hashedPassword = crypto
       .createHash("sha256")

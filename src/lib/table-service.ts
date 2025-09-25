@@ -1,4 +1,5 @@
-import { Database, Tables, TableSeats } from "@/lib/db";
+import { Database } from "@/db";
+import { Tables, TableSeats } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export const createTable = async (db: Database, tableName: string) => {

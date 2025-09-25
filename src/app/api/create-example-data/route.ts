@@ -1,11 +1,11 @@
-import { getDatabase } from "@/lib/db";
+import { getDb } from "@/lib/db";
 
 import { createTable, createTableSeat } from "@/lib/table-service";
 import { NextResponse } from "next/server";
 
 export async function POST() {
   try {
-    const db = getDatabase();
+    const db = getDb();
 
     // Create c1 table with 6 seats
     console.log("Creating table 'a1'...");
