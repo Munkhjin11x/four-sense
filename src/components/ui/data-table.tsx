@@ -95,7 +95,7 @@ export default function DataTable<TData, TValue>({
           className
         )}
       >
-        <Table className="relative min-w-full table-fixed">
+        <Table className="relative min-w-[800px] table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -108,7 +108,7 @@ export default function DataTable<TData, TValue>({
                         minWidth: header.column.columnDef.minSize,
                         maxWidth: header.column.columnDef.maxSize,
                       }}
-                      className="whitespace-nowrap px-4 py-3 text-left font-medium"
+                      className="whitespace-nowrap px-2 sm:px-4 py-3 text-left font-medium text-xs sm:text-sm"
                     >
                       {header.isPlaceholder
                         ? null
@@ -137,7 +137,7 @@ export default function DataTable<TData, TValue>({
                         minWidth: cell.column.columnDef.minSize,
                         maxWidth: cell.column.columnDef.maxSize,
                       }}
-                      className="px-4 py-3 text-sm"
+                      className="px-2 sm:px-4 py-3 text-xs sm:text-sm"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -164,14 +164,14 @@ export default function DataTable<TData, TValue>({
 
       <div className="flex flex-col items-center justify-end gap-2 space-x-2 py-4 sm:flex-row">
         <div className="flex w-full items-center justify-between">
-          <div className="flex-1 text-sm text-muted-foreground">
+          <div className="flex-1 text-xs sm:text-sm text-muted-foreground">
             {table.getFilteredSelectedRowModel().rows.length} of{" "}
             {table.getFilteredRowModel().rows.length} row(s) selected.
           </div>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
             <div className="flex items-center space-x-2">
-              <p className="whitespace-nowrap text-sm font-medium">
-                Rows per page
+              <p className="whitespace-nowrap text-xs sm:text-sm font-medium">
+                Per page
               </p>
               <Select
                 value={`${table.getState().pagination.pageSize}`}
@@ -196,8 +196,9 @@ export default function DataTable<TData, TValue>({
           </div>
         </div>
         <div className="flex w-full items-center justify-between gap-2 sm:justify-end">
-          <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
+          <div className="flex w-[80px] sm:w-[100px] items-center justify-center text-xs sm:text-sm font-medium">
+            <span className="hidden sm:inline">Page </span>
+            {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
           </div>
           <div className="flex items-center space-x-2">

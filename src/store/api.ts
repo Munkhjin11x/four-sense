@@ -1,6 +1,14 @@
 // Use local development API or production URL based on environment
 const baseUrl = "";
 
+interface ApiError {
+  error?: string;
+}
+
+function isApiError(obj: unknown): obj is ApiError {
+  return typeof obj === "object" && obj !== null && "error" in obj;
+}
+
 export async function apiLogin<T>(data: {
   username: string;
   password: string;
@@ -15,7 +23,10 @@ export async function apiLogin<T>(data: {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || "Login failed");
+    const errorMessage = isApiError(errorData)
+      ? errorData.error
+      : "Login failed";
+    throw new Error(errorMessage);
   }
 
   return response.json();
@@ -35,7 +46,9 @@ export async function apiSignup<T>(data: {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || "Signup failed");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const errorMessage = (errorData as any)?.error || "Signup failed";
+    throw new Error(errorMessage);
   }
 
   return response.json();
@@ -101,7 +114,10 @@ export async function apiCreateOrder<T>(data: {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || "Order creation failed");
+    const errorMessage = isApiError(errorData)
+      ? errorData.error
+      : "Order creation failed";
+    throw new Error(errorMessage || "Order creation failed");
   }
 
   return response.json();

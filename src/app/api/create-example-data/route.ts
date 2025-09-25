@@ -9,7 +9,7 @@ export async function POST() {
 
     // Create c1 table with 6 seats
     console.log("Creating table 'a1'...");
-    const tableC1 = await createTable(db, "a5");
+    const tableC1 = await createTable(db, "a3");
     console.log("Created table c1:", tableC1);
 
     console.log("Creating 3 seats for table c1...");
@@ -18,7 +18,7 @@ export async function POST() {
       const seat = await createTableSeat(
         db,
         tableC1.id,
-        "a5",
+        "a3",
         `Seat ${i}`,
         "available"
       );

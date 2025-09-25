@@ -7,3 +7,5 @@ export * from "./dialog";
 export * from "./animation";
 export * from "./tooltip";
 export * from "./table";
+export * from "./card";
+export * from "./badge";

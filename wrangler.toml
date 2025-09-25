@@ -1,6 +1,15 @@
 name = "four-sense"
+main = ".open-next/worker.js"
 account_id = "544971d734e2d2605d77624f56f6e72d"
 compatibility_date = "2024-09-25"
+compatibility_flags = ["nodejs_compat","global_fetch_strictly_public"]
+
+[assets]
+binding = "ASSETS"
+directory = ".open-next/assets"
+
+[observability]
+enabled = true
 
 [[d1_databases]]
 binding = "DB"

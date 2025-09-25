@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "f5f950a5-4595-4a21-9e4a-ec4914fdcfba",
+  "id": "7a1d2262-e18a-44c3-a6f7-540dbbee7d69",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "AdminUsers": {
@@ -158,9 +158,8 @@
           "name": "order_date",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP"
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},

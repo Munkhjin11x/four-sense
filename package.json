@@ -12,8 +12,6 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:prod:generate": "drizzle-kit generate --config=drizzle.prod.ts",
-    "db:prod:push": "drizzle-kit push --config=drizzle.prod.ts",
     "wrangler": "wrangler",
     "cf:login": "wrangler auth login",
     "cf:deploy": "wrangler deploy",

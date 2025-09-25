@@ -1,0 +1,3 @@
+export const production = {"CLOUDFLARE_ACCOUNT_ID":"544971d734e2d2605d77624f56f6e72d","CLOUDFLARE_DATABASE_ID":"1ac8c424-7722-4894-92e6-6473bf090abc","CLOUDFLARE_D1_API_TOKEN":"your_api_token_here","NEXT_PUBLIC_ENV":"development"};
+export const development = {"CLOUDFLARE_ACCOUNT_ID":"544971d734e2d2605d77624f56f6e72d","CLOUDFLARE_DATABASE_ID":"1ac8c424-7722-4894-92e6-6473bf090abc","CLOUDFLARE_D1_API_TOKEN":"your_api_token_here","NEXT_PUBLIC_ENV":"development"};
+export const test = {};
