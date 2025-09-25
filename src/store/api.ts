@@ -1,8 +1,5 @@
 // Use local development API or production URL based on environment
-const baseUrl =
-  process.env.NODE_ENV === "development"
-    ? "" // Use relative URLs for local development
-    : "https://foursenses.onrender.com"; // Production URL
+const baseUrl = "";
 
 export async function apiLogin<T>(data: {
   username: string;
