@@ -19,8 +19,9 @@ import { useTable } from "@/store/store";
 export const TableSection = () => {
   const { width } = useScreenSize();
   const [selectedSeats, setSelectedSeats] = useState<{
-    [key: string]: number[];
+    [key: string]: string[];
   }>({});
+
   const [isOpen, setIsOpen] = useState(false);
   const [all, setAll] = useState(false);
 
@@ -61,7 +62,9 @@ export const TableSection = () => {
     }
     setSelectedSeats((prev) => {
       const tableSeats = prev[tableId] || [];
-      const seatIdString = seatId.toString();
+      // Handle both object format {$oid: "string"} and direct string format
+      const seatIdString =
+        typeof seatId === "object" && seatId?.$oid ? seatId.$oid : seatId;
 
       if (tableSeats.includes(seatIdString)) {
         return {
@@ -83,8 +86,10 @@ export const TableSection = () => {
 
     currentData.forEach((table) => {
       if (table.seats && table.seats.length > 0) {
-        (allSeatsSelected as { [key: string]: number[] })[table.id] =
-          Array.from({ length: table.seats.length }, (_, i) => i);
+        (allSeatsSelected as { [key: string]: string[] })[table.id] =
+          Array.from({ length: table.seats.length }, (_, index) =>
+            index.toString()
+          );
       }
     });
 
@@ -155,7 +160,7 @@ export const TableSection = () => {
                           onClick={() =>
                             handleSeatSelect(
                               item.id as string,
-                              item.seats?.[0]._id
+                              item.seats?.[0]?._id.$oid
                             )
                           }
                         >
@@ -173,7 +178,7 @@ export const TableSection = () => {
                               }
                               className={`cursor-pointer ${
                                 selectedSeats[item.id as string]?.includes(
-                                  seat._id
+                                  seat._id?.$oid || seat._id
                                 ) || seat.status === "ordered"
                                   ? "opacity-50"
                                   : ""
@@ -217,7 +222,31 @@ export const TableSection = () => {
           setSelectedSeats({});
           setAll(false);
         }}
-        seats={Object.values(selectedSeats).flat()}
+        seats={(() => {
+          if (all) {
+            return Object.values(selectedSeats)
+              .flat()
+              .map((seat) => ({ $oid: seat.toString() }));
+          }
+
+          // For single table orders, preserve seat position information
+          const tableName = Object.keys(selectedSeats)[0];
+          const tableData = updatedData.find(
+            (table: any) => table.id === tableName
+          );
+          const selectedSeatIds = selectedSeats[tableName] || [];
+
+          return selectedSeatIds.map((seatId) => {
+            const seatIndex =
+              tableData?.seats?.findIndex(
+                (seat: any) => seat._id?.$oid === seatId || seat._id === seatId
+              ) ?? -1;
+            return {
+              $oid: seatId.toString(),
+              seatNumber: seatIndex + 1,
+            };
+          });
+        })()}
       />
     </div>
   );

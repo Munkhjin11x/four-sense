@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { apiLogin } from "@/store/api";
-import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -36,9 +35,7 @@ const LoginPage = () => {
     onError: (error) => {
       setIsLoading(false);
       console.log(error);
-      if (isAxiosError(error)) {
-        toast.error(error.response?.data?.message || "Login failed");
-      } else if (error instanceof Error) {
+      if (error instanceof Error) {
         toast.error(error.message);
       } else {
         toast.error("An unexpected error occurred");

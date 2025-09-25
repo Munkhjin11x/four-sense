@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+
 import { Modal } from "../common/modal";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
@@ -34,11 +34,10 @@ export const OrderModal = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  seats: number[];
+  seats: { $oid: string; seatNumber?: number }[];
   tableName: string;
   refetch: () => void;
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<OrderFormData>({
     defaultValues: {
       fullName: "",
@@ -48,33 +47,32 @@ export const OrderModal = ({
     },
   });
 
-  const { mutate: createOrder } = useMutation<
+  const { mutate: createOrder, isPending } = useMutation<
     unknown,
-    unknown,
+    Error,
     {
       name: string;
       phone: string;
       email: string;
       tableName: string;
-      seatIds: string[];
+      seatIds: { $oid: string; seatNumber?: number }[];
       date: Date;
     }
   >({
     mutationFn: (data) =>
       apiCreateOrder({
         ...data,
-        seatIds: data.seatIds.map(String),
+        seatIds: data.seatIds.map((seat) => seat.$oid),
       }),
 
     onSuccess: () => {
-      setIsLoading(false);
       toast.success("Order placed successfully");
       form.reset();
       onClose();
       refetch();
     },
-    onError: () => {
-      toast.error("Order placement failed");
+    onError: (error: Error) => {
+      toast.error(error.message || "Order placement failed");
     },
   });
 
@@ -84,7 +82,7 @@ export const OrderModal = ({
       phone: data.phone,
       email: data.email,
       tableName: tableName,
-      seatIds: seats.map(String),
+      seatIds: seats,
       date: data.date,
     });
   };
@@ -156,26 +154,24 @@ export const OrderModal = ({
           />
 
           <div
-            key={tableName}
+            key={`${tableName}-${seats.join("-")}`}
             className="flex border flex-wrap gap-6 py-5 border-[#488457] pb-10 rounded-lg px-4"
           >
             {seats.map((seat, index) => (
-              <>
-                <Seat
-                  key={`${tableName}-${seat}-${index}`}
-                  seatNumber={index + 1}
-                  rotate="rotate-0"
-                />
-              </>
+              <Seat
+                key={`${tableName}-${seat.$oid}-${index}`}
+                seatNumber={seat.seatNumber ?? index + 1}
+                rotate="rotate-0"
+              />
             ))}
           </div>
 
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={isPending}
             className="bg-[#E78140] hover:bg-[#E78140]/90 text-white rounded-none rounded-tl-3xl"
           >
-            {isLoading ? "Processing..." : "Order"}
+            {isPending ? "Processing..." : "Order"}
           </Button>
         </form>
       </FormProvider>

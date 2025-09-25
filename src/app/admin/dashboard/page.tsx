@@ -7,7 +7,13 @@ import { useEffect, useState } from "react";
 
 const AdminPage = () => {
   const { data, refetch } = useTable();
-  const { data: orderList } = useOrderList();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const { data: orderList } = useOrderList({
+    page: currentPage,
+    limit: pageSize,
+  });
+
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -36,7 +42,14 @@ const AdminPage = () => {
       </div>
       <div className="w-full h-full mt-4">
         {activeTab === "Order list" && (
-          <OrderListTable data={orderList?.orders ?? []} />
+          <OrderListTable
+            data={orderList?.orders ?? []}
+            pagination={orderList?.pagination}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+            pageSize={pageSize}
+            onPageSizeChange={setPageSize}
+          />
         )}
         {activeTab === "Table Seats" && (
           <SeatsTableCard refetch={refetch} data={data as Table[]} />

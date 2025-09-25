@@ -2,43 +2,50 @@ import { useQuery } from "@tanstack/react-query";
 import { apiOrderList, apiTables } from "./api";
 
 export const useTable = () => {
-  return useQuery({ queryKey: ["tables"], queryFn: apiTables });
+  return useQuery<Table[]>({ queryKey: ["tables"], queryFn: apiTables });
 };
 
-export const useOrderList = () => {
+export const useOrderList = (params?: { page?: number; limit?: number }) => {
   return useQuery<OrderList>({
-    queryKey: ["order-list"],
-    queryFn: apiOrderList,
+    queryKey: ["order-list", params?.page, params?.limit],
+    queryFn: () => apiOrderList(params),
   });
+};
+
+export type Table = {
+  _id: { $oid: string };
+  tableId: { $oid: string };
+  tableName: string;
+  tableStatus?: string;
+  seats: Seat[];
+  __v: { $numberInt: string };
 };
 
 export type OrderList = {
   orders: Order[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    total: number;
+    limit: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
 };
 
 export type Order = {
-  _doc: {
-    _id: string;
-    name: string;
-    phone: string;
-    email: string;
-    orderStatus: string;
-    orderDate: string;
-    tableName: string;
-    orderTotal: number;
-  };
-  seats: Seat[];
-};
-
-export type Table = {
-  _id: string;
+  id: number;
+  tableId: number;
   tableName: string;
-  tableStatus: string;
-  seats: Seat[];
+  name: string;
+  phone: string;
+  email: string;
+  orderDate: string;
+  seats?: Seat[];
 };
 
 type Seat = {
-  _id: string;
+  _id: { $oid: string };
   title: string;
   status: string;
 };

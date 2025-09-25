@@ -1,4 +1,8 @@
-const baseUrl = "https://foursenses.onrender.com";
+// Use local development API or production URL based on environment
+const baseUrl =
+  process.env.NODE_ENV === "development"
+    ? "" // Use relative URLs for local development
+    : "https://foursenses.onrender.com"; // Production URL
 
 export async function apiLogin<T>(data: {
   username: string;
@@ -13,14 +17,35 @@ export async function apiLogin<T>(data: {
   });
 
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || "Login failed");
+  }
+
+  return response.json();
+}
+
+export async function apiSignup<T>(data: {
+  email: string;
+  password: string;
+}): Promise<T> {
+  const response = await fetch(`${baseUrl}/api/signup`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || "Signup failed");
   }
 
   return response.json();
 }
 
 export async function apiTables<T>(): Promise<T> {
-  const response = await fetch(`${baseUrl}/api/table/get-table-seats`);
+  const response = await fetch(`${baseUrl}/api/tables`);
   return response.json();
 }
 
@@ -42,8 +67,18 @@ export async function apiUpdateTableSeat<T>(data: {
   return response.json();
 }
 
-export async function apiOrderList<T>(): Promise<T> {
-  const response = await fetch(`${baseUrl}/api/order/get-orders`);
+export async function apiOrderList<T>(params?: {
+  page?: number;
+  limit?: number;
+}): Promise<T> {
+  const searchParams = new URLSearchParams();
+  if (params?.page) searchParams.append("page", params.page.toString());
+  if (params?.limit) searchParams.append("limit", params.limit.toString());
+
+  const url = `${baseUrl}/api/order${
+    searchParams.toString() ? `?${searchParams.toString()}` : ""
+  }`;
+  const response = await fetch(url);
   return response.json();
 }
 
@@ -51,16 +86,26 @@ export async function apiCreateOrder<T>(data: {
   name: string;
   phone: string;
   email: string;
-
   tableName: string;
   seatIds: string[];
+  date: Date;
 }): Promise<T> {
-  const response = await fetch(`${baseUrl}/api/order/create-order`, {
+  console.log("API call data:", data);
+  console.log("API call date:", data.date, typeof data.date);
+  console.log("API call JSON:", JSON.stringify(data));
+
+  const response = await fetch(`${baseUrl}/api/order`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
   });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || "Order creation failed");
+  }
+
   return response.json();
 }

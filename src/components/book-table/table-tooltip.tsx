@@ -24,7 +24,7 @@ const SeatTooltip = ({
   all: boolean;
   tableId: string;
   seats: {
-    _id: string;
+    _id: { $oid: string };
     title: string;
     image: string;
     status: string;
@@ -45,7 +45,7 @@ const SeatTooltip = ({
 
     setSelectedSeats({
       ...selectedSeats,
-      [tableId]: allSeatIndices.map((index) => seats[index]._id),
+      [tableId]: allSeatIndices.map((index) => seats[index]._id?.$oid),
     });
   };
 
@@ -74,13 +74,13 @@ const SeatTooltip = ({
                     <Checkbox
                       id={`seat-${tableId}-${index}`}
                       className="cursor-pointer size-4"
-                      checked={selectedSeats[tableId]?.includes(seat._id)}
+                      checked={selectedSeats[tableId]?.includes(seat._id?.$oid)}
                       disabled={seat.status === "ordered"}
                       onCheckedChange={(checked) => {
                         const newSelected = checked
-                          ? [...(selectedSeats[tableId] || []), seat._id]
+                          ? [...(selectedSeats[tableId] || []), seat._id?.$oid]
                           : selectedSeats[tableId]?.filter(
-                              (id: string) => id !== seat._id
+                              (id: string) => id !== seat._id?.$oid
                             ) || [];
                         setSelectedSeats({
                           ...selectedSeats,
