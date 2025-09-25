@@ -5,28 +5,20 @@ import OrderTable from "@/components/dashboard/table";
 import { useSearchParamsWithDefaults } from "@/hook/use-search-params";
 import { Table, useOrderList, useTable } from "@/store/store";
 import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
-const AdminPage = () => {
+// Client component that uses search params
+const AdminDashboardContent = () => {
   const { data, refetch } = useTable();
-
   const { page, pageLimit } = useSearchParamsWithDefaults();
   const { data: orderList } = useOrderList({
     page: page,
     limit: pageLimit,
   });
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      redirect("/admin/login");
-    }
-    setIsClient(true);
-  }, []);
 
   const TabText = ["Order list", "Table Seats"];
   const [activeTab, setActiveTab] = useState("Order list");
-  if (!isClient) return null;
+
   return (
     <div className=" w-full flex flex-col bg-white p-4 h-full">
       <div className="flex gap-2">
@@ -54,6 +46,32 @@ const AdminPage = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const AdminPage = () => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      redirect("/admin/login");
+    }
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
+
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full h-full flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <AdminDashboardContent />
+    </Suspense>
   );
 };
 
