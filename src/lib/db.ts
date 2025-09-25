@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import { drizzle } from "drizzle-orm/d1";
 import * as schema from "@/db/schema";
 
@@ -14,16 +15,98 @@ export function getDatabase(
   d1Database?: D1Database
 ): NonNullable<ReturnType<typeof drizzle>> {
   if (!db) {
-    if (process.env.NODE_ENV === "development" || !d1Database) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const Database = require("better-sqlite3");
-      const sqlite = new Database("dev.db");
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { drizzle: drizzleSqlite } = require("drizzle-orm/better-sqlite3");
-      db = drizzleSqlite(sqlite, { schema });
-    } else {
-      // Production: use D1
+    if (process.env.NODE_ENV === "development") {
+      // Development: use better-sqlite3 with local db file
+      try {
+        const Database = require("better-sqlite3");
+        const sqlite = new Database("dev.db");
+
+        const {
+          drizzle: drizzleSqlite,
+        } = require("drizzle-orm/better-sqlite3");
+        db = drizzleSqlite(sqlite, { schema });
+      } catch (error) {
+        console.error("Failed to initialize development database:", error);
+        throw new Error("Development database initialization failed");
+      }
+    } else if (d1Database) {
+      // Cloudflare Workers/Pages: use D1 binding
       db = drizzle(d1Database, { schema });
+    } else {
+      // For Vercel deployment: use SQLite in-memory fallback
+      // This requires the admin user to be pre-seeded
+      try {
+        const Database = require("better-sqlite3");
+        const sqlite = new Database(":memory:");
+
+        const {
+          drizzle: drizzleSqlite,
+        } = require("drizzle-orm/better-sqlite3");
+        db = drizzleSqlite(sqlite, { schema });
+
+        // Create the AdminUsers table and seed it
+        sqlite.exec(`
+          CREATE TABLE IF NOT EXISTS AdminUsers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+          );
+        `);
+
+        // Create other tables for basic functionality
+        sqlite.exec(`
+          CREATE TABLE IF NOT EXISTS Tables (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            table_name TEXT NOT NULL,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+          );
+        `);
+
+        sqlite.exec(`
+          CREATE TABLE IF NOT EXISTS TableSeats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            table_id INTEGER NOT NULL REFERENCES Tables(id) ON DELETE CASCADE,
+            table_name TEXT NOT NULL,
+            title TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'available',
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+          );
+        `);
+
+        sqlite.exec(`
+          CREATE TABLE IF NOT EXISTS Orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            table_id INTEGER NOT NULL REFERENCES Tables(id) ON DELETE CASCADE,
+            table_name TEXT NOT NULL,
+            name TEXT NOT NULL,
+            phone TEXT NOT NULL,
+            email TEXT NOT NULL,
+            order_date TEXT NOT NULL
+          );
+        `);
+
+        sqlite.exec(`
+          CREATE TABLE IF NOT EXISTS OrderSeats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            order_id INTEGER NOT NULL REFERENCES Orders(id) ON DELETE CASCADE,
+            seat_id INTEGER NOT NULL REFERENCES TableSeats(id) ON DELETE CASCADE
+          );
+        `);
+
+        // Insert the admin user (password is SHA256 hash of "admin123")
+        const adminPassword =
+          "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
+        sqlite.exec(`
+          INSERT OR IGNORE INTO AdminUsers (email, password) 
+          VALUES ('admin@foursenses.com', '${adminPassword}');
+        `);
+
+        console.log("Initialized in-memory database with admin user");
+      } catch (error) {
+        console.error("Failed to initialize in-memory database:", error);
+        throw new Error("Database initialization failed");
+      }
     }
   }
 
