@@ -4,9 +4,15 @@ import { getDatabase } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
 
+interface SignupRequest {
+  email: string;
+  password: string;
+}
+
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
+    const body = await req.json();
+    const { email, password } = body as SignupRequest;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -39,7 +45,7 @@ export async function POST(req: Request) {
       .digest("hex");
 
     // Insert new user
-    const result = await db.insert(AdminUsers).values({
+    await db.insert(AdminUsers).values({
       email,
       password: hashedPassword,
     });
@@ -47,7 +53,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: "User created successfully",
-      user: result[0],
+      user: { email },
     });
   } catch (error) {
     console.error("Signup error:", error);

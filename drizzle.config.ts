@@ -1,8 +1,15 @@
+import path from "node:path";
 import { defineConfig } from "drizzle-kit";
 
+function getLocalD1DB() {
+  // Use a simple local sqlite file for development
+  const localDbPath = path.resolve("dev.db");
+  return localDbPath;
+}
+
 export default defineConfig({
-  schema: "./src/db/schema.ts",
   dialect: "sqlite",
+  schema: "./src/db/schema.ts",
   out: "./drizzle",
   ...(process.env.NODE_ENV === "production"
     ? {
@@ -15,7 +22,7 @@ export default defineConfig({
       }
     : {
         dbCredentials: {
-          url: "./dev.db",
+          url: getLocalD1DB(),
         },
       }),
 });

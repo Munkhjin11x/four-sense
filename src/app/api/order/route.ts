@@ -4,11 +4,22 @@ import { Orders, Tables, OrderSeats, TableSeats } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { eq, desc } from "drizzle-orm";
 
+interface CreateOrderRequest {
+  name: string;
+  phone: string;
+  email: string;
+  tableName: string;
+  seatIds: (string | number)[];
+  tableId?: number;
+  date?: string;
+}
+
 export async function POST(req: Request) {
   const db = getDatabase();
   try {
+    const body = await req.json();
     const { name, phone, email, tableName, seatIds, tableId, date } =
-      await req.json();
+      body as CreateOrderRequest;
 
     // Debug: Log the received date
     console.log("Received date:", date, typeof date);

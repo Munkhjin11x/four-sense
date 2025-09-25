@@ -3,11 +3,17 @@ import { TableSeats } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { eq, and, inArray } from "drizzle-orm";
 
+interface UpdateSeatStatusRequest {
+  tableName: string;
+  seatIds: string[];
+}
+
 export async function PUT(req: Request) {
   const db = getDatabase();
 
   try {
-    const { tableName, seatIds } = await req.json();
+    const body = await req.json();
+    const { tableName, seatIds } = body as UpdateSeatStatusRequest;
 
     if (!tableName || !seatIds || !Array.isArray(seatIds)) {
       return NextResponse.json(

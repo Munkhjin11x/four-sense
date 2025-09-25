@@ -4,9 +4,15 @@ import { getDatabase } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
 
+interface LoginRequest {
+  username: string;
+  password: string;
+}
+
 export async function POST(req: Request) {
   try {
-    const { username, password } = await req.json();
+    const body = await req.json();
+    const { username, password } = body as LoginRequest;
 
     if (!username || !password) {
       return NextResponse.json(

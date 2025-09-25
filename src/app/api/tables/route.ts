@@ -3,6 +3,19 @@ import { Tables, TableSeats } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 
+interface CreateTableRequest {
+  tableName: string;
+}
+
+interface DeleteTableRequest {
+  id: number;
+}
+
+interface UpdateTableRequest {
+  id: number;
+  tableName: string;
+}
+
 export async function GET() {
   try {
     const db = getDatabase();
@@ -40,20 +53,23 @@ export async function GET() {
 }
 export async function POST(req: Request) {
   const db = getDatabase();
-  const { tableName } = await req.json();
+  const body = await req.json();
+  const { tableName } = body as CreateTableRequest;
   const table = await db.insert(Tables).values({ tableName });
   return NextResponse.json(table);
 }
 export async function DELETE(req: Request) {
   const db = getDatabase();
-  const { id } = await req.json();
+  const body = await req.json();
+  const { id } = body as DeleteTableRequest;
   await db.delete(Tables).where(eq(Tables.id, id));
   return NextResponse.json({ message: "Table deleted" });
 }
 
 export async function PUT(req: Request) {
   const db = getDatabase();
-  const { id, tableName } = await req.json();
+  const body = await req.json();
+  const { id, tableName } = body as UpdateTableRequest;
   await db.update(Tables).set({ tableName }).where(eq(Tables.id, id));
   return NextResponse.json({ message: "Table updated" });
 }
