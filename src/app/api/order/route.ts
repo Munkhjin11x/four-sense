@@ -1,11 +1,11 @@
 import { createOrderWithSeats } from "@/store/db";
-import { getDb } from "@/lib/db";
+import { getDatabase } from "@/lib/db";
 import { Orders, Tables, OrderSeats, TableSeats } from "@/db/schema";
 import { NextResponse } from "next/server";
-import { eq, desc, count } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 export async function POST(req: Request) {
-  const db = getDb();
+  const db = getDatabase();
   try {
     const { name, phone, email, tableName, seatIds, tableId, date } =
       await req.json();
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
 }
 
 export async function GET(request: Request) {
-  const db = getDb();
+  const db = getDatabase();
   const url = new URL(request.url);
 
   const page = parseInt(url.searchParams.get("page") || "1");
@@ -101,20 +101,12 @@ export async function GET(request: Request) {
   const offset = (validPage - 1) * validLimit;
 
   try {
-    // Get total count
-    const [totalResult] = await db.select({ count: count() }).from(Orders);
-    const total = totalResult.count;
+    // Get total count - simple approach
+    const allOrders = await db.select().from(Orders);
+    const total = allOrders.length;
 
     const orders = await db
-      .select({
-        id: Orders.id,
-        tableId: Orders.tableId,
-        tableName: Orders.tableName,
-        name: Orders.name,
-        phone: Orders.phone,
-        email: Orders.email,
-        orderDate: Orders.orderDate,
-      })
+      .select()
       .from(Orders)
       .orderBy(desc(Orders.orderDate))
       .limit(validLimit)
@@ -123,11 +115,7 @@ export async function GET(request: Request) {
     const ordersWithSeats = await Promise.all(
       orders.map(async (order) => {
         const seats = await db
-          .select({
-            id: TableSeats.id,
-            title: TableSeats.title,
-            status: TableSeats.status,
-          })
+          .select()
           .from(OrderSeats)
           .innerJoin(TableSeats, eq(OrderSeats.seatId, TableSeats.id))
           .where(eq(OrderSeats.orderId, order.id));

@@ -1,9 +1,9 @@
 import { Orders } from "@/db/schema";
-import { Database } from "@/db";
+import { getDatabase } from "@/lib/db";
 import { and, eq, gte } from "drizzle-orm";
 import * as schema from "@/db/schema";
 export async function checkOrderEligibility(
-  db: Database,
+  db: ReturnType<typeof getDatabase>,
   orderData: { name: string; phone: string; email: string }
 ) {
   const threeHoursAgo = new Date(Date.now() - 3 * 60 * 60 * 1000);
@@ -34,7 +34,7 @@ export async function checkOrderEligibility(
 }
 
 export async function createOrderWithSeats(
-  db: Database,
+  db: ReturnType<typeof getDatabase>,
   orderData: {
     tableId: number;
     tableName: string;
@@ -48,38 +48,35 @@ export async function createOrderWithSeats(
   // Check eligibility first
   await checkOrderEligibility(db, orderData);
 
-  // Begin transaction
-  return await db.transaction(async (tx) => {
-    // Create the order
-    const [order] = await tx
-      .insert(Orders)
-      .values({
-        tableId: orderData.tableId,
-        tableName: orderData.tableName,
-        name: orderData.name,
-        phone: orderData.phone,
-        email: orderData.email,
-        orderDate: orderData.date,
-      })
-      .returning();
+  // Create the order
+  const [order] = await db
+    .insert(Orders)
+    .values({
+      tableId: orderData.tableId,
+      tableName: orderData.tableName,
+      name: orderData.name,
+      phone: orderData.phone,
+      email: orderData.email,
+      orderDate: orderData.date,
+    })
+    .returning();
 
-    const { OrderSeats, TableSeats } = schema;
-    if (orderData.seatIds.length > 0) {
-      await tx.insert(OrderSeats).values(
-        orderData.seatIds.map((seatId) => ({
-          orderId: order.id,
-          seatId: seatId,
-        }))
-      );
+  const { OrderSeats, TableSeats } = schema;
+  if (orderData.seatIds.length > 0) {
+    await db.insert(OrderSeats).values(
+      orderData.seatIds.map((seatId) => ({
+        orderId: order.id,
+        seatId: seatId,
+      }))
+    );
 
-      for (const seatId of orderData.seatIds) {
-        await tx
-          .update(TableSeats)
-          .set({ status: "ordered" })
-          .where(eq(TableSeats.id, seatId));
-      }
+    for (const seatId of orderData.seatIds) {
+      await db
+        .update(TableSeats)
+        .set({ status: "ordered" })
+        .where(eq(TableSeats.id, seatId));
     }
+  }
 
-    return order;
-  });
+  return order;
 }

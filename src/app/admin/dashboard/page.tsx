@@ -46,7 +46,7 @@ const AdminPage = () => {
           <OrderTable
             invoices={orderList?.orders ?? []}
             page={page}
-            pageCount={orderList?.pagination.totalPages}
+            pageCount={orderList?.pagination?.totalPages}
           />
         )}
         {activeTab === "Table Seats" && (

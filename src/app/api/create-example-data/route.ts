@@ -1,26 +1,26 @@
-import { getDb } from "@/lib/db";
+import { getDatabase } from "@/lib/db";
 
 import { createTable, createTableSeat } from "@/lib/table-service";
 import { NextResponse } from "next/server";
 
 export async function POST() {
   try {
-    const db = getDb();
+    const db = getDatabase();
 
     // Create c1 table with 6 seats
     console.log("Creating table 'a1'...");
-    const tableC1 = await createTable(db, "c3");
+    const tableC1 = await createTable(db, "a5");
     console.log("Created table c1:", tableC1);
 
     console.log("Creating 3 seats for table c1...");
     const c1Seats = [];
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 4; i++) {
       const seat = await createTableSeat(
         db,
         tableC1.id,
-        "a3",
+        "a5",
         `Seat ${i}`,
-        "ordered"
+        "available"
       );
       c1Seats.push(seat);
     }

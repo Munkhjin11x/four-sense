@@ -39,13 +39,10 @@ export async function POST(req: Request) {
       .digest("hex");
 
     // Insert new user
-    const result = await db
-      .insert(AdminUsers)
-      .values({
-        email,
-        password: hashedPassword,
-      })
-      .returning({ id: AdminUsers.id, email: AdminUsers.email });
+    const result = await db.insert(AdminUsers).values({
+      email,
+      password: hashedPassword,
+    });
 
     return NextResponse.json({
       success: true,

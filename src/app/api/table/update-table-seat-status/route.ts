@@ -1,4 +1,5 @@
-import { getDatabase, TableSeats } from "@/lib/db";
+import { getDatabase } from "@/lib/db";
+import { TableSeats } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { eq, and, inArray } from "drizzle-orm";
 
