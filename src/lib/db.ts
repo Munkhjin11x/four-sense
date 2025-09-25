@@ -33,79 +33,78 @@ export function getDatabase(
       // Cloudflare Workers/Pages: use D1 binding
       db = drizzle(d1Database, { schema });
     } else {
-      // For Vercel deployment: use SQLite in-memory fallback
-      // This requires the admin user to be pre-seeded
+      // For Vercel deployment: connect to D1 via HTTP API
       try {
-        const Database = require("better-sqlite3");
-        const sqlite = new Database(":memory:");
+        const { drizzle: drizzleD1 } = require("drizzle-orm/d1");
 
-        const {
-          drizzle: drizzleSqlite,
-        } = require("drizzle-orm/better-sqlite3");
-        db = drizzleSqlite(sqlite, { schema });
+        // Create D1 HTTP client for Vercel deployment
+        const d1Client = {
+          prepare: (query: string) => ({
+            bind: (...params: unknown[]) => ({
+              all: async () => {
+                const response = await fetch(
+                  `https://api.cloudflare.com/client/v4/accounts/544971d734e2d2605d77624f56f6e72d/d1/database/1ac8c424-7722-4894-92e6-6473bf090abc/query`,
+                  {
+                    method: "POST",
+                    headers: {
+                      Authorization:
+                        "Bearer khe_QSpOk3iz1DgibXC9eu7dRfqhZfIKaL6ogNoy",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      sql: query,
+                      params: params,
+                    }),
+                  }
+                );
+                const data = await response.json();
+                return data.result?.[0]?.results || [];
+              },
+              run: async () => {
+                const response = await fetch(
+                  `https://api.cloudflare.com/client/v4/accounts/544971d734e2d2605d77624f56f6e72d/d1/database/1ac8c424-7722-4894-92e6-6473bf090abc/query`,
+                  {
+                    method: "POST",
+                    headers: {
+                      Authorization:
+                        "Bearer khe_QSpOk3iz1DgibXC9eu7dRfqhZfIKaL6ogNoy",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      sql: query,
+                      params: params,
+                    }),
+                  }
+                );
+                const data = await response.json();
+                return data.result?.[0] || {};
+              },
+            }),
+          }),
+          exec: async (query: string) => {
+            const response = await fetch(
+              `https://api.cloudflare.com/client/v4/accounts/544971d734e2d2605d77624f56f6e72d/d1/database/1ac8c424-7722-4894-92e6-6473bf090abc/query`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization:
+                    "Bearer khe_QSpOk3iz1DgibXC9eu7dRfqhZfIKaL6ogNoy",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ sql: query }),
+              }
+            );
+            return await response.json();
+          },
+        };
 
-        // Create the AdminUsers table and seed it
-        sqlite.exec(`
-          CREATE TABLE IF NOT EXISTS AdminUsers (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
-          );
-        `);
-
-        // Create other tables for basic functionality
-        sqlite.exec(`
-          CREATE TABLE IF NOT EXISTS Tables (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            table_name TEXT NOT NULL,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
-          );
-        `);
-
-        sqlite.exec(`
-          CREATE TABLE IF NOT EXISTS TableSeats (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            table_id INTEGER NOT NULL REFERENCES Tables(id) ON DELETE CASCADE,
-            table_name TEXT NOT NULL,
-            title TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'available',
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
-          );
-        `);
-
-        sqlite.exec(`
-          CREATE TABLE IF NOT EXISTS Orders (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            table_id INTEGER NOT NULL REFERENCES Tables(id) ON DELETE CASCADE,
-            table_name TEXT NOT NULL,
-            name TEXT NOT NULL,
-            phone TEXT NOT NULL,
-            email TEXT NOT NULL,
-            order_date TEXT NOT NULL
-          );
-        `);
-
-        sqlite.exec(`
-          CREATE TABLE IF NOT EXISTS OrderSeats (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            order_id INTEGER NOT NULL REFERENCES Orders(id) ON DELETE CASCADE,
-            seat_id INTEGER NOT NULL REFERENCES TableSeats(id) ON DELETE CASCADE
-          );
-        `);
-
-        // Insert the admin user (password is SHA256 hash of "admin123")
-        const adminPassword =
-          "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
-        sqlite.exec(`
-          INSERT OR IGNORE INTO AdminUsers (email, password) 
-          VALUES ('admin@foursenses.com', '${adminPassword}');
-        `);
-
-        console.log("Initialized in-memory database with admin user");
+        db = drizzleD1(d1Client, { schema });
+        console.log(
+          "Connected to D1 database via HTTP API for Vercel deployment"
+        );
       } catch (error) {
-        console.error("Failed to initialize in-memory database:", error);
-        throw new Error("Database initialization failed");
+        console.error("Failed to connect to D1 database:", error);
+        throw new Error("D1 database connection failed");
       }
     }
   }
