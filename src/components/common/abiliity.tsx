@@ -195,13 +195,13 @@ export const Ability = () => {
             className=""
           />
           <p className="text-[#F9DAB2] text-center text-2xl font-bold">
-            Spring Menu
+            Autumn Menu
           </p>
           <Link
-            href={"/menu.pdf"}
+            href={"/menufall.pdf"}
             className="border hidden gap-2 lg:flex max-sm:text-sm max-sm:px-5 text-nowrap text-white border-white px-10 rounded-tl-full py-3"
             target="_blank"
-            download={"menu.pdf"}
+            download={"menufall.pdf"}
           >
             <DownloadIcon />
             BAR Menu Download
