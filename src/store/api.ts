@@ -122,3 +122,45 @@ export async function apiCreateOrder<T>(data: {
 
   return response.json();
 }
+
+export async function apiApproveOrder<T>(data: {
+  orderId: number;
+}): Promise<T> {
+  const response = await fetch(`${baseUrl}/api/approve-order`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage = isApiError(errorData)
+      ? errorData.error
+      : "Failed to approve order";
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
+}
+
+export async function apiCancelOrder<T>(data: { orderId: number }): Promise<T> {
+  const response = await fetch(`${baseUrl}/api/cancel-order`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage = isApiError(errorData)
+      ? errorData.error
+      : "Failed to cancel order";
+    throw new Error(errorMessage);
+  }
+
+  return response.json();
+}

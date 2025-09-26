@@ -58,6 +58,7 @@ export async function createOrderWithSeats(
       phone: orderData.phone,
       email: orderData.email,
       orderDate: orderData.date,
+      status: "pending", // Explicitly set status for new orders
     })
     .returning();
 

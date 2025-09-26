@@ -21,11 +21,10 @@ import { redirect } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import Image from "next/image";
 
-// Client component that uses search params
 const AdminDashboardContent = () => {
   const { data, refetch } = useTable();
   const { page, pageLimit } = useSearchParamsWithDefaults();
-  const { data: orderList } = useOrderList({
+  const { data: orderList, refetch: refetchOrderList } = useOrderList({
     page: page,
     limit: pageLimit,
   });
@@ -33,7 +32,6 @@ const AdminDashboardContent = () => {
   const TabText = ["Order list", "Table Seats"];
   const [activeTab, setActiveTab] = useState("Order list");
 
-  // Calculate stats
   const totalOrders = orderList?.orders?.length || 0;
   const totalTables = data?.length || 0;
   const orderedSeats =
@@ -145,6 +143,7 @@ const AdminDashboardContent = () => {
             <div className="min-h-[650px]">
               {activeTab === "Order list" && (
                 <OrderTable
+                  refetch={refetchOrderList}
                   invoices={orderList?.orders ?? []}
                   page={page}
                   pageCount={orderList?.pagination?.totalPages}

@@ -1,5 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import { apiOrderList, apiTables } from "./api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  apiApproveOrder,
+  apiCancelOrder,
+  apiOrderList,
+  apiTables,
+} from "./api";
+import { toast } from "sonner";
 
 export const useTable = () => {
   return useQuery<Table[]>({ queryKey: ["tables"], queryFn: apiTables });
@@ -9,6 +15,35 @@ export const useOrderList = (params?: { page?: number; limit?: number }) => {
   return useQuery<OrderList>({
     queryKey: ["order-list", params?.page, params?.limit],
     queryFn: () => apiOrderList(params),
+  });
+};
+
+export const useApproveOrder = (refetch: () => void) => {
+  return useMutation<Order, unknown, { orderId: number }>({
+    mutationFn: (data: { orderId: number }) =>
+      apiApproveOrder(data) as Promise<Order>,
+    onSuccess: () => {
+      toast.success("Order approved");
+
+      refetch();
+    },
+    onError: () => {
+      toast.error("Failed to approve order");
+    },
+  });
+};
+
+export const useCancelOrder = (refetch: () => void) => {
+  return useMutation<Order, unknown, { orderId: number }>({
+    mutationFn: (data: { orderId: number }) =>
+      apiCancelOrder(data) as Promise<Order>,
+    onSuccess: () => {
+      toast.success("Order cancelled");
+      refetch();
+    },
+    onError: () => {
+      toast.error("Failed to cancel order");
+    },
   });
 };
 
@@ -46,6 +81,7 @@ export type Order = {
   phone: string;
   email: string;
   orderDate: string;
+  status: "pending" | "approved" | "cancelled";
   seats?: Seat[];
 };
 

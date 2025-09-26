@@ -1,24 +1,61 @@
-import { Order } from "@/store/store";
+import { Order, useApproveOrder, useCancelOrder } from "@/store/store";
 import DataTable from "../ui/data-table";
 import { columns } from "./column";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Users, Calendar } from "lucide-react";
+import { AreYouSureModal } from "../ui/are-you-sure-modal";
+import { useState } from "react";
 
 interface TOrderListTableProps {
   invoices: Order[] | undefined;
   page: number;
   totalRows?: number;
   pageCount?: number;
+  refetch: () => void;
 }
 
 export default function OrderTable({
   invoices,
   pageCount,
+  refetch,
 }: TOrderListTableProps) {
   const totalOrders = invoices?.length || 0;
   const totalCustomers = invoices
     ? new Set(invoices.map((order) => order.email)).size
     : 0;
+  const [isOpen, setIsOpen] = useState(false);
+  const { mutate: approveOrder } = useApproveOrder(refetch);
+  const { mutate: cancelOrder } = useCancelOrder(refetch);
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const [actionType, setActionType] = useState<"approve" | "cancel" | null>(
+    null
+  );
+
+  const handleApprove = (orderId: number) => () => {
+    console.log("approveOrder", orderId);
+    setIsOpen(true);
+    setSelectedOrderId(orderId);
+    setActionType("approve");
+  };
+
+  const handleCancel = (orderId: number) => () => {
+    setIsOpen(true);
+    setSelectedOrderId(orderId);
+    setActionType("cancel");
+  };
+
+  const confirmAction = () => {
+    if (selectedOrderId !== null && actionType) {
+      if (actionType === "approve") {
+        approveOrder({ orderId: selectedOrderId });
+      } else {
+        cancelOrder({ orderId: selectedOrderId });
+      }
+    }
+    setIsOpen(false);
+    setSelectedOrderId(null);
+    setActionType(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -76,7 +113,7 @@ export default function OrderTable({
         <CardContent className="p-2">
           {invoices && invoices.length > 0 ? (
             <DataTable
-              columns={columns}
+              columns={columns(handleApprove, handleCancel)}
               data={invoices}
               pageCount={pageCount || 0}
               className="border-none"
@@ -94,6 +131,12 @@ export default function OrderTable({
           )}
         </CardContent>
       </Card>
+      <AreYouSureModal
+        title={actionType === "approve" ? "Approve" : "Cancel"}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onApproval={confirmAction}
+      />
     </div>
   );
 }

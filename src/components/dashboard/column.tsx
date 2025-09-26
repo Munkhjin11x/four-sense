@@ -1,10 +1,22 @@
 import { Order } from "@/store/store";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "../ui/badge";
-import { Calendar, User, Phone, Mail, MapPin, Users } from "lucide-react";
+import { Button } from "../ui/button";
+import {
+  Calendar,
+  User,
+  Phone,
+  Mail,
+  MapPin,
+  Users,
+  Check,
+  X,
+} from "lucide-react";
 import { format } from "date-fns";
-
-export const columns: ColumnDef<Order>[] = [
+export const columns = (
+  handleApprove: (orderId: number) => () => void,
+  handleCancel: (orderId: number) => () => void
+): ColumnDef<Order>[] => [
   {
     header: () => (
       <div className="flex items-center space-x-2">
@@ -164,6 +176,117 @@ export const columns: ColumnDef<Order>[] = [
                 .join(", ")}
             >
               +{extraSeats} more
+            </Badge>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    header: () => (
+      <div className="flex items-center space-x-2">
+        <span className="font-semibold text-gray-700">Status</span>
+      </div>
+    ),
+    accessorKey: "status",
+    size: 120,
+    cell: ({ row }) => {
+      const status = row.original.status;
+      const statusConfig = {
+        pending: {
+          variant: "secondary" as const,
+          className: "bg-yellow-100 text-yellow-800 border-yellow-300",
+          text: "Pending",
+        },
+        approved: {
+          variant: "default" as const,
+          className: "bg-green-100 text-green-800 border-green-300",
+          text: "Approved",
+        },
+        cancelled: {
+          variant: "destructive" as const,
+          className: "bg-red-100 text-red-800 border-red-300",
+          text: "Cancelled",
+        },
+      };
+
+      const config = statusConfig[status] || statusConfig.pending;
+
+      return (
+        <Badge variant={config.variant} className={config.className}>
+          {config.text}
+        </Badge>
+      );
+    },
+  },
+  {
+    header: () => (
+      <div className="flex items-center space-x-2">
+        <span className="font-semibold text-gray-700 hidden sm:inline">
+          Actions
+        </span>
+        <span className="font-semibold text-gray-700 sm:hidden">Act</span>
+      </div>
+    ),
+    id: "actions",
+    size: 120,
+    maxSize: 150,
+    minSize: 80,
+    cell: ({ row }) => {
+      const order = row.original;
+      const isPending = order.status === "pending";
+      const isCancelled = order.status === "cancelled";
+
+      return (
+        <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+          {isPending && (
+            <>
+              <Button
+                size="sm"
+                variant="outline"
+                className="flex items-center h-8 px-2 min-w-[32px] 
+                           text-green-600 border-green-300 hover:bg-green-50
+                           text-xs sm:text-sm"
+                onClick={handleApprove(order.id)}
+                title="Approve order"
+              >
+                <Check className="h-3 w-3" />
+                <span className="hidden lg:ml-1 lg:inline">Approve</span>
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="flex items-center h-8 px-2 min-w-[32px] 
+                           text-red-600 border-red-300 hover:bg-red-50
+                           text-xs sm:text-sm"
+                onClick={handleCancel(order.id)}
+                title="Cancel order"
+              >
+                <X className="h-3 w-3" />
+                <span className="hidden lg:ml-1 lg:inline">Cancel</span>
+              </Button>
+            </>
+          )}
+
+          {!isPending && !isCancelled && (
+            <Badge
+              variant="outline"
+              className="text-xs text-gray-600 px-2 py-0.5 rounded-full whitespace-nowrap"
+            >
+              <span className="hidden sm:inline">
+                {order.status === "approved" ? "Approved" : "No actions"}
+              </span>
+              <span className="sm:hidden"></span>
+            </Badge>
+          )}
+
+          {isCancelled && (
+            <Badge
+              variant="secondary"
+              className="text-xs text-gray-600 px-2 py-0.5 rounded-full whitespace-nowrap"
+            >
+              <span className="hidden sm:inline">Cancelled</span>
+              <span className="sm:hidden">Cancel</span>
             </Badge>
           )}
         </div>

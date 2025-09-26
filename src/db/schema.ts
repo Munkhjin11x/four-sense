@@ -38,6 +38,9 @@ export const Orders = sqliteTable("Orders", {
   phone: text("phone").notNull(),
   email: text("email").notNull(),
   orderDate: text("order_date").notNull(),
+  status: text("status", { enum: ["pending", "approved", "cancelled"] })
+    .notNull()
+    .default("pending"),
 });
 
 export const OrderSeats = sqliteTable("OrderSeats", {
