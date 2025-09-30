@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiLogin } from "@/store/api";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { setTokenWithExpiration } from "@/lib/token-utils";
 
 const LoginPage = () => {
   const { register, handleSubmit } = useForm();
@@ -29,7 +30,8 @@ const LoginPage = () => {
       if (data?.message) {
         toast.success(data.message);
         router.push("/admin/dashboard");
-        localStorage.setItem("token", data.userId);
+
+        setTokenWithExpiration(data.userId, 1);
       }
     },
     onError: (error) => {

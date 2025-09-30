@@ -20,6 +20,8 @@ import { Table, useOrderList, useTable } from "@/store/store";
 import { redirect } from "next/navigation";
 import { useEffect, useState, Suspense, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { getValidToken, removeToken } from "@/lib/token-utils";
 
 const AdminDashboardContent = () => {
   const { data, refetch } = useTable();
@@ -83,15 +85,37 @@ const AdminDashboardContent = () => {
     },
   ];
 
+  const handleLogout = () => {
+    removeToken();
+    redirect("/admin/login");
+  };
+
   return (
     <div className="min-h-screen bg-[#F9D9B1]">
       <div className="container mx-auto p-6 space-y-8">
-        <div className="flex items-center space-y-2">
-          <Image src={"/navbar/logo.png"} alt="logo" width={240} height={50} />
-          <p className="text-sm text-gray-600 mt-1">
-            Welcome back! Here&apos;s what&apos;s happening at your restaurant.
-          </p>
-        </div>
+        <nav className="flex items-center justify-between">
+          <div className="flex items-center space-y-2">
+            <Link href={"/"}>
+              <Image
+                src={"/navbar/logo.png"}
+                alt="logo"
+                width={240}
+                height={50}
+              />
+            </Link>
+            <p className="text-sm text-gray-600 mt-1">
+              Welcome back! Here&apos;s what&apos;s happening at your
+              restaurant.
+            </p>
+          </div>
+          <Button
+            onClick={handleLogout}
+            className="border-[#D9864E] text-[#D9864E]"
+            variant={"outline"}
+          >
+            Logout
+          </Button>
+        </nav>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
@@ -169,7 +193,7 @@ const AdminPage = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getValidToken();
     if (!token) {
       redirect("/admin/login");
     }
