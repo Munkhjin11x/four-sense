@@ -37,26 +37,23 @@ export async function POST(req: Request) {
 
     // Get the seats associated with this order
     const orderSeats = await db
-      .select({ seatId: OrderSeats.seatId })
+      .select()
       .from(OrderSeats)
       .where(eq(OrderSeats.orderId, orderId));
 
-    // Start a transaction to cancel order and free up seats
-    await db.batch([
-      // Update order status to cancelled
-      db
-        .update(Orders)
-        .set({ status: "cancelled" })
-        .where(eq(Orders.id, orderId)),
+    // Update order status to cancelled
+    await db
+      .update(Orders)
+      .set({ status: "cancelled" })
+      .where(eq(Orders.id, orderId));
 
-      // Set all associated seats back to available
-      ...orderSeats.map(({ seatId }) =>
-        db
-          .update(TableSeats)
-          .set({ status: "available" })
-          .where(eq(TableSeats.id, seatId))
-      ),
-    ]);
+    // Set all associated seats back to available
+    for (const seat of orderSeats) {
+      await db
+        .update(TableSeats)
+        .set({ status: "available" })
+        .where(eq(TableSeats.id, seat.seatId));
+    }
 
     return NextResponse.json({
       success: true,

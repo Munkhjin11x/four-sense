@@ -11,6 +11,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { FormFieldDatePicker } from "../common/custom-calendar";
 import { useMutation } from "@tanstack/react-query";
 import { apiCreateOrder } from "@/store/api";
+import { UseTurnstile, useTurnstileStore } from "@/hook/use-turnstile";
 
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
@@ -57,6 +58,7 @@ export const OrderModal = ({
       tableName: string;
       seatIds: { $oid: string; seatNumber?: number }[];
       date: Date;
+      turnstileToken: string;
     }
   >({
     mutationFn: (data) =>
@@ -76,7 +78,14 @@ export const OrderModal = ({
     },
   });
 
+  const { token } = useTurnstileStore();
+
   const onSubmit = (data: OrderFormData) => {
+    if (!token) {
+      toast.error("Please complete the CAPTCHA verification");
+      return;
+    }
+
     createOrder({
       name: data.fullName,
       phone: data.phone,
@@ -84,6 +93,7 @@ export const OrderModal = ({
       tableName: tableName,
       seatIds: seats,
       date: data.date,
+      turnstileToken: token,
     });
   };
 
@@ -164,6 +174,18 @@ export const OrderModal = ({
                 rotate="rotate-0"
               />
             ))}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label
+              className={cn(
+                font.className,
+                "text-[#488457] text-sm font-semibold"
+              )}
+            >
+              Please verify you&apos;re human:
+            </label>
+            <UseTurnstile className="w-full" />
           </div>
 
           <Button

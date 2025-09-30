@@ -1,6 +1,6 @@
 import { Orders } from "@/db/schema";
 import { getDatabase } from "@/lib/db";
-import { and, eq, gte } from "drizzle-orm";
+import { and, eq, gte, ne } from "drizzle-orm";
 import * as schema from "@/db/schema";
 export async function checkOrderEligibility(
   db: ReturnType<typeof getDatabase>,
@@ -21,7 +21,8 @@ export async function checkOrderEligibility(
         eq(Orders.name, orderData.name),
         eq(Orders.phone, orderData.phone),
         eq(Orders.email, orderData.email),
-        gte(Orders.orderDate, threeHoursAgoSQLite)
+        gte(Orders.orderDate, threeHoursAgoSQLite),
+        ne(Orders.status, "cancelled")
       )
     )
     .limit(1);

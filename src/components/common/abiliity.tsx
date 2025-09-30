@@ -1,8 +1,11 @@
 "use client";
 import { DownloadIcon } from "@/icons";
 import Image from "next/image";
-import Link from "next/link";
 import { Position } from "../food/tool";
+import { Modal } from "./modal";
+import { Button } from "../ui";
+import { useState } from "react";
+import Link from "next/link";
 
 export const Ability = () => {
   const position = [
@@ -160,6 +163,10 @@ export const Ability = () => {
       },
     },
   ];
+  const [isOpen, setIsOpen] = useState(false);
+  const handleModal = () => {
+    setIsOpen((prev) => !prev);
+  };
   return (
     <div className="relative bg-[url('/menu/bg.png')]  bg-cover bg-center  bg-no-repeat w-full">
       <div className="flex  flex-col gap-4 justify-center items-center">
@@ -197,17 +204,45 @@ export const Ability = () => {
           <p className="text-[#F9DAB2] text-center text-2xl font-bold">
             Autumn Menu
           </p>
-          <Link
-            href={"/menufall.pdf"}
+          <Button
+            variant={"ghost"}
+            onClick={handleModal}
             className="border hidden gap-2 lg:flex max-sm:text-sm max-sm:px-5 text-nowrap text-white border-white px-10 rounded-tl-full py-3"
-            target="_blank"
-            download={"menufall.pdf"}
           >
             <DownloadIcon />
-            BAR Menu Download
-          </Link>
+            BAR Menu
+          </Button>
         </div>
       </div>
+      <BarMenuModal isOpen={isOpen} onClose={handleModal} />
     </div>
+  );
+};
+const BarMenuModal = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title="Bar Menu">
+      <div className="flex flex-col gap-4 items-center">
+        <iframe
+          src={"/menufall.pdf"}
+          className=" h-[800px] w-full border-none sm:h-[700px]"
+          title="Bar Menu"
+        />
+        <Link
+          href={"/menufall.pdf"}
+          target="_blank"
+          download={"menufall.pdf"}
+          className="border bg-[#F9DAB2] text-center w-fit hidden gap-2 lg:flex max-sm:text-sm max-sm:px-5 text-nowrap text-white border-white px-10 rounded-tl-full py-3"
+        >
+          <DownloadIcon />
+          BAR Menu
+        </Link>
+      </div>
+    </Modal>
   );
 };

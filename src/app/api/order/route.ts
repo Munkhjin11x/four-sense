@@ -12,19 +12,61 @@ interface CreateOrderRequest {
   seatIds: (string | number)[];
   tableId?: number;
   date?: string;
+  turnstileToken: string;
+}
+
+// Function to verify Cloudflare Turnstile token
+async function verifyTurnstileToken(token: string): Promise<boolean> {
+  const secretKey = "0x4AAAAAAB4B7L7MLAYEkwhW-UciGiMs8_Q"; // Your secret key from the component
+
+  const response = await fetch(
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `secret=${secretKey}&response=${token}`,
+    }
+  );
+
+  const data = (await response.json()) as { success: boolean };
+  return data.success === true;
 }
 
 export async function POST(req: Request) {
   const db = getDatabase();
   try {
     const body = await req.json();
-    const { name, phone, email, tableName, seatIds, tableId, date } =
-      body as CreateOrderRequest;
+    const {
+      name,
+      phone,
+      email,
+      tableName,
+      seatIds,
+      tableId,
+      date,
+      turnstileToken,
+    } = body as CreateOrderRequest;
+
+    if (!turnstileToken) {
+      return NextResponse.json(
+        { error: "CAPTCHA token is required" },
+        { status: 400 }
+      );
+    }
+
+    const isTurnstileValid = await verifyTurnstileToken(turnstileToken);
+    if (!isTurnstileValid) {
+      return NextResponse.json(
+        { error: "CAPTCHA verification failed. Please try again." },
+        { status: 400 }
+      );
+    }
 
     // Debug: Log the received date
     console.log("Received date:", date, typeof date);
 
-    // Format date for SQLite (convert from ISO string to SQLite datetime format)
     let formattedDate;
     if (date) {
       const parsedDate = new Date(date);
@@ -43,17 +85,14 @@ export async function POST(req: Request) {
 
     console.log("Formatted date for SQLite:", formattedDate);
 
-    // Convert MongoDB-style seat IDs to integers
     const processedSeatIds = seatIds.map((seatId: string | number) => {
       if (typeof seatId === "string" && seatId.includes("seat_")) {
-        // Extract the integer ID from "seat_9_mfxvy5lh" format
         const parts = seatId.split("_");
         return parseInt(parts[1], 10);
       }
       return typeof seatId === "string" ? parseInt(seatId, 10) : seatId;
     });
 
-    // Find tableId by tableName if not provided
     let processedTableId = tableId;
     if (!processedTableId) {
       const tableRecord = await db

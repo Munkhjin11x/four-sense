@@ -50,7 +50,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/utils/error.js
+// node_modules/@opennextjs/aws/dist/utils/error.js
 function isOpenNextError(e) {
   try {
     return "__openNextInternal" in e;
@@ -59,11 +59,11 @@ function isOpenNextError(e) {
   }
 }
 var init_error = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/utils/error.js"() {
+  "node_modules/@opennextjs/aws/dist/utils/error.js"() {
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/adapters/logger.js
+// node_modules/@opennextjs/aws/dist/adapters/logger.js
 function debug(...args) {
   if (globalThis.openNextDebug) {
     console.log(...args);
@@ -106,7 +106,7 @@ function getOpenNextErrorLogLevel() {
 }
 var DOWNPLAYED_ERROR_LOGS, isDownplayedErrorLog;
 var init_logger = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/adapters/logger.js"() {
+  "node_modules/@opennextjs/aws/dist/adapters/logger.js"() {
     init_error();
     DOWNPLAYED_ERROR_LOGS = [
       {
@@ -119,9 +119,9 @@ var init_logger = __esm({
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/cookie/dist/index.js
+// node_modules/cookie/dist/index.js
 var require_dist = __commonJS({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/cookie/dist/index.js"(exports) {
+  "node_modules/cookie/dist/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.parse = parse3;
@@ -278,7 +278,7 @@ var require_dist = __commonJS({
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/http/util.js
+// node_modules/@opennextjs/aws/dist/http/util.js
 function parseSetCookieHeader(cookies) {
   if (!cookies) {
     return [];
@@ -304,21 +304,21 @@ function getQueryFromIterator(it) {
   return query;
 }
 var init_util = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/http/util.js"() {
+  "node_modules/@opennextjs/aws/dist/http/util.js"() {
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/converters/utils.js
+// node_modules/@opennextjs/aws/dist/overrides/converters/utils.js
 function getQueryFromSearchParams(searchParams) {
   return getQueryFromIterator(searchParams.entries());
 }
 var init_utils = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/converters/utils.js"() {
+  "node_modules/@opennextjs/aws/dist/overrides/converters/utils.js"() {
     init_util();
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/converters/edge.js
+// node_modules/@opennextjs/aws/dist/overrides/converters/edge.js
 var edge_exports = {};
 __export(edge_exports, {
   default: () => edge_default
@@ -326,7 +326,7 @@ __export(edge_exports, {
 import { Buffer as Buffer2 } from "node:buffer";
 var import_cookie, NULL_BODY_STATUSES, converter, edge_default;
 var init_edge = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/converters/edge.js"() {
+  "node_modules/@opennextjs/aws/dist/overrides/converters/edge.js"() {
     import_cookie = __toESM(require_dist(), 1);
     init_util();
     init_utils();
@@ -408,14 +408,14 @@ var init_edge = __esm({
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/wrappers/cloudflare-edge.js
+// node_modules/@opennextjs/aws/dist/overrides/wrappers/cloudflare-edge.js
 var cloudflare_edge_exports = {};
 __export(cloudflare_edge_exports, {
   default: () => cloudflare_edge_default
 });
 var cfPropNameMapping, handler, cloudflare_edge_default;
 var init_cloudflare_edge = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/wrappers/cloudflare-edge.js"() {
+  "node_modules/@opennextjs/aws/dist/overrides/wrappers/cloudflare-edge.js"() {
     cfPropNameMapping = {
       // The city name is percent-encoded.
       // See https://github.com/vercel/vercel/blob/4cb6143/packages/functions/src/headers.ts#L94C19-L94C37
@@ -456,14 +456,14 @@ var init_cloudflare_edge = __esm({
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/originResolver/pattern-env.js
+// node_modules/@opennextjs/aws/dist/overrides/originResolver/pattern-env.js
 var pattern_env_exports = {};
 __export(pattern_env_exports, {
   default: () => pattern_env_default
 });
 var envLoader, pattern_env_default;
 var init_pattern_env = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/originResolver/pattern-env.js"() {
+  "node_modules/@opennextjs/aws/dist/overrides/originResolver/pattern-env.js"() {
     init_logger();
     envLoader = {
       name: "env",
@@ -500,14 +500,14 @@ var init_pattern_env = __esm({
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/assetResolver/dummy.js
+// node_modules/@opennextjs/aws/dist/overrides/assetResolver/dummy.js
 var dummy_exports = {};
 __export(dummy_exports, {
   default: () => dummy_default
 });
 var resolver, dummy_default;
 var init_dummy = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/assetResolver/dummy.js"() {
+  "node_modules/@opennextjs/aws/dist/overrides/assetResolver/dummy.js"() {
     resolver = {
       name: "dummy"
     };
@@ -515,7 +515,7 @@ var init_dummy = __esm({
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/utils/stream.js
+// node_modules/@opennextjs/aws/dist/utils/stream.js
 import { Readable } from "node:stream";
 function toReadableStream(value, isBase64) {
   return Readable.toWeb(Readable.from(Buffer.from(value, isBase64 ? "base64" : "utf8")));
@@ -527,18 +527,18 @@ function emptyReadableStream() {
   return Readable.toWeb(Readable.from([]));
 }
 var init_stream = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/utils/stream.js"() {
+  "node_modules/@opennextjs/aws/dist/utils/stream.js"() {
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/proxyExternalRequest/fetch.js
+// node_modules/@opennextjs/aws/dist/overrides/proxyExternalRequest/fetch.js
 var fetch_exports = {};
 __export(fetch_exports, {
   default: () => fetch_default
 });
 var fetchProxy, fetch_default;
 var init_fetch = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/overrides/proxyExternalRequest/fetch.js"() {
+  "node_modules/@opennextjs/aws/dist/overrides/proxyExternalRequest/fetch.js"() {
     init_stream();
     fetchProxy = {
       name: "fetch-proxy",
@@ -568,7 +568,7 @@ var init_fetch = __esm({
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/edgeFunctionHandler.js
+// node_modules/@opennextjs/aws/dist/core/edgeFunctionHandler.js
 var edgeFunctionHandler_exports = {};
 __export(edgeFunctionHandler_exports, {
   default: () => edgeFunctionHandler
@@ -595,14 +595,14 @@ async function edgeFunctionHandler(request) {
   return response;
 }
 var init_edgeFunctionHandler = __esm({
-  "../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/edgeFunctionHandler.js"() {
+  "node_modules/@opennextjs/aws/dist/core/edgeFunctionHandler.js"() {
     globalThis._ENTRIES = {};
     globalThis.self = globalThis;
     globalThis._ROUTES = [];
   }
 });
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/utils/promise.js
+// node_modules/@opennextjs/aws/dist/utils/promise.js
 init_logger();
 var DetachedPromise = class {
   resolve;
@@ -683,13 +683,13 @@ function runWithOpenNextRequestContext({ isISRRevalidation, waitUntil, requestId
   });
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/adapters/middleware.js
+// node_modules/@opennextjs/aws/dist/adapters/middleware.js
 init_logger();
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/createGenericHandler.js
+// node_modules/@opennextjs/aws/dist/core/createGenericHandler.js
 init_logger();
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/resolve.js
+// node_modules/@opennextjs/aws/dist/core/resolve.js
 async function resolveConverter(converter2) {
   if (typeof converter2 === "function") {
     return converter2();
@@ -726,7 +726,7 @@ async function resolveProxyRequest(proxyRequest) {
   return m_1.default;
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/createGenericHandler.js
+// node_modules/@opennextjs/aws/dist/core/createGenericHandler.js
 async function createGenericHandler(handler3) {
   const config = await import("./open-next.config.mjs").then((m) => m.default);
   globalThis.openNextConfig = config;
@@ -738,12 +738,12 @@ async function createGenericHandler(handler3) {
   return wrapper(handler3.handler, converter2);
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/util.js
+// node_modules/@opennextjs/aws/dist/core/routing/util.js
 import crypto from "node:crypto";
 import { parse as parseQs, stringify as stringifyQs } from "node:querystring";
 import { Readable as Readable2 } from "node:stream";
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/adapters/config/index.js
+// node_modules/@opennextjs/aws/dist/adapters/config/index.js
 init_logger();
 import path from "node:path";
 globalThis.__dirname ??= "";
@@ -751,26 +751,26 @@ var NEXT_DIR = path.join(__dirname, ".next");
 var OPEN_NEXT_DIR = path.join(__dirname, ".open-next");
 debug({ NEXT_DIR, OPEN_NEXT_DIR });
 var NextConfig = { "env": { "CLOUDFLARE_ACCOUNT_ID": "544971d734e2d2605d77624f56f6e72d", "CLOUDFLARE_DATABASE_ID": "1ac8c424-7722-4894-92e6-6473bf090abc", "CLOUDFLARE_D1_API_TOKEN": "R3gt_08buDUu-Tyd6yq5M6XtcmgIryStylNAc-wx" }, "webpack": null, "eslint": { "ignoreDuringBuilds": false }, "typescript": { "ignoreBuildErrors": false, "tsconfigPath": "tsconfig.json" }, "distDir": ".next", "cleanDistDir": true, "assetPrefix": "", "cacheMaxMemorySize": 52428800, "configOrigin": "next.config.ts", "useFileSystemPublicRoutes": true, "generateEtags": true, "pageExtensions": ["tsx", "ts", "jsx", "js"], "poweredByHeader": true, "compress": true, "images": { "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840], "imageSizes": [16, 32, 48, 64, 96, 128, 256, 384], "path": "/_next/image", "loader": "default", "loaderFile": "", "domains": [], "disableStaticImages": false, "minimumCacheTTL": 60, "formats": ["image/webp"], "dangerouslyAllowSVG": false, "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;", "contentDispositionType": "attachment", "remotePatterns": [{ "protocol": "https", "hostname": "pub-f1fd80427d5e489a98fb6022fd6f176b.r2.dev" }], "unoptimized": false }, "devIndicators": { "appIsrStatus": true, "buildActivity": true, "buildActivityPosition": "bottom-right" }, "onDemandEntries": { "maxInactiveAge": 6e4, "pagesBufferLength": 5 }, "amp": { "canonicalBase": "" }, "basePath": "", "sassOptions": {}, "trailingSlash": false, "i18n": null, "productionBrowserSourceMaps": false, "excludeDefaultMomentLocales": true, "serverRuntimeConfig": {}, "publicRuntimeConfig": {}, "reactProductionProfiling": false, "reactStrictMode": null, "reactMaxHeadersLength": 6e3, "httpAgentOptions": { "keepAlive": true }, "logging": {}, "expireTime": 31536e3, "staticPageGenerationTimeout": 60, "output": "standalone", "modularizeImports": { "@mui/icons-material": { "transform": "@mui/icons-material/{{member}}" }, "lodash": { "transform": "lodash/{{member}}" } }, "outputFileTracingRoot": "/Users/munkhjinaltangerel/Desktop/other/four-sense", "experimental": { "cacheLife": { "default": { "stale": 300, "revalidate": 900, "expire": 4294967294 }, "seconds": { "stale": 0, "revalidate": 1, "expire": 60 }, "minutes": { "stale": 300, "revalidate": 60, "expire": 3600 }, "hours": { "stale": 300, "revalidate": 3600, "expire": 86400 }, "days": { "stale": 300, "revalidate": 86400, "expire": 604800 }, "weeks": { "stale": 300, "revalidate": 604800, "expire": 2592e3 }, "max": { "stale": 300, "revalidate": 2592e3, "expire": 4294967294 } }, "cacheHandlers": {}, "cssChunking": true, "multiZoneDraftMode": false, "appNavFailHandling": false, "prerenderEarlyExit": true, "serverMinification": true, "serverSourceMaps": false, "linkNoTouchStart": false, "caseSensitiveRoutes": false, "clientSegmentCache": false, "preloadEntriesOnStart": true, "clientRouterFilter": true, "clientRouterFilterRedirects": false, "fetchCacheKeyPrefix": "", "middlewarePrefetch": "flexible", "optimisticClientCache": true, "manualClientBasePath": false, "cpus": 9, "memoryBasedWorkersCount": false, "imgOptConcurrency": null, "imgOptTimeoutInSeconds": 7, "imgOptMaxInputPixels": 268402689, "imgOptSequentialRead": null, "isrFlushToDisk": true, "workerThreads": false, "optimizeCss": false, "nextScriptWorkers": false, "scrollRestoration": false, "externalDir": false, "disableOptimizedLoading": false, "gzipSize": true, "craCompat": false, "esmExternals": true, "fullySpecified": false, "swcTraceProfiling": false, "forceSwcTransforms": false, "largePageDataBytes": 128e3, "turbo": { "root": "/Users/munkhjinaltangerel/Desktop/other/four-sense" }, "typedRoutes": false, "typedEnv": false, "parallelServerCompiles": false, "parallelServerBuildTraces": false, "ppr": false, "authInterrupts": false, "reactOwnerStack": false, "webpackMemoryOptimizations": false, "optimizeServerReact": true, "useEarlyImport": false, "staleTimes": { "dynamic": 0, "static": 300 }, "serverComponentsHmrCache": true, "staticGenerationMaxConcurrency": 8, "staticGenerationMinPagesPerWorker": 25, "dynamicIO": false, "inlineCss": false, "optimizePackageImports": ["lucide-react", "date-fns", "lodash-es", "ramda", "antd", "react-bootstrap", "ahooks", "@ant-design/icons", "@headlessui/react", "@headlessui-float/react", "@heroicons/react/20/solid", "@heroicons/react/24/solid", "@heroicons/react/24/outline", "@visx/visx", "@tremor/react", "rxjs", "@mui/material", "@mui/icons-material", "recharts", "react-use", "effect", "@effect/schema", "@effect/platform", "@effect/platform-node", "@effect/platform-browser", "@effect/platform-bun", "@effect/sql", "@effect/sql-mssql", "@effect/sql-mysql2", "@effect/sql-pg", "@effect/sql-squlite-node", "@effect/sql-squlite-bun", "@effect/sql-squlite-wasm", "@effect/sql-squlite-react-native", "@effect/rpc", "@effect/rpc-http", "@effect/typeclass", "@effect/experimental", "@effect/opentelemetry", "@material-ui/core", "@material-ui/icons", "@tabler/icons-react", "mui-core", "react-icons/ai", "react-icons/bi", "react-icons/bs", "react-icons/cg", "react-icons/ci", "react-icons/di", "react-icons/fa", "react-icons/fa6", "react-icons/fc", "react-icons/fi", "react-icons/gi", "react-icons/go", "react-icons/gr", "react-icons/hi", "react-icons/hi2", "react-icons/im", "react-icons/io", "react-icons/io5", "react-icons/lia", "react-icons/lib", "react-icons/lu", "react-icons/md", "react-icons/pi", "react-icons/ri", "react-icons/rx", "react-icons/si", "react-icons/sl", "react-icons/tb", "react-icons/tfi", "react-icons/ti", "react-icons/vsc", "react-icons/wi"], "trustHostHeader": false, "isExperimentalCompile": false }, "bundlePagesRouterDependencies": false, "configFileName": "next.config.ts" };
-var BuildId = "KFAuMrFx3J2-9Br282bE4";
+var BuildId = "MNO9gsjhfv5yhlJC2GCOe";
 var RoutesManifest = { "basePath": "", "rewrites": { "beforeFiles": [], "afterFiles": [], "fallback": [] }, "redirects": [{ "source": "/:path+/", "destination": "/:path+", "internal": true, "statusCode": 308, "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$" }], "routes": { "static": [{ "page": "/", "regex": "^/(?:/)?$", "routeKeys": {}, "namedRegex": "^/(?:/)?$" }, { "page": "/_not-found", "regex": "^/_not\\-found(?:/)?$", "routeKeys": {}, "namedRegex": "^/_not\\-found(?:/)?$" }, { "page": "/admin/dashboard", "regex": "^/admin/dashboard(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/dashboard(?:/)?$" }, { "page": "/admin/login", "regex": "^/admin/login(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/login(?:/)?$" }, { "page": "/bar-menu", "regex": "^/bar\\-menu(?:/)?$", "routeKeys": {}, "namedRegex": "^/bar\\-menu(?:/)?$" }, { "page": "/book-table", "regex": "^/book\\-table(?:/)?$", "routeKeys": {}, "namedRegex": "^/book\\-table(?:/)?$" }, { "page": "/favicon.ico", "regex": "^/favicon\\.ico(?:/)?$", "routeKeys": {}, "namedRegex": "^/favicon\\.ico(?:/)?$" }], "dynamic": [], "data": { "static": [], "dynamic": [] } }, "locales": [] };
 var ConfigHeaders = [];
-var PrerenderManifest = { "version": 4, "routes": { "/favicon.ico": { "initialHeaders": { "cache-control": "public, max-age=0, must-revalidate", "content-type": "image/x-icon", "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico" }, "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/favicon.ico", "dataRoute": null, "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/book-table": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/book-table", "dataRoute": "/book-table.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/dashboard": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/dashboard", "dataRoute": "/admin/dashboard.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/bar-menu": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/bar-menu", "dataRoute": "/bar-menu.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/login": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/login", "dataRoute": "/admin/login.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/", "dataRoute": "/index.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] } }, "dynamicRoutes": {}, "notFoundRoutes": [], "preview": { "previewModeId": "4851b71d621e2d7a2ea88a36ba3560db", "previewModeSigningKey": "24c834d62a5a1d17ca467b205977fc4819183c2b8db0c6cfaf4e5b4e166ad3eb", "previewModeEncryptionKey": "34a99844c45af69f9b47f91c6c8f5e2ca43ff97e11b446daf539a7edcadb7f0e" } };
+var PrerenderManifest = { "version": 4, "routes": { "/favicon.ico": { "initialHeaders": { "cache-control": "public, max-age=0, must-revalidate", "content-type": "image/x-icon", "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico" }, "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/favicon.ico", "dataRoute": null, "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/dashboard": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/dashboard", "dataRoute": "/admin/dashboard.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/book-table": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/book-table", "dataRoute": "/book-table.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/", "dataRoute": "/index.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/bar-menu": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/bar-menu", "dataRoute": "/bar-menu.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/login": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/login", "dataRoute": "/admin/login.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] } }, "dynamicRoutes": {}, "notFoundRoutes": [], "preview": { "previewModeId": "d0817f015d189bfbaad0c8d19328fee5", "previewModeSigningKey": "6978fbe1d8a62ee9509fbb674aa85677f1590e56e3aeab28c6d965c0f7fc271c", "previewModeEncryptionKey": "bb8d9f39d8b338066ceb7e535da6c0cd5d513973c13ea48a4484ef6a1553a56a" } };
 var MiddlewareManifest = { "version": 3, "middleware": {}, "functions": {}, "sortedMiddleware": [] };
-var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/api/cancel-order/route": "/api/cancel-order", "/api/approve-order/route": "/api/approve-order", "/api/create-example-data/route": "/api/create-example-data", "/api/admin/login/route": "/api/admin/login", "/api/order/route": "/api/order", "/api/signup/route": "/api/signup", "/favicon.ico/route": "/favicon.ico", "/api/table/update-table-seat-status/route": "/api/table/update-table-seat-status", "/api/tables/route": "/api/tables", "/(home)/bar-menu/page": "/bar-menu", "/(home)/book-table/page": "/book-table", "/admin/dashboard/page": "/admin/dashboard", "/(home)/page": "/", "/admin/login/page": "/admin/login" };
+var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/api/admin/login/route": "/api/admin/login", "/api/cancel-order/route": "/api/cancel-order", "/api/create-example-data/route": "/api/create-example-data", "/api/order/route": "/api/order", "/api/signup/route": "/api/signup", "/api/approve-order/route": "/api/approve-order", "/api/table/update-table-seat-status/route": "/api/table/update-table-seat-status", "/api/tables/route": "/api/tables", "/favicon.ico/route": "/favicon.ico", "/(home)/page": "/", "/admin/dashboard/page": "/admin/dashboard", "/(home)/bar-menu/page": "/bar-menu", "/admin/login/page": "/admin/login", "/(home)/book-table/page": "/book-table" };
 var FunctionsConfigManifest = { "version": 1, "functions": {} };
 var PagesManifest = { "/_app": "pages/_app.js", "/_error": "pages/_error.js", "/_document": "pages/_document.js", "/404": "pages/404.html" };
 process.env.NEXT_BUILD_ID = BuildId;
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/http/openNextResponse.js
+// node_modules/@opennextjs/aws/dist/http/openNextResponse.js
 init_logger();
 init_util();
 import { Transform } from "node:stream";
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/util.js
+// node_modules/@opennextjs/aws/dist/core/routing/util.js
 init_util();
 init_logger();
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/utils/binary.js
+// node_modules/@opennextjs/aws/dist/utils/binary.js
 var commonBinaryMimeTypes = /* @__PURE__ */ new Set([
   "application/octet-stream",
   // Docs
@@ -838,11 +838,11 @@ function isBinaryContentType(contentType) {
   return commonBinaryMimeTypes.has(value);
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/i18n/index.js
+// node_modules/@opennextjs/aws/dist/core/routing/i18n/index.js
 init_stream();
 init_logger();
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/i18n/accept-header.js
+// node_modules/@opennextjs/aws/dist/core/routing/i18n/accept-header.js
 function parse(raw, preferences, options) {
   const lowers = /* @__PURE__ */ new Map();
   const header = raw.replace(/[ \t]/g, "");
@@ -942,7 +942,7 @@ function acceptLanguage(header = "", preferences) {
   })[0] || void 0;
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/i18n/index.js
+// node_modules/@opennextjs/aws/dist/core/routing/i18n/index.js
 function isLocalizedPath(path3) {
   return NextConfig.i18n?.locales.includes(path3.split("/")[1].toLowerCase()) ?? false;
 }
@@ -1038,7 +1038,7 @@ function handleLocaleRedirect(internalEvent) {
   return false;
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/queue.js
+// node_modules/@opennextjs/aws/dist/core/routing/queue.js
 function generateShardId(rawPath, maxConcurrency, prefix) {
   let a = cyrb128(rawPath);
   let t = a += 1831565813;
@@ -1072,7 +1072,7 @@ function cyrb128(str) {
   return h1 >>> 0;
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/util.js
+// node_modules/@opennextjs/aws/dist/core/routing/util.js
 function isExternal(url, host) {
   if (!url)
     return false;
@@ -1181,14 +1181,14 @@ function normalizeLocationHeader(location, baseUrl, encodeQuery = false) {
   return href;
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routingHandler.js
+// node_modules/@opennextjs/aws/dist/core/routingHandler.js
 init_logger();
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/cacheInterceptor.js
+// node_modules/@opennextjs/aws/dist/core/routing/cacheInterceptor.js
 import { createHash } from "node:crypto";
 init_stream();
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/utils/cache.js
+// node_modules/@opennextjs/aws/dist/utils/cache.js
 init_logger();
 async function hasBeenRevalidated(key, tags, cacheEntry) {
   if (globalThis.openNextConfig.dangerous?.disableTagCache) {
@@ -1219,7 +1219,7 @@ function getTagsFromValue(value) {
   }
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/cacheInterceptor.js
+// node_modules/@opennextjs/aws/dist/core/routing/cacheInterceptor.js
 init_logger();
 var CACHE_ONE_YEAR = 60 * 60 * 24 * 365;
 var CACHE_ONE_MONTH = 60 * 60 * 24 * 30;
@@ -1399,7 +1399,7 @@ async function cacheInterceptor(event) {
   return event;
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/path-to-regexp/dist.es2015/index.js
+// node_modules/path-to-regexp/dist.es2015/index.js
 function lexer(str) {
   var tokens = [];
   var i = 0;
@@ -1775,18 +1775,18 @@ function pathToRegexp(path3, keys, options) {
   return stringToRegexp(path3, keys, options);
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/utils/normalize-path.js
+// node_modules/@opennextjs/aws/dist/utils/normalize-path.js
 import path2 from "node:path";
 function normalizeRepeatedSlashes(url) {
   const urlNoQuery = url.host + url.pathname;
   return `${url.protocol}//${urlNoQuery.replace(/\\/g, "/").replace(/\/\/+/g, "/")}${url.search}`;
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/matcher.js
+// node_modules/@opennextjs/aws/dist/core/routing/matcher.js
 init_stream();
 init_logger();
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/routeMatcher.js
+// node_modules/@opennextjs/aws/dist/core/routing/routeMatcher.js
 var optionalLocalePrefixRegex = `^/(?:${RoutesManifest.locales.map((locale) => `${locale}/?`).join("|")})?`;
 var optionalBasepathPrefixRegex = RoutesManifest.basePath ? `^${RoutesManifest.basePath}/?` : "^/";
 var optionalPrefix = optionalLocalePrefixRegex.replace("^/", optionalBasepathPrefixRegex);
@@ -1836,7 +1836,7 @@ function getStaticAPIRoutes() {
   return [...pagesStaticAPIRoutes, ...appPathsStaticAPIRoutes];
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/matcher.js
+// node_modules/@opennextjs/aws/dist/core/routing/matcher.js
 var routeHasMatcher = (headers, cookies, query) => (redirect) => {
   switch (redirect.type) {
     case "header":
@@ -2124,7 +2124,7 @@ function handleFallbackFalse(internalEvent, prerenderManifest) {
   };
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routing/middleware.js
+// node_modules/@opennextjs/aws/dist/core/routing/middleware.js
 init_stream();
 init_utils();
 var middlewareManifest = MiddlewareManifest;
@@ -2237,7 +2237,7 @@ async function handleMiddleware(internalEvent, initialSearch, middlewareLoader =
   };
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/core/routingHandler.js
+// node_modules/@opennextjs/aws/dist/core/routingHandler.js
 var MIDDLEWARE_HEADER_PREFIX = "x-middleware-response-";
 var MIDDLEWARE_HEADER_PREFIX_LEN = MIDDLEWARE_HEADER_PREFIX.length;
 var INTERNAL_HEADER_PREFIX = "x-opennext-";
@@ -2401,7 +2401,7 @@ function isInternalResult(eventOrResult) {
   return eventOrResult != null && "statusCode" in eventOrResult;
 }
 
-// ../../../.npm-global/_npx/b8f71965aba33be8/node_modules/@opennextjs/aws/dist/adapters/middleware.js
+// node_modules/@opennextjs/aws/dist/adapters/middleware.js
 globalThis.internalFetch = fetch;
 globalThis.__openNextAls = new AsyncLocalStorage();
 var defaultHandler = async (internalEvent, options) => {

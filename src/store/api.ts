@@ -99,6 +99,7 @@ export async function apiCreateOrder<T>(data: {
   tableName: string;
   seatIds: string[];
   date: Date;
+  turnstileToken: string;
 }): Promise<T> {
   console.log("API call data:", data);
   console.log("API call date:", data.date, typeof data.date);
