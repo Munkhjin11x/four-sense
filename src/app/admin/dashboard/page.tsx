@@ -18,7 +18,7 @@ import {
 import { useSearchParamsWithDefaults } from "@/hook/use-search-params";
 import { Table, useOrderList, useTable } from "@/store/store";
 import { redirect } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useCallback } from "react";
 import Image from "next/image";
 
 const AdminDashboardContent = () => {
@@ -31,6 +31,11 @@ const AdminDashboardContent = () => {
 
   const TabText = ["Order list", "Table Seats"];
   const [activeTab, setActiveTab] = useState("Order list");
+
+  const recall = useCallback(() => {
+    refetchOrderList();
+    refetch();
+  }, [refetchOrderList, refetch]);
 
   const totalOrders = orderList?.orders?.length || 0;
   const totalTables = data?.length || 0;
@@ -143,7 +148,7 @@ const AdminDashboardContent = () => {
             <div className="min-h-[650px]">
               {activeTab === "Order list" && (
                 <OrderTable
-                  refetch={refetchOrderList}
+                  refetch={recall}
                   invoices={orderList?.orders ?? []}
                   page={page}
                   pageCount={orderList?.pagination?.totalPages}
