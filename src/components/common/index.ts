@@ -16,3 +16,4 @@ export * from "./classic-menu";
 export * from "./zero-menu";
 export * from "./shim-menu";
 export * from "./wine-menu";
+export * from "./event-news-section";

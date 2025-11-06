@@ -22,7 +22,6 @@ const LoginPage = () => {
       const response = await apiLogin<{ message: string; userId: string }>(
         data
       );
-      console.log("Full response:", response);
       return response;
     },
     onSuccess: (data) => {
@@ -36,7 +35,6 @@ const LoginPage = () => {
     },
     onError: (error) => {
       setIsLoading(false);
-      console.log(error);
       if (error instanceof Error) {
         toast.error(error.message);
       } else {

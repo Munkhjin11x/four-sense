@@ -1,7 +1,19 @@
-globalThis.openNextDebug = false;globalThis.openNextVersion = "3.7.7";
+globalThis.openNextDebug = false;globalThis.openNextVersion = "3.8.5";
 
-// node_modules/@opennextjs/cloudflare/dist/api/durable-objects/sharded-tag-cache.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/cloudflare/dist/api/durable-objects/sharded-tag-cache.js
 import { DurableObject } from "cloudflare:workers";
+
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/cloudflare/dist/api/cloudflare-context.js
+var cloudflareContextSymbol = Symbol.for("__cloudflare-context__");
+
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/cloudflare/dist/api/overrides/internal.js
+var debugCache = (name, ...args) => {
+  if (process.env.NEXT_PRIVATE_DEBUG_CACHE) {
+    console.log(`[${name}] `, ...args);
+  }
+};
+
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/cloudflare/dist/api/durable-objects/sharded-tag-cache.js
 var DOShardedTagCache = class extends DurableObject {
   sql;
   constructor(state, env) {
@@ -14,18 +26,21 @@ var DOShardedTagCache = class extends DurableObject {
   async getLastRevalidated(tags) {
     try {
       const result = this.sql.exec(`SELECT MAX(revalidatedAt) AS time FROM revalidations WHERE tag IN (${tags.map(() => "?").join(", ")})`, ...tags).toArray();
-      if (result.length === 0)
-        return 0;
-      return result[0]?.time;
+      const timeMs = result[0]?.time ?? 0;
+      debugCache("DOShardedTagCache", `getLastRevalidated tags=${tags} -> time=${timeMs}`);
+      return timeMs;
     } catch (e) {
       console.error(e);
       return 0;
     }
   }
   async hasBeenRevalidated(tags, lastModified) {
-    return this.sql.exec(`SELECT 1 FROM revalidations WHERE tag IN (${tags.map(() => "?").join(", ")}) AND revalidatedAt > ? LIMIT 1`, ...tags, lastModified ?? Date.now()).toArray().length > 0;
+    const revalidated = this.sql.exec(`SELECT 1 FROM revalidations WHERE tag IN (${tags.map(() => "?").join(", ")}) AND revalidatedAt > ? LIMIT 1`, ...tags, lastModified ?? Date.now()).toArray().length > 0;
+    debugCache("DOShardedTagCache", `hasBeenRevalidated tags=${tags} -> revalidated=${revalidated}`);
+    return revalidated;
   }
   async writeTags(tags, lastModified) {
+    debugCache("DOShardedTagCache", `writeTags tags=${tags} time=${lastModified}`);
     tags.forEach((tag) => {
       this.sql.exec(`INSERT OR REPLACE INTO revalidations (tag, revalidatedAt) VALUES (?, ?)`, tag, lastModified);
     });

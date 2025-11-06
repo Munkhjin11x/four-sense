@@ -75,6 +75,7 @@ export type OrderList = {
 
 export type Order = {
   id: number;
+  eventDate: number;
   tableId: number;
   tableName: string;
   name: string;

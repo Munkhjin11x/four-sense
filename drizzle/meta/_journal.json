@@ -15,6 +15,13 @@
       "when": 1758873824640,
       "tag": "0001_conscious_ronan",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1762326938445,
+      "tag": "0002_left_thanos",
+      "breakpoints": true
     }
   ]
 }

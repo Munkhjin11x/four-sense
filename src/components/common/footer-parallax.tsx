@@ -2,9 +2,15 @@
 
 import { FooterVideo } from "./footer";
 import { FooterSection } from "./footer-section";
+import { usePathname } from "next/navigation";
 
 export const FooterParallax = () => {
   const data = [{ child: <FooterSection /> }, { child: <FooterVideo /> }];
+  const pathname = usePathname();
+
+  if (pathname === "/") {
+    return null;
+  }
 
   return (
     <div className="relative h-full scroll-smooth">

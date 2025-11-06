@@ -13,6 +13,7 @@ interface CreateOrderRequest {
   tableId?: number;
   date?: string;
   turnstileToken: string;
+  eventDate: number;
 }
 
 // Function to verify Cloudflare Turnstile token
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
       tableId,
       date,
       turnstileToken,
+      eventDate,
     } = body as CreateOrderRequest;
 
     if (!turnstileToken) {
@@ -64,26 +66,20 @@ export async function POST(req: Request) {
       );
     }
 
-    // Debug: Log the received date
-    console.log("Received date:", date, typeof date);
-
     let formattedDate;
     if (date) {
       const parsedDate = new Date(date);
-      console.log("Parsed date:", parsedDate);
+
       formattedDate = parsedDate
         .toISOString()
         .replace("T", " ")
         .substring(0, 19);
     } else {
-      console.log("No date provided, using current timestamp");
       formattedDate = new Date()
         .toISOString()
         .replace("T", " ")
         .substring(0, 19);
     }
-
-    console.log("Formatted date for SQLite:", formattedDate);
 
     const processedSeatIds = seatIds.map((seatId: string | number) => {
       if (typeof seatId === "string" && seatId.includes("seat_")) {
@@ -116,7 +112,9 @@ export async function POST(req: Request) {
       seatIds: processedSeatIds,
       tableId: processedTableId,
       date: formattedDate,
+      eventDate,
     });
+
     return NextResponse.json(order);
   } catch (error) {
     console.error("Error creating order:", error);

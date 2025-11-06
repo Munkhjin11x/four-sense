@@ -47,13 +47,19 @@ export const NavbarItemsMobile = ({
                     {title}
                   </Link>
                 ) : (
-                  <div
-                    className="flex items-center gap-2 p-0 hover:bg-transparent"
-                    onClick={onClick}
+                  <button
+                    className="flex items-center gap-2 p-0 hover:bg-transparent cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (onClick) {
+                        onClick(e);
+                      }
+                      toggleHamburger();
+                    }}
                   >
                     {icon}
                     {title}
-                  </div>
+                  </button>
                 )}
               </AccordionTrigger>
             </AccordionItem>

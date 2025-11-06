@@ -1,6 +1,7 @@
 import process from "node:process";
 const DEPLOYMENT_MAPPING_ENV_NAME = "CF_DEPLOYMENT_MAPPING";
 const CURRENT_VERSION_ID = "current";
+let deploymentMapping;
 function maybeGetSkewProtectionResponse(request) {
   if (false) {
     const url = new URL(request.url);
@@ -11,11 +12,11 @@ function maybeGetSkewProtectionResponse(request) {
     if (!requestDeploymentId || requestDeploymentId === process.env.DEPLOYMENT_ID) {
       return void 0;
     }
-    const mapping = process.env[DEPLOYMENT_MAPPING_ENV_NAME] ? JSON.parse(process.env[DEPLOYMENT_MAPPING_ENV_NAME]) : {};
-    if (!(requestDeploymentId in mapping)) {
+    deploymentMapping ??= process.env[DEPLOYMENT_MAPPING_ENV_NAME] ? JSON.parse(process.env[DEPLOYMENT_MAPPING_ENV_NAME]) : {};
+    if (!(requestDeploymentId in deploymentMapping)) {
       return void 0;
     }
-    const version = mapping[requestDeploymentId];
+    const version = deploymentMapping[requestDeploymentId];
     if (!version || version === CURRENT_VERSION_ID) {
       return void 0;
     }

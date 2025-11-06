@@ -4,6 +4,7 @@ import { CDN_URL } from "@/constants/contant";
 import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
 import Animation from "../ui/animation";
+import Marquee from "react-fast-marquee";
 
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
@@ -15,7 +16,7 @@ export const ExploreSection = () => {
 
   return (
     <div className="bg-[#F9D9B1] w-full h-full max-sm:px-5 flex justify-center mt-[80px]">
-      <div className="w-full flex pb-10 flex-col items-center pt-24">
+      <div className="w-full flex pb-2 flex-col items-center pt-24">
         <div className="flex flex-col gap-2 justify-center items-center w-full pb-10">
           <Animation>
             <p
@@ -37,13 +38,7 @@ export const ExploreSection = () => {
         </div>
         <Animation>
           <div className="relative w-full overflow-hidden">
-            <div
-              className="flex animate-scroll gap-2 "
-              style={{
-                animation: "scroll 50s linear infinite",
-                width: "fit-content",
-              }}
-            >
+            <Marquee className="">
               {scrollingImages.map((e, i) => (
                 <Image
                   key={i}
@@ -52,10 +47,10 @@ export const ExploreSection = () => {
                   width={836}
                   height={0}
                   sizes="100vw"
-                  className="object-cover min-w-[836px] h-[600px]"
+                  className="object-cover mx-1 min-w-[836px] h-[600px]"
                 />
               ))}
-            </div>
+            </Marquee>
           </div>
         </Animation>
       </div>

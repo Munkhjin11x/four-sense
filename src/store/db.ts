@@ -44,6 +44,7 @@ export async function createOrderWithSeats(
     email: string;
     seatIds: number[];
     date: string;
+    eventDate: number;
   }
 ) {
   // Check eligibility first
@@ -59,7 +60,8 @@ export async function createOrderWithSeats(
       phone: orderData.phone,
       email: orderData.email,
       orderDate: orderData.date,
-      status: "pending", // Explicitly set status for new orders
+      status: "pending",
+      eventDate: orderData.eventDate,
     })
     .returning();
 

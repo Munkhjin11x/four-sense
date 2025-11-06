@@ -11,6 +11,7 @@ import {
   Users,
   Check,
   X,
+  Sparkles,
 } from "lucide-react";
 import { format } from "date-fns";
 export const columns = (
@@ -112,10 +113,21 @@ export const columns = (
     cell: ({ row }) => {
       const date = new Date(row.original.orderDate);
       return (
-        <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
-          <div className="font-medium">{format(date, "MMM dd")}</div>
-          <div className="text-xs text-gray-400 hidden sm:block">
-            {format(date, "hh:mm a")}
+        <div className="flex flex-col gap-1.5">
+          {row.original.eventDate === 1 && (
+            <Badge
+              variant="outline"
+              className="w-fit bg-gradient-to-r from-purple-50 to-pink-50 border-purple-300 text-purple-700 font-medium shadow-sm hover:shadow-md transition-shadow"
+            >
+              <Sparkles className="h-3 w-3 mr-1 inline-block" />
+              Event
+            </Badge>
+          )}
+          <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
+            <div className="font-medium">{format(date, "MMM dd")}</div>
+            <div className="text-xs text-gray-400 hidden sm:block">
+              {format(date, "hh:mm a")}
+            </div>
           </div>
         </div>
       );

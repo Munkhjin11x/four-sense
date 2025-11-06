@@ -8,11 +8,9 @@ export async function POST() {
     const db = getDatabase();
 
     // Create c1 table with 6 seats
-    console.log("Creating table 'a1'...");
-    const tableC1 = await createTable(db, "a3");
-    console.log("Created table c1:", tableC1);
 
-    console.log("Creating 3 seats for table c1...");
+    const tableC1 = await createTable(db, "a3");
+
     const c1Seats = [];
     for (let i = 1; i <= 4; i++) {
       const seat = await createTableSeat(

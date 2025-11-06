@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState, useEffect } from "react";
 
 const useLoading = (delay: number = 4000) => {

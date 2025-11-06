@@ -32,7 +32,6 @@ export default function OrderTable({
   );
 
   const handleApprove = (orderId: number) => () => {
-    console.log("approveOrder", orderId);
     setIsOpen(true);
     setSelectedOrderId(orderId);
     setActionType("approve");

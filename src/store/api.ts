@@ -63,7 +63,6 @@ export async function apiUpdateTableSeat<T>(data: {
   tableName: string;
   seatIds: string[];
 }): Promise<T> {
-  console.log(data);
   const response = await fetch(
     `${baseUrl}/api/table/update-table-seat-status`,
     {
@@ -100,11 +99,8 @@ export async function apiCreateOrder<T>(data: {
   seatIds: string[];
   date: Date;
   turnstileToken: string;
+  eventDate: number;
 }): Promise<T> {
-  console.log("API call data:", data);
-  console.log("API call date:", data.date, typeof data.date);
-  console.log("API call JSON:", JSON.stringify(data));
-
   const response = await fetch(`${baseUrl}/api/order`, {
     method: "POST",
     headers: {

@@ -1,4 +1,4 @@
-globalThis.disableIncrementalCache = false;globalThis.disableDynamoDBCache = false;globalThis.isNextAfter15 = true;globalThis.openNextDebug = false;globalThis.openNextVersion = "3.7.7";
+globalThis.disableIncrementalCache = false;globalThis.disableDynamoDBCache = false;globalThis.isNextAfter15 = true;globalThis.openNextDebug = false;globalThis.openNextVersion = "3.8.5";
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -17,7 +17,7 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/@opennextjs/aws/dist/adapters/cache.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/cache.js
 var cache_exports = {};
 __export(cache_exports, {
   SOFT_TAG_PREFIX: () => SOFT_TAG_PREFIX,
@@ -25,7 +25,7 @@ __export(cache_exports, {
 });
 module.exports = __toCommonJS(cache_exports);
 
-// node_modules/@opennextjs/aws/dist/utils/error.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/error.js
 function isOpenNextError(e) {
   try {
     return "__openNextInternal" in e;
@@ -34,7 +34,7 @@ function isOpenNextError(e) {
   }
 }
 
-// node_modules/@opennextjs/aws/dist/adapters/logger.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/logger.js
 function debug(...args) {
   if (globalThis.openNextDebug) {
     console.log(...args);
@@ -84,7 +84,7 @@ function getOpenNextErrorLogLevel() {
   }
 }
 
-// node_modules/@opennextjs/aws/dist/utils/cache.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/cache.js
 async function hasBeenRevalidated(key, tags, cacheEntry) {
   if (globalThis.openNextConfig.dangerous?.disableTagCache) {
     return false;
@@ -98,7 +98,7 @@ async function hasBeenRevalidated(key, tags, cacheEntry) {
   }
   const lastModified = cacheEntry.lastModified ?? Date.now();
   if (globalThis.tagCache.mode === "nextMode") {
-    return await globalThis.tagCache.hasBeenRevalidated(tags, lastModified);
+    return tags.length === 0 ? false : await globalThis.tagCache.hasBeenRevalidated(tags, lastModified);
   }
   const _lastModified = await globalThis.tagCache.getLastModified(key, lastModified);
   return _lastModified === -1;
@@ -108,7 +108,9 @@ function getTagsFromValue(value) {
     return [];
   }
   try {
-    return value.meta?.headers?.["x-next-cache-tags"]?.split(",") ?? [];
+    const cacheTags = value.meta?.headers?.["x-next-cache-tags"]?.split(",") ?? [];
+    delete value.meta?.headers?.["x-next-cache-tags"];
+    return cacheTags;
   } catch (e) {
     return [];
   }
@@ -142,7 +144,7 @@ async function writeTags(tags) {
   await globalThis.tagCache.writeTags(tagsToWrite);
 }
 
-// node_modules/@opennextjs/aws/dist/utils/binary.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/binary.js
 var commonBinaryMimeTypes = /* @__PURE__ */ new Set([
   "application/octet-stream",
   // Docs
@@ -206,11 +208,11 @@ var commonBinaryMimeTypes = /* @__PURE__ */ new Set([
 function isBinaryContentType(contentType) {
   if (!contentType)
     return false;
-  const value = contentType?.split(";")[0] ?? "";
+  const value = contentType.split(";")[0];
   return commonBinaryMimeTypes.has(value);
 }
 
-// node_modules/@opennextjs/aws/dist/adapters/cache.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/cache.js
 var SOFT_TAG_PREFIX = "_N_T_/";
 function isFetchCache(options) {
   if (typeof options === "boolean") {

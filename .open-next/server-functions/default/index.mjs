@@ -1,4 +1,4 @@
-globalThis.monorepoPackagePath = "";globalThis.openNextDebug = false;globalThis.openNextVersion = "3.7.7";
+globalThis.monorepoPackagePath = "";globalThis.openNextDebug = false;globalThis.openNextVersion = "3.8.5";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -40,7 +40,7 @@ var __toESM = (mod3, isNodeMode, target) => (target = mod3 != null ? __create(__
 ));
 var __toCommonJS = (mod3) => __copyProps(__defProp({}, "__esModule", { value: true }), mod3);
 
-// node_modules/@opennextjs/aws/dist/utils/error.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/error.js
 function isOpenNextError(e) {
   try {
     return "__openNextInternal" in e;
@@ -50,7 +50,7 @@ function isOpenNextError(e) {
 }
 var IgnorableError, FatalError;
 var init_error = __esm({
-  "node_modules/@opennextjs/aws/dist/utils/error.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/error.js"() {
     IgnorableError = class extends Error {
       __openNextInternal = true;
       canIgnore = true;
@@ -72,7 +72,7 @@ var init_error = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/adapters/logger.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/logger.js
 function debug(...args) {
   if (globalThis.openNextDebug) {
     console.log(...args);
@@ -115,7 +115,7 @@ function getOpenNextErrorLogLevel() {
 }
 var DOWNPLAYED_ERROR_LOGS, isDownplayedErrorLog;
 var init_logger = __esm({
-  "node_modules/@opennextjs/aws/dist/adapters/logger.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/logger.js"() {
     init_error();
     DOWNPLAYED_ERROR_LOGS = [
       {
@@ -128,7 +128,545 @@ var init_logger = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/http/util.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/chalk/source/vendor/ansi-styles/index.js
+function assembleStyles() {
+  const codes = /* @__PURE__ */ new Map();
+  for (const [groupName, group] of Object.entries(styles)) {
+    for (const [styleName, style] of Object.entries(group)) {
+      styles[styleName] = {
+        open: `\x1B[${style[0]}m`,
+        close: `\x1B[${style[1]}m`
+      };
+      group[styleName] = styles[styleName];
+      codes.set(style[0], style[1]);
+    }
+    Object.defineProperty(styles, groupName, {
+      value: group,
+      enumerable: false
+    });
+  }
+  Object.defineProperty(styles, "codes", {
+    value: codes,
+    enumerable: false
+  });
+  styles.color.close = "\x1B[39m";
+  styles.bgColor.close = "\x1B[49m";
+  styles.color.ansi = wrapAnsi16();
+  styles.color.ansi256 = wrapAnsi256();
+  styles.color.ansi16m = wrapAnsi16m();
+  styles.bgColor.ansi = wrapAnsi16(ANSI_BACKGROUND_OFFSET);
+  styles.bgColor.ansi256 = wrapAnsi256(ANSI_BACKGROUND_OFFSET);
+  styles.bgColor.ansi16m = wrapAnsi16m(ANSI_BACKGROUND_OFFSET);
+  Object.defineProperties(styles, {
+    rgbToAnsi256: {
+      value(red, green, blue) {
+        if (red === green && green === blue) {
+          if (red < 8) {
+            return 16;
+          }
+          if (red > 248) {
+            return 231;
+          }
+          return Math.round((red - 8) / 247 * 24) + 232;
+        }
+        return 16 + 36 * Math.round(red / 255 * 5) + 6 * Math.round(green / 255 * 5) + Math.round(blue / 255 * 5);
+      },
+      enumerable: false
+    },
+    hexToRgb: {
+      value(hex) {
+        const matches = /[a-f\d]{6}|[a-f\d]{3}/i.exec(hex.toString(16));
+        if (!matches) {
+          return [0, 0, 0];
+        }
+        let [colorString] = matches;
+        if (colorString.length === 3) {
+          colorString = [...colorString].map((character) => character + character).join("");
+        }
+        const integer = Number.parseInt(colorString, 16);
+        return [
+          /* eslint-disable no-bitwise */
+          integer >> 16 & 255,
+          integer >> 8 & 255,
+          integer & 255
+          /* eslint-enable no-bitwise */
+        ];
+      },
+      enumerable: false
+    },
+    hexToAnsi256: {
+      value: (hex) => styles.rgbToAnsi256(...styles.hexToRgb(hex)),
+      enumerable: false
+    },
+    ansi256ToAnsi: {
+      value(code) {
+        if (code < 8) {
+          return 30 + code;
+        }
+        if (code < 16) {
+          return 90 + (code - 8);
+        }
+        let red;
+        let green;
+        let blue;
+        if (code >= 232) {
+          red = ((code - 232) * 10 + 8) / 255;
+          green = red;
+          blue = red;
+        } else {
+          code -= 16;
+          const remainder = code % 36;
+          red = Math.floor(code / 36) / 5;
+          green = Math.floor(remainder / 6) / 5;
+          blue = remainder % 6 / 5;
+        }
+        const value = Math.max(red, green, blue) * 2;
+        if (value === 0) {
+          return 30;
+        }
+        let result = 30 + (Math.round(blue) << 2 | Math.round(green) << 1 | Math.round(red));
+        if (value === 2) {
+          result += 60;
+        }
+        return result;
+      },
+      enumerable: false
+    },
+    rgbToAnsi: {
+      value: (red, green, blue) => styles.ansi256ToAnsi(styles.rgbToAnsi256(red, green, blue)),
+      enumerable: false
+    },
+    hexToAnsi: {
+      value: (hex) => styles.ansi256ToAnsi(styles.hexToAnsi256(hex)),
+      enumerable: false
+    }
+  });
+  return styles;
+}
+var ANSI_BACKGROUND_OFFSET, wrapAnsi16, wrapAnsi256, wrapAnsi16m, styles, modifierNames, foregroundColorNames, backgroundColorNames, colorNames, ansiStyles, ansi_styles_default;
+var init_ansi_styles = __esm({
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/chalk/source/vendor/ansi-styles/index.js"() {
+    ANSI_BACKGROUND_OFFSET = 10;
+    wrapAnsi16 = (offset = 0) => (code) => `\x1B[${code + offset}m`;
+    wrapAnsi256 = (offset = 0) => (code) => `\x1B[${38 + offset};5;${code}m`;
+    wrapAnsi16m = (offset = 0) => (red, green, blue) => `\x1B[${38 + offset};2;${red};${green};${blue}m`;
+    styles = {
+      modifier: {
+        reset: [0, 0],
+        // 21 isn't widely supported and 22 does the same thing
+        bold: [1, 22],
+        dim: [2, 22],
+        italic: [3, 23],
+        underline: [4, 24],
+        overline: [53, 55],
+        inverse: [7, 27],
+        hidden: [8, 28],
+        strikethrough: [9, 29]
+      },
+      color: {
+        black: [30, 39],
+        red: [31, 39],
+        green: [32, 39],
+        yellow: [33, 39],
+        blue: [34, 39],
+        magenta: [35, 39],
+        cyan: [36, 39],
+        white: [37, 39],
+        // Bright color
+        blackBright: [90, 39],
+        gray: [90, 39],
+        // Alias of `blackBright`
+        grey: [90, 39],
+        // Alias of `blackBright`
+        redBright: [91, 39],
+        greenBright: [92, 39],
+        yellowBright: [93, 39],
+        blueBright: [94, 39],
+        magentaBright: [95, 39],
+        cyanBright: [96, 39],
+        whiteBright: [97, 39]
+      },
+      bgColor: {
+        bgBlack: [40, 49],
+        bgRed: [41, 49],
+        bgGreen: [42, 49],
+        bgYellow: [43, 49],
+        bgBlue: [44, 49],
+        bgMagenta: [45, 49],
+        bgCyan: [46, 49],
+        bgWhite: [47, 49],
+        // Bright color
+        bgBlackBright: [100, 49],
+        bgGray: [100, 49],
+        // Alias of `bgBlackBright`
+        bgGrey: [100, 49],
+        // Alias of `bgBlackBright`
+        bgRedBright: [101, 49],
+        bgGreenBright: [102, 49],
+        bgYellowBright: [103, 49],
+        bgBlueBright: [104, 49],
+        bgMagentaBright: [105, 49],
+        bgCyanBright: [106, 49],
+        bgWhiteBright: [107, 49]
+      }
+    };
+    modifierNames = Object.keys(styles.modifier);
+    foregroundColorNames = Object.keys(styles.color);
+    backgroundColorNames = Object.keys(styles.bgColor);
+    colorNames = [...foregroundColorNames, ...backgroundColorNames];
+    ansiStyles = assembleStyles();
+    ansi_styles_default = ansiStyles;
+  }
+});
+
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/chalk/source/vendor/supports-color/index.js
+import process2 from "node:process";
+import os from "node:os";
+import tty from "node:tty";
+function hasFlag(flag, argv = globalThis.Deno ? globalThis.Deno.args : process2.argv) {
+  const prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--";
+  const position = argv.indexOf(prefix + flag);
+  const terminatorPosition = argv.indexOf("--");
+  return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
+}
+function envForceColor() {
+  if ("FORCE_COLOR" in env) {
+    if (env.FORCE_COLOR === "true") {
+      return 1;
+    }
+    if (env.FORCE_COLOR === "false") {
+      return 0;
+    }
+    return env.FORCE_COLOR.length === 0 ? 1 : Math.min(Number.parseInt(env.FORCE_COLOR, 10), 3);
+  }
+}
+function translateLevel(level) {
+  if (level === 0) {
+    return false;
+  }
+  return {
+    level,
+    hasBasic: true,
+    has256: level >= 2,
+    has16m: level >= 3
+  };
+}
+function _supportsColor(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
+  const noFlagForceColor = envForceColor();
+  if (noFlagForceColor !== void 0) {
+    flagForceColor = noFlagForceColor;
+  }
+  const forceColor = sniffFlags ? flagForceColor : noFlagForceColor;
+  if (forceColor === 0) {
+    return 0;
+  }
+  if (sniffFlags) {
+    if (hasFlag("color=16m") || hasFlag("color=full") || hasFlag("color=truecolor")) {
+      return 3;
+    }
+    if (hasFlag("color=256")) {
+      return 2;
+    }
+  }
+  if ("TF_BUILD" in env && "AGENT_NAME" in env) {
+    return 1;
+  }
+  if (haveStream && !streamIsTTY && forceColor === void 0) {
+    return 0;
+  }
+  const min = forceColor || 0;
+  if (env.TERM === "dumb") {
+    return min;
+  }
+  if (process2.platform === "win32") {
+    const osRelease = os.release().split(".");
+    if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
+      return Number(osRelease[2]) >= 14931 ? 3 : 2;
+    }
+    return 1;
+  }
+  if ("CI" in env) {
+    if (["GITHUB_ACTIONS", "GITEA_ACTIONS", "CIRCLECI"].some((key) => key in env)) {
+      return 3;
+    }
+    if (["TRAVIS", "APPVEYOR", "GITLAB_CI", "BUILDKITE", "DRONE"].some((sign) => sign in env) || env.CI_NAME === "codeship") {
+      return 1;
+    }
+    return min;
+  }
+  if ("TEAMCITY_VERSION" in env) {
+    return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
+  }
+  if (env.COLORTERM === "truecolor") {
+    return 3;
+  }
+  if (env.TERM === "xterm-kitty") {
+    return 3;
+  }
+  if (env.TERM === "xterm-ghostty") {
+    return 3;
+  }
+  if (env.TERM === "wezterm") {
+    return 3;
+  }
+  if ("TERM_PROGRAM" in env) {
+    const version = Number.parseInt((env.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
+    switch (env.TERM_PROGRAM) {
+      case "iTerm.app": {
+        return version >= 3 ? 3 : 2;
+      }
+      case "Apple_Terminal": {
+        return 2;
+      }
+    }
+  }
+  if (/-256(color)?$/i.test(env.TERM)) {
+    return 2;
+  }
+  if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM)) {
+    return 1;
+  }
+  if ("COLORTERM" in env) {
+    return 1;
+  }
+  return min;
+}
+function createSupportsColor(stream, options = {}) {
+  const level = _supportsColor(stream, {
+    streamIsTTY: stream && stream.isTTY,
+    ...options
+  });
+  return translateLevel(level);
+}
+var env, flagForceColor, supportsColor, supports_color_default;
+var init_supports_color = __esm({
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/chalk/source/vendor/supports-color/index.js"() {
+    ({ env } = process2);
+    if (hasFlag("no-color") || hasFlag("no-colors") || hasFlag("color=false") || hasFlag("color=never")) {
+      flagForceColor = 0;
+    } else if (hasFlag("color") || hasFlag("colors") || hasFlag("color=true") || hasFlag("color=always")) {
+      flagForceColor = 1;
+    }
+    supportsColor = {
+      stdout: createSupportsColor({ isTTY: tty.isatty(1) }),
+      stderr: createSupportsColor({ isTTY: tty.isatty(2) })
+    };
+    supports_color_default = supportsColor;
+  }
+});
+
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/chalk/source/utilities.js
+function stringReplaceAll(string, substring, replacer) {
+  let index = string.indexOf(substring);
+  if (index === -1) {
+    return string;
+  }
+  const substringLength = substring.length;
+  let endIndex = 0;
+  let returnValue = "";
+  do {
+    returnValue += string.slice(endIndex, index) + substring + replacer;
+    endIndex = index + substringLength;
+    index = string.indexOf(substring, endIndex);
+  } while (index !== -1);
+  returnValue += string.slice(endIndex);
+  return returnValue;
+}
+function stringEncaseCRLFWithFirstIndex(string, prefix, postfix, index) {
+  let endIndex = 0;
+  let returnValue = "";
+  do {
+    const gotCR = string[index - 1] === "\r";
+    returnValue += string.slice(endIndex, gotCR ? index - 1 : index) + prefix + (gotCR ? "\r\n" : "\n") + postfix;
+    endIndex = index + 1;
+    index = string.indexOf("\n", endIndex);
+  } while (index !== -1);
+  returnValue += string.slice(endIndex);
+  return returnValue;
+}
+var init_utilities = __esm({
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/chalk/source/utilities.js"() {
+  }
+});
+
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/chalk/source/index.js
+function createChalk(options) {
+  return chalkFactory(options);
+}
+var stdoutColor, stderrColor, GENERATOR, STYLER, IS_EMPTY, levelMapping, styles2, applyOptions, chalkFactory, getModelAnsi, usedModels, proto, createStyler, createBuilder, applyStyle, chalk, chalkStderr, source_default;
+var init_source = __esm({
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/chalk/source/index.js"() {
+    init_ansi_styles();
+    init_supports_color();
+    init_utilities();
+    ({ stdout: stdoutColor, stderr: stderrColor } = supports_color_default);
+    GENERATOR = Symbol("GENERATOR");
+    STYLER = Symbol("STYLER");
+    IS_EMPTY = Symbol("IS_EMPTY");
+    levelMapping = [
+      "ansi",
+      "ansi",
+      "ansi256",
+      "ansi16m"
+    ];
+    styles2 = /* @__PURE__ */ Object.create(null);
+    applyOptions = (object, options = {}) => {
+      if (options.level && !(Number.isInteger(options.level) && options.level >= 0 && options.level <= 3)) {
+        throw new Error("The `level` option should be an integer from 0 to 3");
+      }
+      const colorLevel = stdoutColor ? stdoutColor.level : 0;
+      object.level = options.level === void 0 ? colorLevel : options.level;
+    };
+    chalkFactory = (options) => {
+      const chalk2 = (...strings) => strings.join(" ");
+      applyOptions(chalk2, options);
+      Object.setPrototypeOf(chalk2, createChalk.prototype);
+      return chalk2;
+    };
+    Object.setPrototypeOf(createChalk.prototype, Function.prototype);
+    for (const [styleName, style] of Object.entries(ansi_styles_default)) {
+      styles2[styleName] = {
+        get() {
+          const builder = createBuilder(this, createStyler(style.open, style.close, this[STYLER]), this[IS_EMPTY]);
+          Object.defineProperty(this, styleName, { value: builder });
+          return builder;
+        }
+      };
+    }
+    styles2.visible = {
+      get() {
+        const builder = createBuilder(this, this[STYLER], true);
+        Object.defineProperty(this, "visible", { value: builder });
+        return builder;
+      }
+    };
+    getModelAnsi = (model, level, type, ...arguments_) => {
+      if (model === "rgb") {
+        if (level === "ansi16m") {
+          return ansi_styles_default[type].ansi16m(...arguments_);
+        }
+        if (level === "ansi256") {
+          return ansi_styles_default[type].ansi256(ansi_styles_default.rgbToAnsi256(...arguments_));
+        }
+        return ansi_styles_default[type].ansi(ansi_styles_default.rgbToAnsi(...arguments_));
+      }
+      if (model === "hex") {
+        return getModelAnsi("rgb", level, type, ...ansi_styles_default.hexToRgb(...arguments_));
+      }
+      return ansi_styles_default[type][model](...arguments_);
+    };
+    usedModels = ["rgb", "hex", "ansi256"];
+    for (const model of usedModels) {
+      styles2[model] = {
+        get() {
+          const { level } = this;
+          return function(...arguments_) {
+            const styler = createStyler(getModelAnsi(model, levelMapping[level], "color", ...arguments_), ansi_styles_default.color.close, this[STYLER]);
+            return createBuilder(this, styler, this[IS_EMPTY]);
+          };
+        }
+      };
+      const bgModel = "bg" + model[0].toUpperCase() + model.slice(1);
+      styles2[bgModel] = {
+        get() {
+          const { level } = this;
+          return function(...arguments_) {
+            const styler = createStyler(getModelAnsi(model, levelMapping[level], "bgColor", ...arguments_), ansi_styles_default.bgColor.close, this[STYLER]);
+            return createBuilder(this, styler, this[IS_EMPTY]);
+          };
+        }
+      };
+    }
+    proto = Object.defineProperties(() => {
+    }, {
+      ...styles2,
+      level: {
+        enumerable: true,
+        get() {
+          return this[GENERATOR].level;
+        },
+        set(level) {
+          this[GENERATOR].level = level;
+        }
+      }
+    });
+    createStyler = (open, close, parent) => {
+      let openAll;
+      let closeAll;
+      if (parent === void 0) {
+        openAll = open;
+        closeAll = close;
+      } else {
+        openAll = parent.openAll + open;
+        closeAll = close + parent.closeAll;
+      }
+      return {
+        open,
+        close,
+        openAll,
+        closeAll,
+        parent
+      };
+    };
+    createBuilder = (self, _styler, _isEmpty) => {
+      const builder = (...arguments_) => applyStyle(builder, arguments_.length === 1 ? "" + arguments_[0] : arguments_.join(" "));
+      Object.setPrototypeOf(builder, proto);
+      builder[GENERATOR] = self;
+      builder[STYLER] = _styler;
+      builder[IS_EMPTY] = _isEmpty;
+      return builder;
+    };
+    applyStyle = (self, string) => {
+      if (self.level <= 0 || !string) {
+        return self[IS_EMPTY] ? "" : string;
+      }
+      let styler = self[STYLER];
+      if (styler === void 0) {
+        return string;
+      }
+      const { openAll, closeAll } = styler;
+      if (string.includes("\x1B")) {
+        while (styler !== void 0) {
+          string = stringReplaceAll(string, styler.close, styler.open);
+          styler = styler.parent;
+        }
+      }
+      const lfIndex = string.indexOf("\n");
+      if (lfIndex !== -1) {
+        string = stringEncaseCRLFWithFirstIndex(string, closeAll, openAll, lfIndex);
+      }
+      return openAll + string + closeAll;
+    };
+    Object.defineProperties(createChalk.prototype, styles2);
+    chalk = createChalk();
+    chalkStderr = createChalk({ level: stderrColor ? stderrColor.level : 0 });
+    source_default = chalk;
+  }
+});
+
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/logger.js
+var logLevel, logger_default;
+var init_logger2 = __esm({
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/logger.js"() {
+    init_source();
+    logLevel = "info";
+    logger_default = {
+      setLevel: (level) => logLevel = level,
+      debug: (...args) => {
+        if (logLevel !== "debug")
+          return;
+        console.log(source_default.magenta("DEBUG"), ...args);
+      },
+      info: console.log,
+      warn: (...args) => console.warn(source_default.yellow("WARN"), ...args),
+      error: (...args) => console.error(source_default.red("ERROR"), ...args),
+      time: console.time,
+      timeEnd: console.timeEnd
+    };
+  }
+});
+
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/http/util.js
 function parseSetCookieHeader(cookies) {
   if (!cookies) {
     return [];
@@ -155,7 +693,8 @@ function getQueryFromIterator(it) {
 }
 var parseHeaders, convertHeader;
 var init_util = __esm({
-  "node_modules/@opennextjs/aws/dist/http/util.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/http/util.js"() {
+    init_logger2();
     parseHeaders = (headers) => {
       const result = {};
       if (!headers) {
@@ -165,7 +704,17 @@ var init_util = __esm({
         if (value === void 0) {
           continue;
         }
-        result[key.toLowerCase()] = convertHeader(value);
+        const keyLower = key.toLowerCase();
+        if (keyLower === "location" && Array.isArray(value)) {
+          if (value[0] === value[1]) {
+            result[keyLower] = value[0];
+          } else {
+            logger_default.warn("Multiple different values for Location header found. Using the last one");
+            result[keyLower] = value[value.length - 1];
+          }
+          continue;
+        }
+        result[keyLower] = convertHeader(value);
       }
       return result;
     };
@@ -190,32 +739,43 @@ var init_node_module = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/utils/stream.js
-import { Readable } from "node:stream";
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/stream.js
+import { ReadableStream as ReadableStream2 } from "node:stream/web";
 function emptyReadableStream() {
   if (process.env.OPEN_NEXT_FORCE_NON_EMPTY_RESPONSE === "true") {
-    return Readable.toWeb(Readable.from([Buffer.from("SOMETHING")]));
+    return new ReadableStream2({
+      pull(controller) {
+        maybeSomethingBuffer ??= Buffer.from("SOMETHING");
+        controller.enqueue(maybeSomethingBuffer);
+        controller.close();
+      }
+    }, { highWaterMark: 0 });
   }
-  return Readable.toWeb(Readable.from([]));
+  return new ReadableStream2({
+    start(controller) {
+      controller.close();
+    }
+  });
 }
+var maybeSomethingBuffer;
 var init_stream = __esm({
-  "node_modules/@opennextjs/aws/dist/utils/stream.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/stream.js"() {
   }
 });
 
-// node_modules/@opennextjs/aws/dist/overrides/converters/utils.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/converters/utils.js
 function getQueryFromSearchParams(searchParams) {
   return getQueryFromIterator(searchParams.entries());
 }
 var init_utils = __esm({
-  "node_modules/@opennextjs/aws/dist/overrides/converters/utils.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/converters/utils.js"() {
     init_util();
   }
 });
 
-// node_modules/cookie/dist/index.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/cookie/dist/index.js
 var require_dist = __commonJS({
-  "node_modules/cookie/dist/index.js"(exports) {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/cookie/dist/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.parse = parse2;
@@ -372,7 +932,7 @@ var require_dist = __commonJS({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/overrides/converters/edge.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/converters/edge.js
 var edge_exports = {};
 __export(edge_exports, {
   default: () => edge_default
@@ -380,7 +940,7 @@ __export(edge_exports, {
 import { Buffer as Buffer2 } from "node:buffer";
 var import_cookie, NULL_BODY_STATUSES, converter, edge_default;
 var init_edge = __esm({
-  "node_modules/@opennextjs/aws/dist/overrides/converters/edge.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/converters/edge.js"() {
     import_cookie = __toESM(require_dist(), 1);
     init_util();
     init_utils();
@@ -390,7 +950,6 @@ var init_edge = __esm({
         const url = new URL(event.url);
         const searchParams = url.searchParams;
         const query = getQueryFromSearchParams(searchParams);
-        const body = await event.arrayBuffer();
         const headers = {};
         event.headers.forEach((value, key) => {
           headers[key] = value;
@@ -398,6 +957,7 @@ var init_edge = __esm({
         const rawPath = url.pathname;
         const method = event.method;
         const shouldHaveBody = method !== "GET" && method !== "HEAD";
+        const body = shouldHaveBody ? Buffer2.from(await event.arrayBuffer()) : void 0;
         const cookieHeader = event.headers.get("cookie");
         const cookies = cookieHeader ? import_cookie.default.parse(cookieHeader) : {};
         return {
@@ -405,7 +965,7 @@ var init_edge = __esm({
           method,
           rawPath,
           url: event.url,
-          body: shouldHaveBody ? Buffer2.from(body) : void 0,
+          body,
           headers,
           remoteAddress: event.headers.get("x-forwarded-for") ?? "::1",
           query,
@@ -462,7 +1022,7 @@ var init_edge = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/overrides/wrappers/cloudflare-node.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/wrappers/cloudflare-node.js
 var cloudflare_node_exports = {};
 __export(cloudflare_node_exports, {
   default: () => cloudflare_node_default
@@ -470,11 +1030,11 @@ __export(cloudflare_node_exports, {
 import { Writable } from "node:stream";
 var NULL_BODY_STATUSES2, handler, cloudflare_node_default;
 var init_cloudflare_node = __esm({
-  "node_modules/@opennextjs/aws/dist/overrides/wrappers/cloudflare-node.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/wrappers/cloudflare-node.js"() {
     NULL_BODY_STATUSES2 = /* @__PURE__ */ new Set([101, 204, 205, 304]);
-    handler = async (handler3, converter2) => async (request, env, ctx, abortSignal) => {
+    handler = async (handler3, converter2) => async (request, env2, ctx, abortSignal) => {
       globalThis.process = process;
-      for (const [key, value] of Object.entries(env)) {
+      for (const [key, value] of Object.entries(env2)) {
         if (typeof value === "string") {
           process.env[key] = value;
         }
@@ -492,23 +1052,57 @@ var init_cloudflare_node = __esm({
           if (url.hostname === "localhost") {
             responseHeaders.set("Content-Encoding", "identity");
           }
-          const { readable, writable } = new TransformStream({
-            transform(chunk, controller) {
-              controller.enqueue(Uint8Array.from(chunk.chunk ?? chunk));
+          if (NULL_BODY_STATUSES2.has(statusCode)) {
+            const response2 = new Response(null, {
+              status: statusCode,
+              headers: responseHeaders
+            });
+            resolveResponse(response2);
+            return new Writable({
+              write(chunk, encoding, callback) {
+                callback();
+              }
+            });
+          }
+          let controller;
+          const readable = new ReadableStream({
+            start(c) {
+              controller = c;
             }
           });
-          const body = NULL_BODY_STATUSES2.has(statusCode) ? null : readable;
-          const response = new Response(body, {
+          const response = new Response(readable, {
             status: statusCode,
             headers: responseHeaders
           });
           resolveResponse(response);
-          return Writable.fromWeb(writable);
+          return new Writable({
+            write(chunk, encoding, callback) {
+              controller.enqueue(chunk);
+              callback();
+            },
+            final(callback) {
+              controller.close();
+              callback();
+            },
+            destroy(error2, callback) {
+              if (error2) {
+                controller.error(error2);
+              } else {
+                try {
+                  controller.close();
+                } catch {
+                }
+              }
+              callback(error2);
+            }
+          });
         },
         // This is for passing along the original abort signal from the initial Request you retrieve in your worker
         // Ensures that the response we pass to NextServer is aborted if the request is aborted
         // By doing this `request.signal.onabort` will work in route handlers
-        abortSignal
+        abortSignal,
+        // There is no need to retain the chunks that were pushed to the response stream.
+        retainChunks: false
       };
       ctx.waitUntil(handler3(internalEvent, {
         streamCreator,
@@ -524,14 +1118,14 @@ var init_cloudflare_node = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/overrides/tagCache/dummy.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/tagCache/dummy.js
 var dummy_exports = {};
 __export(dummy_exports, {
   default: () => dummy_default
 });
 var dummyTagCache, dummy_default;
 var init_dummy = __esm({
-  "node_modules/@opennextjs/aws/dist/overrides/tagCache/dummy.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/tagCache/dummy.js"() {
     dummyTagCache = {
       name: "dummy",
       mode: "original",
@@ -552,14 +1146,14 @@ var init_dummy = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/overrides/queue/dummy.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/queue/dummy.js
 var dummy_exports2 = {};
 __export(dummy_exports2, {
   default: () => dummy_default2
 });
 var dummyQueue, dummy_default2;
 var init_dummy2 = __esm({
-  "node_modules/@opennextjs/aws/dist/overrides/queue/dummy.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/queue/dummy.js"() {
     init_error();
     dummyQueue = {
       name: "dummy",
@@ -571,14 +1165,14 @@ var init_dummy2 = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/overrides/incrementalCache/dummy.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/incrementalCache/dummy.js
 var dummy_exports3 = {};
 __export(dummy_exports3, {
   default: () => dummy_default3
 });
 var dummyIncrementalCache, dummy_default3;
 var init_dummy3 = __esm({
-  "node_modules/@opennextjs/aws/dist/overrides/incrementalCache/dummy.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/incrementalCache/dummy.js"() {
     init_error();
     dummyIncrementalCache = {
       name: "dummy",
@@ -596,14 +1190,14 @@ var init_dummy3 = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/overrides/assetResolver/dummy.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/assetResolver/dummy.js
 var dummy_exports4 = {};
 __export(dummy_exports4, {
   default: () => dummy_default4
 });
 var resolver, dummy_default4;
 var init_dummy4 = __esm({
-  "node_modules/@opennextjs/aws/dist/overrides/assetResolver/dummy.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/assetResolver/dummy.js"() {
     resolver = {
       name: "dummy"
     };
@@ -611,14 +1205,14 @@ var init_dummy4 = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/overrides/proxyExternalRequest/fetch.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/proxyExternalRequest/fetch.js
 var fetch_exports = {};
 __export(fetch_exports, {
   default: () => fetch_default
 });
 var fetchProxy, fetch_default;
 var init_fetch = __esm({
-  "node_modules/@opennextjs/aws/dist/overrides/proxyExternalRequest/fetch.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/proxyExternalRequest/fetch.js"() {
     init_stream();
     fetchProxy = {
       name: "fetch-proxy",
@@ -648,14 +1242,14 @@ var init_fetch = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/overrides/cdnInvalidation/dummy.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/cdnInvalidation/dummy.js
 var dummy_exports5 = {};
 __export(dummy_exports5, {
   default: () => dummy_default5
 });
 var dummy_default5;
 var init_dummy5 = __esm({
-  "node_modules/@opennextjs/aws/dist/overrides/cdnInvalidation/dummy.js"() {
+  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/overrides/cdnInvalidation/dummy.js"() {
     dummy_default5 = {
       name: "dummy",
       invalidatePaths: (_) => {
@@ -665,27 +1259,27 @@ var init_dummy5 = __esm({
   }
 });
 
-// node_modules/@opennextjs/aws/dist/adapters/config/index.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/config/index.js
 init_logger();
 import path from "node:path";
 globalThis.__dirname ??= "";
 var NEXT_DIR = path.join(__dirname, ".next");
 var OPEN_NEXT_DIR = path.join(__dirname, ".open-next");
 debug({ NEXT_DIR, OPEN_NEXT_DIR });
-var NextConfig = { "env": { "CLOUDFLARE_ACCOUNT_ID": "544971d734e2d2605d77624f56f6e72d", "CLOUDFLARE_DATABASE_ID": "1ac8c424-7722-4894-92e6-6473bf090abc", "CLOUDFLARE_D1_API_TOKEN": "R3gt_08buDUu-Tyd6yq5M6XtcmgIryStylNAc-wx" }, "webpack": null, "eslint": { "ignoreDuringBuilds": false }, "typescript": { "ignoreBuildErrors": false, "tsconfigPath": "tsconfig.json" }, "distDir": ".next", "cleanDistDir": true, "assetPrefix": "", "cacheMaxMemorySize": 52428800, "configOrigin": "next.config.ts", "useFileSystemPublicRoutes": true, "generateEtags": true, "pageExtensions": ["tsx", "ts", "jsx", "js"], "poweredByHeader": true, "compress": true, "images": { "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840], "imageSizes": [16, 32, 48, 64, 96, 128, 256, 384], "path": "/_next/image", "loader": "default", "loaderFile": "", "domains": [], "disableStaticImages": false, "minimumCacheTTL": 60, "formats": ["image/webp"], "dangerouslyAllowSVG": false, "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;", "contentDispositionType": "attachment", "remotePatterns": [{ "protocol": "https", "hostname": "pub-f1fd80427d5e489a98fb6022fd6f176b.r2.dev" }], "unoptimized": false }, "devIndicators": { "appIsrStatus": true, "buildActivity": true, "buildActivityPosition": "bottom-right" }, "onDemandEntries": { "maxInactiveAge": 6e4, "pagesBufferLength": 5 }, "amp": { "canonicalBase": "" }, "basePath": "", "sassOptions": {}, "trailingSlash": false, "i18n": null, "productionBrowserSourceMaps": false, "excludeDefaultMomentLocales": true, "serverRuntimeConfig": {}, "publicRuntimeConfig": {}, "reactProductionProfiling": false, "reactStrictMode": null, "reactMaxHeadersLength": 6e3, "httpAgentOptions": { "keepAlive": true }, "logging": {}, "expireTime": 31536e3, "staticPageGenerationTimeout": 60, "output": "standalone", "modularizeImports": { "@mui/icons-material": { "transform": "@mui/icons-material/{{member}}" }, "lodash": { "transform": "lodash/{{member}}" } }, "outputFileTracingRoot": "/Users/munkhjinaltangerel/Desktop/other/four-sense", "experimental": { "cacheLife": { "default": { "stale": 300, "revalidate": 900, "expire": 4294967294 }, "seconds": { "stale": 0, "revalidate": 1, "expire": 60 }, "minutes": { "stale": 300, "revalidate": 60, "expire": 3600 }, "hours": { "stale": 300, "revalidate": 3600, "expire": 86400 }, "days": { "stale": 300, "revalidate": 86400, "expire": 604800 }, "weeks": { "stale": 300, "revalidate": 604800, "expire": 2592e3 }, "max": { "stale": 300, "revalidate": 2592e3, "expire": 4294967294 } }, "cacheHandlers": {}, "cssChunking": true, "multiZoneDraftMode": false, "appNavFailHandling": false, "prerenderEarlyExit": true, "serverMinification": true, "serverSourceMaps": false, "linkNoTouchStart": false, "caseSensitiveRoutes": false, "clientSegmentCache": false, "preloadEntriesOnStart": true, "clientRouterFilter": true, "clientRouterFilterRedirects": false, "fetchCacheKeyPrefix": "", "middlewarePrefetch": "flexible", "optimisticClientCache": true, "manualClientBasePath": false, "cpus": 9, "memoryBasedWorkersCount": false, "imgOptConcurrency": null, "imgOptTimeoutInSeconds": 7, "imgOptMaxInputPixels": 268402689, "imgOptSequentialRead": null, "isrFlushToDisk": true, "workerThreads": false, "optimizeCss": false, "nextScriptWorkers": false, "scrollRestoration": false, "externalDir": false, "disableOptimizedLoading": false, "gzipSize": true, "craCompat": false, "esmExternals": true, "fullySpecified": false, "swcTraceProfiling": false, "forceSwcTransforms": false, "largePageDataBytes": 128e3, "turbo": { "root": "/Users/munkhjinaltangerel/Desktop/other/four-sense" }, "typedRoutes": false, "typedEnv": false, "parallelServerCompiles": false, "parallelServerBuildTraces": false, "ppr": false, "authInterrupts": false, "reactOwnerStack": false, "webpackMemoryOptimizations": false, "optimizeServerReact": true, "useEarlyImport": false, "staleTimes": { "dynamic": 0, "static": 300 }, "serverComponentsHmrCache": true, "staticGenerationMaxConcurrency": 8, "staticGenerationMinPagesPerWorker": 25, "dynamicIO": false, "inlineCss": false, "optimizePackageImports": ["lucide-react", "date-fns", "lodash-es", "ramda", "antd", "react-bootstrap", "ahooks", "@ant-design/icons", "@headlessui/react", "@headlessui-float/react", "@heroicons/react/20/solid", "@heroicons/react/24/solid", "@heroicons/react/24/outline", "@visx/visx", "@tremor/react", "rxjs", "@mui/material", "@mui/icons-material", "recharts", "react-use", "effect", "@effect/schema", "@effect/platform", "@effect/platform-node", "@effect/platform-browser", "@effect/platform-bun", "@effect/sql", "@effect/sql-mssql", "@effect/sql-mysql2", "@effect/sql-pg", "@effect/sql-squlite-node", "@effect/sql-squlite-bun", "@effect/sql-squlite-wasm", "@effect/sql-squlite-react-native", "@effect/rpc", "@effect/rpc-http", "@effect/typeclass", "@effect/experimental", "@effect/opentelemetry", "@material-ui/core", "@material-ui/icons", "@tabler/icons-react", "mui-core", "react-icons/ai", "react-icons/bi", "react-icons/bs", "react-icons/cg", "react-icons/ci", "react-icons/di", "react-icons/fa", "react-icons/fa6", "react-icons/fc", "react-icons/fi", "react-icons/gi", "react-icons/go", "react-icons/gr", "react-icons/hi", "react-icons/hi2", "react-icons/im", "react-icons/io", "react-icons/io5", "react-icons/lia", "react-icons/lib", "react-icons/lu", "react-icons/md", "react-icons/pi", "react-icons/ri", "react-icons/rx", "react-icons/si", "react-icons/sl", "react-icons/tb", "react-icons/tfi", "react-icons/ti", "react-icons/vsc", "react-icons/wi"], "trustHostHeader": false, "isExperimentalCompile": false }, "bundlePagesRouterDependencies": false, "configFileName": "next.config.ts" };
-var BuildId = "gU7-9HQsAzbcicFLCeaOW";
+var NextConfig = { "env": { "CLOUDFLARE_ACCOUNT_ID": "544971d734e2d2605d77624f56f6e72d", "CLOUDFLARE_DATABASE_ID": "1ac8c424-7722-4894-92e6-6473bf090abc", "CLOUDFLARE_D1_API_TOKEN": "R3gt_08buDUu-Tyd6yq5M6XtcmgIryStylNAc-wx" }, "webpack": null, "eslint": { "ignoreDuringBuilds": false }, "typescript": { "ignoreBuildErrors": false, "tsconfigPath": "tsconfig.json" }, "distDir": ".next", "cleanDistDir": true, "assetPrefix": "", "cacheMaxMemorySize": 52428800, "configOrigin": "next.config.ts", "useFileSystemPublicRoutes": true, "generateEtags": true, "pageExtensions": ["tsx", "ts", "jsx", "js"], "poweredByHeader": true, "compress": true, "images": { "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840], "imageSizes": [16, 32, 48, 64, 96, 128, 256, 384], "path": "/_next/image", "loader": "default", "loaderFile": "", "domains": [], "disableStaticImages": false, "minimumCacheTTL": 60, "formats": ["image/webp"], "dangerouslyAllowSVG": false, "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;", "contentDispositionType": "attachment", "remotePatterns": [{ "protocol": "https", "hostname": "pub-f1fd80427d5e489a98fb6022fd6f176b.r2.dev" }, { "protocol": "https", "hostname": "cdn.sanity.io" }], "unoptimized": false }, "devIndicators": { "appIsrStatus": true, "buildActivity": true, "buildActivityPosition": "bottom-right" }, "onDemandEntries": { "maxInactiveAge": 6e4, "pagesBufferLength": 5 }, "amp": { "canonicalBase": "" }, "basePath": "", "sassOptions": {}, "trailingSlash": false, "i18n": null, "productionBrowserSourceMaps": false, "excludeDefaultMomentLocales": true, "serverRuntimeConfig": {}, "publicRuntimeConfig": {}, "reactProductionProfiling": false, "reactStrictMode": null, "reactMaxHeadersLength": 6e3, "httpAgentOptions": { "keepAlive": true }, "logging": {}, "expireTime": 31536e3, "staticPageGenerationTimeout": 60, "output": "standalone", "modularizeImports": { "@mui/icons-material": { "transform": "@mui/icons-material/{{member}}" }, "lodash": { "transform": "lodash/{{member}}" } }, "outputFileTracingRoot": "", "experimental": { "cacheLife": { "default": { "stale": 300, "revalidate": 900, "expire": 4294967294 }, "seconds": { "stale": 0, "revalidate": 1, "expire": 60 }, "minutes": { "stale": 300, "revalidate": 60, "expire": 3600 }, "hours": { "stale": 300, "revalidate": 3600, "expire": 86400 }, "days": { "stale": 300, "revalidate": 86400, "expire": 604800 }, "weeks": { "stale": 300, "revalidate": 604800, "expire": 2592e3 }, "max": { "stale": 300, "revalidate": 2592e3, "expire": 4294967294 } }, "cacheHandlers": {}, "cssChunking": true, "multiZoneDraftMode": false, "appNavFailHandling": false, "prerenderEarlyExit": true, "serverMinification": true, "serverSourceMaps": false, "linkNoTouchStart": false, "caseSensitiveRoutes": false, "clientSegmentCache": false, "preloadEntriesOnStart": true, "clientRouterFilter": true, "clientRouterFilterRedirects": false, "fetchCacheKeyPrefix": "", "middlewarePrefetch": "flexible", "optimisticClientCache": true, "manualClientBasePath": false, "cpus": 9, "memoryBasedWorkersCount": false, "imgOptConcurrency": null, "imgOptTimeoutInSeconds": 7, "imgOptMaxInputPixels": 268402689, "imgOptSequentialRead": null, "isrFlushToDisk": true, "workerThreads": false, "optimizeCss": false, "nextScriptWorkers": false, "scrollRestoration": false, "externalDir": false, "disableOptimizedLoading": false, "gzipSize": true, "craCompat": false, "esmExternals": true, "fullySpecified": false, "swcTraceProfiling": false, "forceSwcTransforms": false, "largePageDataBytes": 128e3, "typedRoutes": false, "typedEnv": false, "parallelServerCompiles": false, "parallelServerBuildTraces": false, "ppr": false, "authInterrupts": false, "reactOwnerStack": false, "webpackMemoryOptimizations": false, "optimizeServerReact": true, "useEarlyImport": false, "staleTimes": { "dynamic": 0, "static": 300 }, "serverComponentsHmrCache": true, "staticGenerationMaxConcurrency": 8, "staticGenerationMinPagesPerWorker": 25, "dynamicIO": false, "inlineCss": false, "optimizePackageImports": ["lucide-react", "date-fns", "lodash-es", "ramda", "antd", "react-bootstrap", "ahooks", "@ant-design/icons", "@headlessui/react", "@headlessui-float/react", "@heroicons/react/20/solid", "@heroicons/react/24/solid", "@heroicons/react/24/outline", "@visx/visx", "@tremor/react", "rxjs", "@mui/material", "@mui/icons-material", "recharts", "react-use", "effect", "@effect/schema", "@effect/platform", "@effect/platform-node", "@effect/platform-browser", "@effect/platform-bun", "@effect/sql", "@effect/sql-mssql", "@effect/sql-mysql2", "@effect/sql-pg", "@effect/sql-squlite-node", "@effect/sql-squlite-bun", "@effect/sql-squlite-wasm", "@effect/sql-squlite-react-native", "@effect/rpc", "@effect/rpc-http", "@effect/typeclass", "@effect/experimental", "@effect/opentelemetry", "@material-ui/core", "@material-ui/icons", "@tabler/icons-react", "mui-core", "react-icons/ai", "react-icons/bi", "react-icons/bs", "react-icons/cg", "react-icons/ci", "react-icons/di", "react-icons/fa", "react-icons/fa6", "react-icons/fc", "react-icons/fi", "react-icons/gi", "react-icons/go", "react-icons/gr", "react-icons/hi", "react-icons/hi2", "react-icons/im", "react-icons/io", "react-icons/io5", "react-icons/lia", "react-icons/lib", "react-icons/lu", "react-icons/md", "react-icons/pi", "react-icons/ri", "react-icons/rx", "react-icons/si", "react-icons/sl", "react-icons/tb", "react-icons/tfi", "react-icons/ti", "react-icons/vsc", "react-icons/wi"], "trustHostHeader": false, "isExperimentalCompile": false }, "bundlePagesRouterDependencies": false, "configFileName": "next.config.ts" };
+var BuildId = "BaK4Vpou3SUDt9qf_MdsU";
 var HtmlPages = ["/404"];
-var RoutesManifest = { "basePath": "", "rewrites": { "beforeFiles": [], "afterFiles": [], "fallback": [] }, "redirects": [{ "source": "/:path+/", "destination": "/:path+", "internal": true, "statusCode": 308, "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$" }], "routes": { "static": [{ "page": "/", "regex": "^/(?:/)?$", "routeKeys": {}, "namedRegex": "^/(?:/)?$" }, { "page": "/_not-found", "regex": "^/_not\\-found(?:/)?$", "routeKeys": {}, "namedRegex": "^/_not\\-found(?:/)?$" }, { "page": "/admin/dashboard", "regex": "^/admin/dashboard(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/dashboard(?:/)?$" }, { "page": "/admin/login", "regex": "^/admin/login(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/login(?:/)?$" }, { "page": "/bar-menu", "regex": "^/bar\\-menu(?:/)?$", "routeKeys": {}, "namedRegex": "^/bar\\-menu(?:/)?$" }, { "page": "/book-table", "regex": "^/book\\-table(?:/)?$", "routeKeys": {}, "namedRegex": "^/book\\-table(?:/)?$" }, { "page": "/favicon.ico", "regex": "^/favicon\\.ico(?:/)?$", "routeKeys": {}, "namedRegex": "^/favicon\\.ico(?:/)?$" }], "dynamic": [], "data": { "static": [], "dynamic": [] } }, "locales": [] };
+var RoutesManifest = { "basePath": "", "rewrites": { "beforeFiles": [], "afterFiles": [], "fallback": [] }, "redirects": [{ "source": "/:path+/", "destination": "/:path+", "internal": true, "statusCode": 308, "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$" }], "routes": { "static": [{ "page": "/", "regex": "^/(?:/)?$", "routeKeys": {}, "namedRegex": "^/(?:/)?$" }, { "page": "/_not-found", "regex": "^/_not\\-found(?:/)?$", "routeKeys": {}, "namedRegex": "^/_not\\-found(?:/)?$" }, { "page": "/admin/dashboard", "regex": "^/admin/dashboard(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/dashboard(?:/)?$" }, { "page": "/admin/login", "regex": "^/admin/login(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/login(?:/)?$" }, { "page": "/bar-menu", "regex": "^/bar\\-menu(?:/)?$", "routeKeys": {}, "namedRegex": "^/bar\\-menu(?:/)?$" }, { "page": "/blog", "regex": "^/blog(?:/)?$", "routeKeys": {}, "namedRegex": "^/blog(?:/)?$" }, { "page": "/book-table", "regex": "^/book\\-table(?:/)?$", "routeKeys": {}, "namedRegex": "^/book\\-table(?:/)?$" }, { "page": "/event", "regex": "^/event(?:/)?$", "routeKeys": {}, "namedRegex": "^/event(?:/)?$" }, { "page": "/favicon.ico", "regex": "^/favicon\\.ico(?:/)?$", "routeKeys": {}, "namedRegex": "^/favicon\\.ico(?:/)?$" }], "dynamic": [{ "page": "/blog/[slug]", "regex": "^/blog/([^/]+?)(?:/)?$", "routeKeys": { "nxtPslug": "nxtPslug" }, "namedRegex": "^/blog/(?<nxtPslug>[^/]+?)(?:/)?$" }, { "page": "/event/[slug]", "regex": "^/event/([^/]+?)(?:/)?$", "routeKeys": { "nxtPslug": "nxtPslug" }, "namedRegex": "^/event/(?<nxtPslug>[^/]+?)(?:/)?$" }, { "page": "/team/[id]", "regex": "^/team/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/team/(?<nxtPid>[^/]+?)(?:/)?$" }], "data": { "static": [], "dynamic": [] } }, "locales": [] };
 var MiddlewareManifest = { "version": 3, "middleware": {}, "functions": {}, "sortedMiddleware": [] };
-var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/api/approve-order/route": "/api/approve-order", "/api/cancel-order/route": "/api/cancel-order", "/api/order/route": "/api/order", "/api/table/update-table-seat-status/route": "/api/table/update-table-seat-status", "/api/signup/route": "/api/signup", "/favicon.ico/route": "/favicon.ico", "/api/tables/route": "/api/tables", "/api/create-example-data/route": "/api/create-example-data", "/api/admin/login/route": "/api/admin/login", "/admin/login/page": "/admin/login", "/(home)/page": "/", "/(home)/bar-menu/page": "/bar-menu", "/(home)/book-table/page": "/book-table", "/admin/dashboard/page": "/admin/dashboard" };
+var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/api/create-example-data/route": "/api/create-example-data", "/api/admin/login/route": "/api/admin/login", "/api/order/route": "/api/order", "/api/sanity/route": "/api/sanity", "/api/signup/route": "/api/signup", "/api/table/update-table-seat-status/route": "/api/table/update-table-seat-status", "/api/approve-order/route": "/api/approve-order", "/api/cancel-order/route": "/api/cancel-order", "/favicon.ico/route": "/favicon.ico", "/api/tables/route": "/api/tables", "/(home)/blog/page": "/blog", "/(home)/blog/[slug]/page": "/blog/[slug]", "/(home)/event/page": "/event", "/(home)/event/[slug]/page": "/event/[slug]", "/(home)/bar-menu/page": "/bar-menu", "/admin/login/page": "/admin/login", "/admin/dashboard/page": "/admin/dashboard", "/(home)/team/[id]/page": "/team/[id]", "/(home)/page": "/", "/(home)/book-table/page": "/book-table" };
 var FunctionsConfigManifest = { "version": 1, "functions": {} };
 var PagesManifest = { "/_app": "pages/_app.js", "/_error": "pages/_error.js", "/_document": "pages/_document.js", "/404": "pages/404.html" };
 process.env.NEXT_BUILD_ID = BuildId;
 
-// node_modules/@opennextjs/aws/dist/core/createMainHandler.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/createMainHandler.js
 init_logger();
 
-// node_modules/@opennextjs/aws/dist/adapters/util.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/util.js
 function setNodeEnv() {
   const processEnv = process.env;
   processEnv.NODE_ENV = process.env.NODE_ENV ?? "production";
@@ -694,10 +1288,10 @@ function generateUniqueId() {
   return Math.random().toString(36).slice(2, 8);
 }
 
-// node_modules/@opennextjs/aws/dist/core/requestHandler.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/requestHandler.js
 import { AsyncLocalStorage } from "node:async_hooks";
 
-// node_modules/@opennextjs/aws/dist/http/openNextResponse.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/http/openNextResponse.js
 init_logger();
 init_util();
 import { Transform } from "node:stream";
@@ -711,10 +1305,11 @@ var OpenNextNodeResponse = class extends Transform {
   statusCode;
   statusMessage = "";
   headers = {};
-  _cookies = [];
-  responseStream;
   headersSent = false;
   _chunks = [];
+  _cookies = [];
+  responseStream;
+  bodyLength = 0;
   // To comply with the ServerResponse interface :
   strictContentLength = false;
   assignSocket(_socket) {
@@ -887,8 +1482,12 @@ var OpenNextNodeResponse = class extends Transform {
     return Buffer.concat(this._chunks);
   }
   _internalWrite(chunk, encoding) {
-    this._chunks.push(Buffer.from(chunk, encoding));
-    this.push(chunk, encoding);
+    const buffer = encoding === "buffer" ? chunk : Buffer.from(chunk, encoding);
+    this.bodyLength += buffer.length;
+    if (this.streamCreator?.retainChunks !== false) {
+      this._chunks.push(buffer);
+    }
+    this.push(buffer);
     this.streamCreator?.onWrite?.();
   }
   _transform(chunk, encoding, callback) {
@@ -903,9 +1502,8 @@ var OpenNextNodeResponse = class extends Transform {
       this.flushHeaders();
     }
     globalThis.__openNextAls?.getStore()?.pendingPromiseRunner.add(this.onEnd(this.headers));
-    const bodyLength = this.getBody().length;
-    this.streamCreator?.onFinish?.(bodyLength);
-    if (bodyLength === 0 && // We use an env variable here because not all aws account have the same behavior
+    this.streamCreator?.onFinish?.(this.bodyLength);
+    if (this.bodyLength === 0 && // We use an env variable here because not all aws account have the same behavior
     // On some aws accounts the response will hang if the body is empty
     // We are modifying the response body here, this is not a good practice
     process.env.OPEN_NEXT_FORCE_NON_EMPTY_RESPONSE === "true") {
@@ -938,8 +1536,10 @@ var OpenNextNodeResponse = class extends Transform {
     return (Array.isArray(values) ? values : [values]).map((value) => value.toString());
   }
   send() {
-    const body = this.getBody();
-    this.end(body);
+    for (const chunk of this._chunks) {
+      this.write(chunk);
+    }
+    this.end();
   }
   body(value) {
     this.write(value);
@@ -968,7 +1568,7 @@ var OpenNextNodeResponse = class extends Transform {
   }
 };
 
-// node_modules/@opennextjs/aws/dist/http/request.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/http/request.js
 import http from "node:http";
 var IncomingMessage = class extends http.IncomingMessage {
   constructor({ method, url, headers, body, remoteAddress }) {
@@ -1001,7 +1601,7 @@ var IncomingMessage = class extends http.IncomingMessage {
   }
 };
 
-// node_modules/@opennextjs/aws/dist/utils/promise.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/promise.js
 init_logger();
 var DetachedPromise = class {
   resolve;
@@ -1082,20 +1682,20 @@ function runWithOpenNextRequestContext({ isISRRevalidation, waitUntil, requestId
   });
 }
 
-// node_modules/@opennextjs/aws/dist/core/requestHandler.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/requestHandler.js
 init_logger();
 
-// node_modules/@opennextjs/aws/dist/core/patchAsyncStorage.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/patchAsyncStorage.js
 var mod = (init_node_module(), __toCommonJS(node_module_exports));
 var resolveFilename = mod._resolveFilename;
 
-// node_modules/@opennextjs/aws/dist/core/routing/util.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/util.js
 import crypto from "node:crypto";
-import { Readable as Readable2 } from "node:stream";
 init_util();
 init_logger();
+import { ReadableStream as ReadableStream3 } from "node:stream/web";
 
-// node_modules/@opennextjs/aws/dist/utils/binary.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/binary.js
 var commonBinaryMimeTypes = /* @__PURE__ */ new Set([
   "application/octet-stream",
   // Docs
@@ -1159,15 +1759,15 @@ var commonBinaryMimeTypes = /* @__PURE__ */ new Set([
 function isBinaryContentType(contentType) {
   if (!contentType)
     return false;
-  const value = contentType?.split(";")[0] ?? "";
+  const value = contentType.split(";")[0];
   return commonBinaryMimeTypes.has(value);
 }
 
-// node_modules/@opennextjs/aws/dist/core/routing/i18n/index.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/i18n/index.js
 init_stream();
 init_logger();
 
-// node_modules/@opennextjs/aws/dist/core/routing/i18n/accept-header.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/i18n/accept-header.js
 function parse(raw, preferences, options) {
   const lowers = /* @__PURE__ */ new Map();
   const header = raw.replace(/[ \t]/g, "");
@@ -1267,7 +1867,7 @@ function acceptLanguage(header = "", preferences) {
   })[0] || void 0;
 }
 
-// node_modules/@opennextjs/aws/dist/core/routing/i18n/index.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/i18n/index.js
 function isLocalizedPath(path2) {
   return NextConfig.i18n?.locales.includes(path2.split("/")[1].toLowerCase()) ?? false;
 }
@@ -1319,7 +1919,7 @@ function localizePath(internalEvent) {
   return `/${detectedLocale}${internalEvent.rawPath}`;
 }
 
-// node_modules/@opennextjs/aws/dist/core/routing/queue.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/queue.js
 function generateShardId(rawPath, maxConcurrency, prefix) {
   let a = cyrb128(rawPath);
   let t = a += 1831565813;
@@ -1353,7 +1953,7 @@ function cyrb128(str) {
   return h1 >>> 0;
 }
 
-// node_modules/@opennextjs/aws/dist/core/routing/util.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/util.js
 function constructNextUrl(baseUrl, path2) {
   const nextBasePath = NextConfig.basePath ?? "";
   const url = new URL(`${nextBasePath}${path2}`, baseUrl);
@@ -1363,7 +1963,15 @@ function convertRes(res) {
   const statusCode = res.statusCode || 200;
   const headers = parseHeaders(res.getFixedHeaders());
   const isBase64Encoded = isBinaryContentType(headers["content-type"]) || !!headers["content-encoding"];
-  const body = Readable2.toWeb(Readable2.from(res.getBody()));
+  const body = new ReadableStream3({
+    pull(controller) {
+      if (!res._chunks || res._chunks.length === 0) {
+        controller.close();
+        return;
+      }
+      controller.enqueue(res._chunks.shift());
+    }
+  });
   return {
     type: "core",
     statusCode,
@@ -1373,6 +1981,8 @@ function convertRes(res) {
   };
 }
 function convertToQuery(querystring) {
+  if (!querystring)
+    return {};
   const query = new URLSearchParams(querystring);
   const queryObject = {};
   for (const key of query.keys()) {
@@ -1499,25 +2109,25 @@ async function invalidateCDNOnRequest(params, headers) {
   }
 }
 
-// node_modules/@opennextjs/aws/dist/core/routingHandler.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routingHandler.js
 init_logger();
 
-// node_modules/@opennextjs/aws/dist/core/routing/cacheInterceptor.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/cacheInterceptor.js
 init_stream();
 
-// node_modules/@opennextjs/aws/dist/utils/cache.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/cache.js
 init_logger();
 
-// node_modules/@opennextjs/aws/dist/core/routing/cacheInterceptor.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/cacheInterceptor.js
 init_logger();
 var CACHE_ONE_YEAR = 60 * 60 * 24 * 365;
 var CACHE_ONE_MONTH = 60 * 60 * 24 * 30;
 
-// node_modules/@opennextjs/aws/dist/core/routing/matcher.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/matcher.js
 init_stream();
 init_logger();
 
-// node_modules/@opennextjs/aws/dist/core/routing/routeMatcher.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/routeMatcher.js
 var optionalLocalePrefixRegex = `^/(?:${RoutesManifest.locales.map((locale) => `${locale}/?`).join("|")})?`;
 var optionalBasepathPrefixRegex = RoutesManifest.basePath ? `^${RoutesManifest.basePath}/?` : "^/";
 var optionalPrefix = optionalLocalePrefixRegex.replace("^/", optionalBasepathPrefixRegex);
@@ -1563,18 +2173,18 @@ function getStaticAPIRoutes() {
   });
   const dynamicRoutePages = new Set(RoutesManifest.routes.dynamic.map(({ page }) => page));
   const pagesStaticAPIRoutes = Object.keys(PagesManifest).filter((route) => route.startsWith("/api/") && !dynamicRoutePages.has(route)).map(createRouteDefinition);
-  const appPathsStaticAPIRoutes = Object.values(AppPathRoutesManifest).filter((route) => route.startsWith("/api/") || route === "/api" && !dynamicRoutePages.has(route)).map(createRouteDefinition);
+  const appPathsStaticAPIRoutes = Object.values(AppPathRoutesManifest).filter((route) => (route.startsWith("/api/") || route === "/api") && !dynamicRoutePages.has(route)).map(createRouteDefinition);
   return [...pagesStaticAPIRoutes, ...appPathsStaticAPIRoutes];
 }
 
-// node_modules/@opennextjs/aws/dist/core/routing/middleware.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routing/middleware.js
 init_stream();
 init_utils();
 var middlewareManifest = MiddlewareManifest;
 var functionsConfigManifest = FunctionsConfigManifest;
 var middleMatch = getMiddlewareMatch(middlewareManifest, functionsConfigManifest);
 
-// node_modules/@opennextjs/aws/dist/core/routingHandler.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/routingHandler.js
 var MIDDLEWARE_HEADER_PREFIX = "x-middleware-response-";
 var MIDDLEWARE_HEADER_PREFIX_LEN = MIDDLEWARE_HEADER_PREFIX.length;
 var INTERNAL_HEADER_PREFIX = "x-opennext-";
@@ -1584,16 +2194,16 @@ var INTERNAL_HEADER_RESOLVED_ROUTES = `${INTERNAL_HEADER_PREFIX}resolved-routes`
 var INTERNAL_HEADER_REWRITE_STATUS_CODE = `${INTERNAL_HEADER_PREFIX}rewrite-status-code`;
 var INTERNAL_EVENT_REQUEST_ID = `${INTERNAL_HEADER_PREFIX}request-id`;
 
-// node_modules/@opennextjs/aws/dist/core/util.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/util.js
 init_logger();
 import NextServer from "next/dist/server/next-server.js";
 
-// node_modules/@opennextjs/aws/dist/core/require-hooks.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/require-hooks.js
 init_logger();
 var mod2 = (init_node_module(), __toCommonJS(node_module_exports));
 var resolveFilename2 = mod2._resolveFilename;
 
-// node_modules/@opennextjs/aws/dist/core/util.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/util.js
 var cacheHandlerPath = __require.resolve("./cache.cjs");
 var composableCacheHandlerPath = __require.resolve("./composable-cache.cjs");
 var nextServer = new NextServer.default({
@@ -1658,7 +2268,7 @@ globalThis.__next_route_preloader = async (stage) => {
 };
 var requestHandler = (metadata) => "getRequestHandlerWithMetadata" in nextServer ? nextServer.getRequestHandlerWithMetadata(metadata) : nextServer.getRequestHandler();
 
-// node_modules/@opennextjs/aws/dist/core/requestHandler.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/requestHandler.js
 globalThis.__openNextAls = new AsyncLocalStorage();
 async function openNextHandler(internalEvent, options) {
   const initialHeaders = internalEvent.headers;
@@ -1869,7 +2479,7 @@ async function tryRenderError(type, res, internalEvent) {
   }
 }
 
-// node_modules/@opennextjs/aws/dist/core/resolve.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/resolve.js
 async function resolveConverter(converter2) {
   if (typeof converter2 === "function") {
     return converter2();
@@ -1927,7 +2537,7 @@ async function resolveCdnInvalidation(cdnInvalidation) {
   return m_1.default;
 }
 
-// node_modules/@opennextjs/aws/dist/core/createMainHandler.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/core/createMainHandler.js
 async function createMainHandler() {
   const config = await import("./open-next.config.mjs").then((m) => m.default);
   const thisFunction = globalThis.fnName ? config.functions[globalThis.fnName] : config.default;
@@ -1948,7 +2558,7 @@ async function createMainHandler() {
   return wrapper(openNextHandler, converter2);
 }
 
-// node_modules/@opennextjs/aws/dist/adapters/server-adapter.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/server-adapter.js
 setNodeEnv();
 setBuildIdEnv();
 setNextjsServerWorkingDirectory();

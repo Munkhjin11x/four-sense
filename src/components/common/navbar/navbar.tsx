@@ -12,16 +12,18 @@ import {
   VolumeIcon,
 } from "@/icons";
 import Image from "next/image";
-import useLoading from "@/hook/use-loading";
 import useBackgroundAudio from "@/hook/use-sound";
 import { Hamburger } from "./hamburger";
 import { usePathname } from "next/navigation";
 export const Navbar = () => {
+  const pathname = usePathname();
+
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [openIndex, setOpenIndex] = useState<number>();
   const [isScrolled, setIsScrolled] = useState(false);
-  const loading = useLoading(4000);
-  const { play, pause } = useBackgroundAudio("/backsound.mp3");
+  const { play, pause } = useBackgroundAudio("/backsound.mp3", {
+    autoplay: pathname === "/" ? false : true,
+  });
   const [isPlaying, setIsPlaying] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [navTop, setNavTop] = useState("top-5");
@@ -86,7 +88,10 @@ export const Navbar = () => {
   const toggleHamburger = () => {
     setHamburgerOpen((prev) => !prev);
   };
-  const pathname = usePathname();
+
+  if (pathname === "/") {
+    return null;
+  }
 
   const data = [
     {
@@ -178,10 +183,6 @@ export const Navbar = () => {
       ),
     },
   ];
-
-  if (loading) {
-    return null;
-  }
 
   return (
     <div className=" flex w-full flex-col items-center">

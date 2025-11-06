@@ -3,10 +3,11 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { cn } from "@/lib/utils";
 import fonts from "@/constants/fonts";
-import { Navbar } from "@/components/common/navbar";
+
 import { FooterParallax } from "@/components/common";
 import { Toaster } from "sonner";
 import { QueryProvider } from "@/hook/provider";
+import { Navbar } from "@/components/common/navbar/navbar";
 export const metadata: Metadata = {
   title: "FourSenses",
   description: "Nomad-ability bar ",

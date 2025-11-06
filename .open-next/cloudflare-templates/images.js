@@ -1,3 +1,4 @@
+let NEXT_IMAGE_REGEXP;
 /**
  * Fetches an images.
  *
@@ -11,17 +12,15 @@ export async function fetchImage(fetcher, imageUrl, ctx) {
     }
     // Local
     if (imageUrl.startsWith("/")) {
-        let pathname;
-        let url;
-        try {
-            // We only need pathname and search
-            url = new URL(imageUrl, "http://n");
-            pathname = decodeURIComponent(url.pathname);
-        }
-        catch {
+        // @ts-expect-error TS2339 Missing types for URL.parse
+        const url = URL.parse(imageUrl, "http://n");
+        if (url == null) {
             return getUrlErrorResponse();
         }
-        if (/\/_next\/image($|\/)/.test(pathname)) {
+        // This method will never throw because URL parser will handle invalid input.
+        const pathname = decodeURIComponent(url.pathname);
+        NEXT_IMAGE_REGEXP ??= /\/_next\/image($|\/)/;
+        if (NEXT_IMAGE_REGEXP.test(pathname)) {
             return getUrlErrorResponse();
         }
         // If localPatterns are not defined all local images are allowed.

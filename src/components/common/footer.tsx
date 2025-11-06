@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Animation from "../ui/animation";
 import useLoading from "@/hook/use-loading";
+import { usePathname } from "next/navigation";
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
   style: "normal",
@@ -14,8 +15,9 @@ const font = localFont({
 
 export const FooterVideo = () => {
   const loading = useLoading(4000);
+  const pathname = usePathname();
 
-  if (loading) {
+  if (pathname === "/" && loading) {
     return null;
   }
 

@@ -12,6 +12,8 @@ import { FormFieldDatePicker } from "../common/custom-calendar";
 import { useMutation } from "@tanstack/react-query";
 import { apiCreateOrder } from "@/store/api";
 import { UseTurnstile, useTurnstileStore } from "@/hook/use-turnstile";
+import { useSearchParams } from "next/navigation";
+import { format } from "date-fns";
 
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
@@ -39,12 +41,14 @@ export const OrderModal = ({
   tableName: string;
   refetch: () => void;
 }) => {
+  const searchParams = useSearchParams();
+  const date = searchParams.get("date");
   const form = useForm<OrderFormData>({
     defaultValues: {
       fullName: "",
       email: "",
       phone: "",
-      date: new Date(),
+      date: date ? new Date(date) : new Date(),
     },
   });
 
@@ -59,6 +63,7 @@ export const OrderModal = ({
       seatIds: { $oid: string; seatNumber?: number }[];
       date: Date;
       turnstileToken: string;
+      eventDate: number;
     }
   >({
     mutationFn: (data) =>
@@ -94,6 +99,7 @@ export const OrderModal = ({
       seatIds: seats,
       date: data.date,
       turnstileToken: token,
+      eventDate: date ? 1 : 0,
     });
   };
 
@@ -175,6 +181,14 @@ export const OrderModal = ({
               />
             ))}
           </div>
+          {date && (
+            <div className="text-sm text-gray-500">
+              <p className="text-[#488457]">
+                You are selected event date:{" "}
+                {format(new Date(date), "yyyy-MM-dd HH:mm")}
+              </p>
+            </div>
+          )}
 
           <div className="flex flex-col gap-2">
             <label

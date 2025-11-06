@@ -52,6 +52,10 @@ async function getCloudflareContextFromWrangler(options) {
   const environment = options?.environment ?? process.env.NEXT_DEV_WRANGLER_ENV;
   const { env, cf, ctx } = await getPlatformProxy({
     ...options,
+    // The `env` passed to the fetch handler does not contain variables from `.env*` files.
+    // because we invoke wrangler with `CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV`=`"false"`.
+    // Initializing `envFiles` with an empty list is the equivalent for this API call.
+    envFiles: [],
     environment
   });
   return {

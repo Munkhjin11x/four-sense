@@ -16,3 +16,14 @@ binding = "DB"
 database_name = "four-sense-new-db"
 database_id = "1ac8c424-7722-4894-92e6-6473bf090abc"
 migrations_dir = "drizzle"
+
+# Preview environment
+[env.preview]
+name = "four-sense-preview"
+vars = { ENVIRONMENT = "preview" }
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "four-sense-new-db"
+database_id = "1ac8c424-7722-4894-92e6-6473bf090abc"
+migrations_dir = "drizzle"

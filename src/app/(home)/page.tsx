@@ -1,11 +1,15 @@
 "use client";
 import {
+  EventNewsSection,
   ExploreSection,
   GreenSection,
   Home,
   InstagramNewsSection,
   Loader,
 } from "@/components";
+import { FooterParallaxHome } from "@/components/common/footer-parallax-home";
+import { NavbarHome } from "@/components/common/navbar";
+// import { Navbar } from "@/components/common/navbar";
 import { ParallaxSection } from "@/components/common/parallax-section";
 
 import useLoading from "@/hook/use-loading";
@@ -16,6 +20,7 @@ const HomePage = () => {
   return (
     <div className="w-full h-full">
       {loading && <Loader />}
+      <NavbarHome />
       <Home />
       {!loading && (
         <>
@@ -24,9 +29,11 @@ const HomePage = () => {
             <ParallaxSection />
           </div>
           <ExploreSection />
+          <EventNewsSection />
           <InstagramNewsSection />
         </>
       )}
+      <FooterParallaxHome />
     </div>
   );
 };

@@ -23,14 +23,14 @@ const useBackgroundAudio = (src: string, options: AudioOptions = {}) => {
     return () => {
       audio.unload();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src]);
 
   useEffect(() => {
-    if (true) {
+    if (options.autoplay ?? true) {
       sound?.play();
     }
-  }, [sound]);
+  }, [sound, options.autoplay]);
 
   const play = () => {
     sound?.play();

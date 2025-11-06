@@ -1,0 +1,1 @@
+ALTER TABLE `Orders` ADD `event_date` integer DEFAULT 0 NOT NULL;

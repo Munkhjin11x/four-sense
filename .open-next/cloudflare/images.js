@@ -1,19 +1,18 @@
 var define_IMAGES_LOCAL_PATTERNS_default = [];
-var define_IMAGES_REMOTE_PATTERNS_default = [{ protocol: "https", hostname: "^(?:^(?:pub\\-f1fd80427d5e489a98fb6022fd6f176b\\.r2\\.dev)$)$", pathname: "^(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)\\/?)$" }];
+var define_IMAGES_REMOTE_PATTERNS_default = [{ protocol: "https", hostname: "^(?:^(?:pub\\-f1fd80427d5e489a98fb6022fd6f176b\\.r2\\.dev)$)$", pathname: "^(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)\\/?)$" }, { protocol: "https", hostname: "^(?:^(?:cdn\\.sanity\\.io)$)$", pathname: "^(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)\\/?)$" }];
+let NEXT_IMAGE_REGEXP;
 async function fetchImage(fetcher, imageUrl, ctx) {
   if (!imageUrl || imageUrl.length > 3072 || imageUrl.startsWith("//")) {
     return getUrlErrorResponse();
   }
   if (imageUrl.startsWith("/")) {
-    let pathname;
-    let url2;
-    try {
-      url2 = new URL(imageUrl, "http://n");
-      pathname = decodeURIComponent(url2.pathname);
-    } catch {
+    const url2 = URL.parse(imageUrl, "http://n");
+    if (url2 == null) {
       return getUrlErrorResponse();
     }
-    if (/\/_next\/image($|\/)/.test(pathname)) {
+    const pathname = decodeURIComponent(url2.pathname);
+    NEXT_IMAGE_REGEXP ??= /\/_next\/image($|\/)/;
+    if (NEXT_IMAGE_REGEXP.test(pathname)) {
       return getUrlErrorResponse();
     }
     if (define_IMAGES_LOCAL_PATTERNS_default.length > 0 && !define_IMAGES_LOCAL_PATTERNS_default.some((p) => matchLocalPattern(p, url2))) {

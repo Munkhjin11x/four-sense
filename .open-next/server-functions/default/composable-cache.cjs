@@ -1,4 +1,4 @@
-globalThis.disableIncrementalCache = false;globalThis.disableDynamoDBCache = false;globalThis.isNextAfter15 = true;globalThis.openNextDebug = false;globalThis.openNextVersion = "3.7.7";
+globalThis.disableIncrementalCache = false;globalThis.disableDynamoDBCache = false;globalThis.isNextAfter15 = true;globalThis.openNextDebug = false;globalThis.openNextVersion = "3.8.5";
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -17,21 +17,21 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/@opennextjs/aws/dist/adapters/composable-cache.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/composable-cache.js
 var composable_cache_exports = {};
 __export(composable_cache_exports, {
   default: () => composable_cache_default
 });
 module.exports = __toCommonJS(composable_cache_exports);
 
-// node_modules/@opennextjs/aws/dist/adapters/logger.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/logger.js
 function debug(...args) {
   if (globalThis.openNextDebug) {
     console.log(...args);
   }
 }
 
-// node_modules/@opennextjs/aws/dist/utils/cache.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/cache.js
 function getTagKey(tag) {
   if (typeof tag === "string") {
     return tag;
@@ -61,30 +61,39 @@ async function writeTags(tags) {
   await globalThis.tagCache.writeTags(tagsToWrite);
 }
 
-// node_modules/@opennextjs/aws/dist/utils/stream.js
-var import_node_stream = require("node:stream");
-function fromReadableStream(stream, base64) {
-  const reader = stream.getReader();
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/utils/stream.js
+var import_web = require("node:stream/web");
+async function fromReadableStream(stream, base64) {
   const chunks = [];
-  return new Promise((resolve, reject) => {
-    function pump() {
-      reader.read().then(({ done, value }) => {
-        if (done) {
-          resolve(Buffer.concat(chunks).toString(base64 ? "base64" : "utf8"));
-          return;
-        }
-        chunks.push(value);
-        pump();
-      }).catch(reject);
-    }
-    pump();
-  });
+  let totalLength = 0;
+  for await (const chunk of stream) {
+    chunks.push(chunk);
+    totalLength += chunk.length;
+  }
+  if (chunks.length === 0) {
+    return "";
+  }
+  if (chunks.length === 1) {
+    return Buffer.from(chunks[0]).toString(base64 ? "base64" : "utf8");
+  }
+  const buffer = Buffer.alloc(totalLength);
+  let offset = 0;
+  for (const chunk of chunks) {
+    buffer.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return buffer.toString(base64 ? "base64" : "utf8");
 }
 function toReadableStream(value, isBase64) {
-  return import_node_stream.Readable.toWeb(import_node_stream.Readable.from(Buffer.from(value, isBase64 ? "base64" : "utf8")));
+  return new import_web.ReadableStream({
+    pull(controller) {
+      controller.enqueue(Buffer.from(value, isBase64 ? "base64" : "utf8"));
+      controller.close();
+    }
+  }, { highWaterMark: 0 });
 }
 
-// node_modules/@opennextjs/aws/dist/adapters/composable-cache.js
+// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/adapters/composable-cache.js
 var pendingWritePromiseMap = /* @__PURE__ */ new Map();
 var composable_cache_default = {
   async get(cacheKey) {

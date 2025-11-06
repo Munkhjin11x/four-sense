@@ -41,6 +41,7 @@ export const Orders = sqliteTable("Orders", {
   status: text("status", { enum: ["pending", "approved", "cancelled"] })
     .notNull()
     .default("pending"),
+  eventDate: integer("event_date").notNull().default(0),
 });
 
 export const OrderSeats = sqliteTable("OrderSeats", {
