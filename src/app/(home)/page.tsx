@@ -1,41 +1,17 @@
-"use client";
-import {
-  EventNewsSection,
-  ExploreSection,
-  GreenSection,
-  Home,
-  InstagramNewsSection,
-  Loader,
-} from "@/components";
-import { FooterParallaxHome } from "@/components/common/footer-parallax-home";
-import { NavbarHome } from "@/components/common/navbar";
-// import { Navbar } from "@/components/common/navbar";
-import { ParallaxSection } from "@/components/common/parallax-section";
+import { genPageMetadata } from "@/lib/seo";
+import { Metadata } from "next";
+import HomePageClient from "../../components/common/home-client";
 
-import useLoading from "@/hook/use-loading";
+export async function generateMetadata(): Promise<Metadata> {
+  return genPageMetadata({
+    title: "Four Senses",
+    description:
+      "Four Senses is the first Nomad-Ability bar that combines the traditional Mongolian nomadic culture with modern sustainable development principles.We based on the nomadic way of life and aims to create a new standard of environmentally-friendly and responsible service.",
+  });
+}
 
 const HomePage = () => {
-  const loading = useLoading(4000);
-
-  return (
-    <div className="w-full h-full">
-      {loading && <Loader />}
-      <NavbarHome />
-      <Home />
-      {!loading && (
-        <>
-          <GreenSection />
-          <div>
-            <ParallaxSection />
-          </div>
-          <ExploreSection />
-          <EventNewsSection />
-          <InstagramNewsSection />
-        </>
-      )}
-      <FooterParallaxHome />
-    </div>
-  );
+  return <HomePageClient />;
 };
 
 export default HomePage;

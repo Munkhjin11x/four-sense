@@ -16,7 +16,7 @@ Object.defineProperty = function(o, p, a) {
 
   
   
-  globalThis.openNextDebug = false;globalThis.openNextVersion = "3.8.5";
+  globalThis.openNextDebug = false;globalThis.openNextVersion = "3.9.1";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -124,12 +124,19 @@ var require_dist = __commonJS({
   "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/cookie/dist/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.parse = parse3;
-    exports.serialize = serialize;
+    exports.parseCookie = parseCookie;
+    exports.parse = parseCookie;
+    exports.stringifyCookie = stringifyCookie;
+    exports.stringifySetCookie = stringifySetCookie;
+    exports.serialize = stringifySetCookie;
+    exports.parseSetCookie = parseSetCookie;
+    exports.stringifySetCookie = stringifySetCookie;
+    exports.serialize = stringifySetCookie;
     var cookieNameRegExp = /^[\u0021-\u003A\u003C\u003E-\u007E]+$/;
     var cookieValueRegExp = /^[\u0021-\u003A\u003C-\u007E]*$/;
     var domainValueRegExp = /^([.]?[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)([.][a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$/i;
     var pathValueRegExp = /^[\u0020-\u003A\u003D-\u007E]*$/;
+    var maxAgeRegExp = /^-?\d+$/;
     var __toString = Object.prototype.toString;
     var NullObject = /* @__PURE__ */ (() => {
       const C = function() {
@@ -137,7 +144,7 @@ var require_dist = __commonJS({
       C.prototype = /* @__PURE__ */ Object.create(null);
       return C;
     })();
-    function parse3(str, options) {
+    function parseCookie(str, options) {
       const obj = new NullObject();
       const len = str.length;
       if (len < 2)
@@ -145,91 +152,87 @@ var require_dist = __commonJS({
       const dec = options?.decode || decode;
       let index = 0;
       do {
-        const eqIdx = str.indexOf("=", index);
+        const eqIdx = eqIndex(str, index, len);
         if (eqIdx === -1)
           break;
-        const colonIdx = str.indexOf(";", index);
-        const endIdx = colonIdx === -1 ? len : colonIdx;
+        const endIdx = endIndex(str, index, len);
         if (eqIdx > endIdx) {
           index = str.lastIndexOf(";", eqIdx - 1) + 1;
           continue;
         }
-        const keyStartIdx = startIndex(str, index, eqIdx);
-        const keyEndIdx = endIndex(str, eqIdx, keyStartIdx);
-        const key = str.slice(keyStartIdx, keyEndIdx);
+        const key = valueSlice(str, index, eqIdx);
         if (obj[key] === void 0) {
-          let valStartIdx = startIndex(str, eqIdx + 1, endIdx);
-          let valEndIdx = endIndex(str, endIdx, valStartIdx);
-          const value = dec(str.slice(valStartIdx, valEndIdx));
-          obj[key] = value;
+          obj[key] = dec(valueSlice(str, eqIdx + 1, endIdx));
         }
         index = endIdx + 1;
       } while (index < len);
       return obj;
     }
-    function startIndex(str, index, max) {
-      do {
-        const code = str.charCodeAt(index);
-        if (code !== 32 && code !== 9)
-          return index;
-      } while (++index < max);
-      return max;
-    }
-    function endIndex(str, index, min) {
-      while (index > min) {
-        const code = str.charCodeAt(--index);
-        if (code !== 32 && code !== 9)
-          return index + 1;
-      }
-      return min;
-    }
-    function serialize(name, val, options) {
+    function stringifyCookie(cookie, options) {
       const enc = options?.encode || encodeURIComponent;
-      if (!cookieNameRegExp.test(name)) {
-        throw new TypeError(`argument name is invalid: ${name}`);
+      const cookieStrings = [];
+      for (const name of Object.keys(cookie)) {
+        const val = cookie[name];
+        if (val === void 0)
+          continue;
+        if (!cookieNameRegExp.test(name)) {
+          throw new TypeError(`cookie name is invalid: ${name}`);
+        }
+        const value = enc(val);
+        if (!cookieValueRegExp.test(value)) {
+          throw new TypeError(`cookie val is invalid: ${val}`);
+        }
+        cookieStrings.push(`${name}=${value}`);
       }
-      const value = enc(val);
+      return cookieStrings.join("; ");
+    }
+    function stringifySetCookie(_name, _val, _opts) {
+      const cookie = typeof _name === "object" ? _name : { ..._opts, name: _name, value: String(_val) };
+      const options = typeof _val === "object" ? _val : _opts;
+      const enc = options?.encode || encodeURIComponent;
+      if (!cookieNameRegExp.test(cookie.name)) {
+        throw new TypeError(`argument name is invalid: ${cookie.name}`);
+      }
+      const value = cookie.value ? enc(cookie.value) : "";
       if (!cookieValueRegExp.test(value)) {
-        throw new TypeError(`argument val is invalid: ${val}`);
+        throw new TypeError(`argument val is invalid: ${cookie.value}`);
       }
-      let str = name + "=" + value;
-      if (!options)
-        return str;
-      if (options.maxAge !== void 0) {
-        if (!Number.isInteger(options.maxAge)) {
-          throw new TypeError(`option maxAge is invalid: ${options.maxAge}`);
+      let str = cookie.name + "=" + value;
+      if (cookie.maxAge !== void 0) {
+        if (!Number.isInteger(cookie.maxAge)) {
+          throw new TypeError(`option maxAge is invalid: ${cookie.maxAge}`);
         }
-        str += "; Max-Age=" + options.maxAge;
+        str += "; Max-Age=" + cookie.maxAge;
       }
-      if (options.domain) {
-        if (!domainValueRegExp.test(options.domain)) {
-          throw new TypeError(`option domain is invalid: ${options.domain}`);
+      if (cookie.domain) {
+        if (!domainValueRegExp.test(cookie.domain)) {
+          throw new TypeError(`option domain is invalid: ${cookie.domain}`);
         }
-        str += "; Domain=" + options.domain;
+        str += "; Domain=" + cookie.domain;
       }
-      if (options.path) {
-        if (!pathValueRegExp.test(options.path)) {
-          throw new TypeError(`option path is invalid: ${options.path}`);
+      if (cookie.path) {
+        if (!pathValueRegExp.test(cookie.path)) {
+          throw new TypeError(`option path is invalid: ${cookie.path}`);
         }
-        str += "; Path=" + options.path;
+        str += "; Path=" + cookie.path;
       }
-      if (options.expires) {
-        if (!isDate(options.expires) || !Number.isFinite(options.expires.valueOf())) {
-          throw new TypeError(`option expires is invalid: ${options.expires}`);
+      if (cookie.expires) {
+        if (!isDate(cookie.expires) || !Number.isFinite(cookie.expires.valueOf())) {
+          throw new TypeError(`option expires is invalid: ${cookie.expires}`);
         }
-        str += "; Expires=" + options.expires.toUTCString();
+        str += "; Expires=" + cookie.expires.toUTCString();
       }
-      if (options.httpOnly) {
+      if (cookie.httpOnly) {
         str += "; HttpOnly";
       }
-      if (options.secure) {
+      if (cookie.secure) {
         str += "; Secure";
       }
-      if (options.partitioned) {
+      if (cookie.partitioned) {
         str += "; Partitioned";
       }
-      if (options.priority) {
-        const priority = typeof options.priority === "string" ? options.priority.toLowerCase() : void 0;
+      if (cookie.priority) {
+        const priority = typeof cookie.priority === "string" ? cookie.priority.toLowerCase() : void 0;
         switch (priority) {
           case "low":
             str += "; Priority=Low";
@@ -241,11 +244,11 @@ var require_dist = __commonJS({
             str += "; Priority=High";
             break;
           default:
-            throw new TypeError(`option priority is invalid: ${options.priority}`);
+            throw new TypeError(`option priority is invalid: ${cookie.priority}`);
         }
       }
-      if (options.sameSite) {
-        const sameSite = typeof options.sameSite === "string" ? options.sameSite.toLowerCase() : options.sameSite;
+      if (cookie.sameSite) {
+        const sameSite = typeof cookie.sameSite === "string" ? cookie.sameSite.toLowerCase() : cookie.sameSite;
         switch (sameSite) {
           case true:
           case "strict":
@@ -258,10 +261,97 @@ var require_dist = __commonJS({
             str += "; SameSite=None";
             break;
           default:
-            throw new TypeError(`option sameSite is invalid: ${options.sameSite}`);
+            throw new TypeError(`option sameSite is invalid: ${cookie.sameSite}`);
         }
       }
       return str;
+    }
+    function parseSetCookie(str, options) {
+      const dec = options?.decode || decode;
+      const len = str.length;
+      const endIdx = endIndex(str, 0, len);
+      const eqIdx = eqIndex(str, 0, endIdx);
+      const setCookie = eqIdx === -1 ? { name: "", value: dec(valueSlice(str, 0, endIdx)) } : {
+        name: valueSlice(str, 0, eqIdx),
+        value: dec(valueSlice(str, eqIdx + 1, endIdx))
+      };
+      let index = endIdx + 1;
+      while (index < len) {
+        const endIdx2 = endIndex(str, index, len);
+        const eqIdx2 = eqIndex(str, index, endIdx2);
+        const attr = eqIdx2 === -1 ? valueSlice(str, index, endIdx2) : valueSlice(str, index, eqIdx2);
+        const val = eqIdx2 === -1 ? void 0 : valueSlice(str, eqIdx2 + 1, endIdx2);
+        switch (attr.toLowerCase()) {
+          case "httponly":
+            setCookie.httpOnly = true;
+            break;
+          case "secure":
+            setCookie.secure = true;
+            break;
+          case "partitioned":
+            setCookie.partitioned = true;
+            break;
+          case "domain":
+            setCookie.domain = val;
+            break;
+          case "path":
+            setCookie.path = val;
+            break;
+          case "max-age":
+            if (val && maxAgeRegExp.test(val))
+              setCookie.maxAge = Number(val);
+            break;
+          case "expires":
+            if (!val)
+              break;
+            const date = new Date(val);
+            if (Number.isFinite(date.valueOf()))
+              setCookie.expires = date;
+            break;
+          case "priority":
+            if (!val)
+              break;
+            const priority = val.toLowerCase();
+            if (priority === "low" || priority === "medium" || priority === "high") {
+              setCookie.priority = priority;
+            }
+            break;
+          case "samesite":
+            if (!val)
+              break;
+            const sameSite = val.toLowerCase();
+            if (sameSite === "lax" || sameSite === "strict" || sameSite === "none") {
+              setCookie.sameSite = sameSite;
+            }
+            break;
+        }
+        index = endIdx2 + 1;
+      }
+      return setCookie;
+    }
+    function endIndex(str, min, len) {
+      const index = str.indexOf(";", min);
+      return index === -1 ? len : index;
+    }
+    function eqIndex(str, min, max) {
+      const index = str.indexOf("=", min);
+      return index < max ? index : -1;
+    }
+    function valueSlice(str, min, max) {
+      let start = min;
+      let end = max;
+      do {
+        const code = str.charCodeAt(start);
+        if (code !== 32 && code !== 9)
+          break;
+      } while (++start < end);
+      while (end > start) {
+        const code = str.charCodeAt(end - 1);
+        if (code !== 32 && code !== 9)
+          break;
+        end--;
+      }
+      return str.slice(start, end);
     }
     function decode(str) {
       if (str.indexOf("%") === -1)
@@ -275,12 +365,6 @@ var require_dist = __commonJS({
     function isDate(val) {
       return __toString.call(val) === "[object Date]";
     }
-  }
-});
-
-// ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/logger.js
-var init_logger2 = __esm({
-  "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/logger.js"() {
   }
 });
 
@@ -311,7 +395,7 @@ function getQueryFromIterator(it) {
 }
 var init_util = __esm({
   "../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/http/util.js"() {
-    init_logger2();
+    init_logger();
   }
 });
 
@@ -794,15 +878,16 @@ var NEXT_DIR = path.join(__dirname, ".next");
 var OPEN_NEXT_DIR = path.join(__dirname, ".open-next");
 debug({ NEXT_DIR, OPEN_NEXT_DIR });
 var NextConfig = { "env": { "CLOUDFLARE_ACCOUNT_ID": "544971d734e2d2605d77624f56f6e72d", "CLOUDFLARE_DATABASE_ID": "1ac8c424-7722-4894-92e6-6473bf090abc", "CLOUDFLARE_D1_API_TOKEN": "R3gt_08buDUu-Tyd6yq5M6XtcmgIryStylNAc-wx" }, "webpack": null, "eslint": { "ignoreDuringBuilds": false }, "typescript": { "ignoreBuildErrors": false, "tsconfigPath": "tsconfig.json" }, "distDir": ".next", "cleanDistDir": true, "assetPrefix": "", "cacheMaxMemorySize": 52428800, "configOrigin": "next.config.ts", "useFileSystemPublicRoutes": true, "generateEtags": true, "pageExtensions": ["tsx", "ts", "jsx", "js"], "poweredByHeader": true, "compress": true, "images": { "deviceSizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840], "imageSizes": [16, 32, 48, 64, 96, 128, 256, 384], "path": "/_next/image", "loader": "default", "loaderFile": "", "domains": [], "disableStaticImages": false, "minimumCacheTTL": 60, "formats": ["image/webp"], "dangerouslyAllowSVG": false, "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;", "contentDispositionType": "attachment", "remotePatterns": [{ "protocol": "https", "hostname": "pub-f1fd80427d5e489a98fb6022fd6f176b.r2.dev" }, { "protocol": "https", "hostname": "cdn.sanity.io" }], "unoptimized": false }, "devIndicators": { "appIsrStatus": true, "buildActivity": true, "buildActivityPosition": "bottom-right" }, "onDemandEntries": { "maxInactiveAge": 6e4, "pagesBufferLength": 5 }, "amp": { "canonicalBase": "" }, "basePath": "", "sassOptions": {}, "trailingSlash": false, "i18n": null, "productionBrowserSourceMaps": false, "excludeDefaultMomentLocales": true, "serverRuntimeConfig": {}, "publicRuntimeConfig": {}, "reactProductionProfiling": false, "reactStrictMode": null, "reactMaxHeadersLength": 6e3, "httpAgentOptions": { "keepAlive": true }, "logging": {}, "expireTime": 31536e3, "staticPageGenerationTimeout": 60, "output": "standalone", "modularizeImports": { "@mui/icons-material": { "transform": "@mui/icons-material/{{member}}" }, "lodash": { "transform": "lodash/{{member}}" } }, "outputFileTracingRoot": "", "experimental": { "cacheLife": { "default": { "stale": 300, "revalidate": 900, "expire": 4294967294 }, "seconds": { "stale": 0, "revalidate": 1, "expire": 60 }, "minutes": { "stale": 300, "revalidate": 60, "expire": 3600 }, "hours": { "stale": 300, "revalidate": 3600, "expire": 86400 }, "days": { "stale": 300, "revalidate": 86400, "expire": 604800 }, "weeks": { "stale": 300, "revalidate": 604800, "expire": 2592e3 }, "max": { "stale": 300, "revalidate": 2592e3, "expire": 4294967294 } }, "cacheHandlers": {}, "cssChunking": true, "multiZoneDraftMode": false, "appNavFailHandling": false, "prerenderEarlyExit": true, "serverMinification": true, "serverSourceMaps": false, "linkNoTouchStart": false, "caseSensitiveRoutes": false, "clientSegmentCache": false, "preloadEntriesOnStart": true, "clientRouterFilter": true, "clientRouterFilterRedirects": false, "fetchCacheKeyPrefix": "", "middlewarePrefetch": "flexible", "optimisticClientCache": true, "manualClientBasePath": false, "cpus": 9, "memoryBasedWorkersCount": false, "imgOptConcurrency": null, "imgOptTimeoutInSeconds": 7, "imgOptMaxInputPixels": 268402689, "imgOptSequentialRead": null, "isrFlushToDisk": true, "workerThreads": false, "optimizeCss": false, "nextScriptWorkers": false, "scrollRestoration": false, "externalDir": false, "disableOptimizedLoading": false, "gzipSize": true, "craCompat": false, "esmExternals": true, "fullySpecified": false, "swcTraceProfiling": false, "forceSwcTransforms": false, "largePageDataBytes": 128e3, "typedRoutes": false, "typedEnv": false, "parallelServerCompiles": false, "parallelServerBuildTraces": false, "ppr": false, "authInterrupts": false, "reactOwnerStack": false, "webpackMemoryOptimizations": false, "optimizeServerReact": true, "useEarlyImport": false, "staleTimes": { "dynamic": 0, "static": 300 }, "serverComponentsHmrCache": true, "staticGenerationMaxConcurrency": 8, "staticGenerationMinPagesPerWorker": 25, "dynamicIO": false, "inlineCss": false, "optimizePackageImports": ["lucide-react", "date-fns", "lodash-es", "ramda", "antd", "react-bootstrap", "ahooks", "@ant-design/icons", "@headlessui/react", "@headlessui-float/react", "@heroicons/react/20/solid", "@heroicons/react/24/solid", "@heroicons/react/24/outline", "@visx/visx", "@tremor/react", "rxjs", "@mui/material", "@mui/icons-material", "recharts", "react-use", "effect", "@effect/schema", "@effect/platform", "@effect/platform-node", "@effect/platform-browser", "@effect/platform-bun", "@effect/sql", "@effect/sql-mssql", "@effect/sql-mysql2", "@effect/sql-pg", "@effect/sql-squlite-node", "@effect/sql-squlite-bun", "@effect/sql-squlite-wasm", "@effect/sql-squlite-react-native", "@effect/rpc", "@effect/rpc-http", "@effect/typeclass", "@effect/experimental", "@effect/opentelemetry", "@material-ui/core", "@material-ui/icons", "@tabler/icons-react", "mui-core", "react-icons/ai", "react-icons/bi", "react-icons/bs", "react-icons/cg", "react-icons/ci", "react-icons/di", "react-icons/fa", "react-icons/fa6", "react-icons/fc", "react-icons/fi", "react-icons/gi", "react-icons/go", "react-icons/gr", "react-icons/hi", "react-icons/hi2", "react-icons/im", "react-icons/io", "react-icons/io5", "react-icons/lia", "react-icons/lib", "react-icons/lu", "react-icons/md", "react-icons/pi", "react-icons/ri", "react-icons/rx", "react-icons/si", "react-icons/sl", "react-icons/tb", "react-icons/tfi", "react-icons/ti", "react-icons/vsc", "react-icons/wi"], "trustHostHeader": false, "isExperimentalCompile": false }, "bundlePagesRouterDependencies": false, "configFileName": "next.config.ts" };
-var BuildId = "BaK4Vpou3SUDt9qf_MdsU";
+var BuildId = "CupUEgQoUTtksabUptc4i";
 var RoutesManifest = { "basePath": "", "rewrites": { "beforeFiles": [], "afterFiles": [], "fallback": [] }, "redirects": [{ "source": "/:path+/", "destination": "/:path+", "internal": true, "statusCode": 308, "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$" }], "routes": { "static": [{ "page": "/", "regex": "^/(?:/)?$", "routeKeys": {}, "namedRegex": "^/(?:/)?$" }, { "page": "/_not-found", "regex": "^/_not\\-found(?:/)?$", "routeKeys": {}, "namedRegex": "^/_not\\-found(?:/)?$" }, { "page": "/admin/dashboard", "regex": "^/admin/dashboard(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/dashboard(?:/)?$" }, { "page": "/admin/login", "regex": "^/admin/login(?:/)?$", "routeKeys": {}, "namedRegex": "^/admin/login(?:/)?$" }, { "page": "/bar-menu", "regex": "^/bar\\-menu(?:/)?$", "routeKeys": {}, "namedRegex": "^/bar\\-menu(?:/)?$" }, { "page": "/blog", "regex": "^/blog(?:/)?$", "routeKeys": {}, "namedRegex": "^/blog(?:/)?$" }, { "page": "/book-table", "regex": "^/book\\-table(?:/)?$", "routeKeys": {}, "namedRegex": "^/book\\-table(?:/)?$" }, { "page": "/event", "regex": "^/event(?:/)?$", "routeKeys": {}, "namedRegex": "^/event(?:/)?$" }, { "page": "/favicon.ico", "regex": "^/favicon\\.ico(?:/)?$", "routeKeys": {}, "namedRegex": "^/favicon\\.ico(?:/)?$" }], "dynamic": [{ "page": "/blog/[slug]", "regex": "^/blog/([^/]+?)(?:/)?$", "routeKeys": { "nxtPslug": "nxtPslug" }, "namedRegex": "^/blog/(?<nxtPslug>[^/]+?)(?:/)?$" }, { "page": "/event/[slug]", "regex": "^/event/([^/]+?)(?:/)?$", "routeKeys": { "nxtPslug": "nxtPslug" }, "namedRegex": "^/event/(?<nxtPslug>[^/]+?)(?:/)?$" }, { "page": "/team/[id]", "regex": "^/team/([^/]+?)(?:/)?$", "routeKeys": { "nxtPid": "nxtPid" }, "namedRegex": "^/team/(?<nxtPid>[^/]+?)(?:/)?$" }], "data": { "static": [], "dynamic": [] } }, "locales": [] };
 var ConfigHeaders = [];
-var PrerenderManifest = { "version": 4, "routes": { "/favicon.ico": { "initialHeaders": { "cache-control": "public, max-age=0, must-revalidate", "content-type": "image/x-icon", "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico" }, "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/favicon.ico", "dataRoute": null, "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/", "dataRoute": "/index.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/book-table": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/book-table", "dataRoute": "/book-table.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/dashboard": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/dashboard", "dataRoute": "/admin/dashboard.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/bar-menu": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/bar-menu", "dataRoute": "/bar-menu.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/login": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/login", "dataRoute": "/admin/login.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] } }, "dynamicRoutes": {}, "notFoundRoutes": [], "preview": { "previewModeId": "b5f3f2dbee55e75ce583f8644d33e300", "previewModeSigningKey": "28dfdb6d215092be82aa5541bfe20ac9e7292e84c7f16908ba3afdce6fc9c9c1", "previewModeEncryptionKey": "46c911a8e3795dc3d7ea0dc88b6142a81bf43ca79dde3750d5da013e64566d37" } };
+var PrerenderManifest = { "version": 4, "routes": { "/favicon.ico": { "initialHeaders": { "cache-control": "public, max-age=0, must-revalidate", "content-type": "image/x-icon", "x-next-cache-tags": "_N_T_/layout,_N_T_/favicon.ico/layout,_N_T_/favicon.ico/route,_N_T_/favicon.ico" }, "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/favicon.ico", "dataRoute": null, "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/book-table": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/book-table", "dataRoute": "/book-table.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/", "dataRoute": "/index.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/bar-menu": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/bar-menu", "dataRoute": "/bar-menu.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/dashboard": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/dashboard", "dataRoute": "/admin/dashboard.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] }, "/admin/login": { "experimentalBypassFor": [{ "type": "header", "key": "Next-Action" }, { "type": "header", "key": "content-type", "value": "multipart/form-data;.*" }], "initialRevalidateSeconds": false, "srcRoute": "/admin/login", "dataRoute": "/admin/login.rsc", "allowHeader": ["host", "x-matched-path", "x-prerender-revalidate", "x-prerender-revalidate-if-generated", "x-next-revalidated-tags", "x-next-revalidate-tag-token"] } }, "dynamicRoutes": {}, "notFoundRoutes": [], "preview": { "previewModeId": "865fea2dca83bfd03501cea3fd22934e", "previewModeSigningKey": "57b9b390dbe66e5ad9faa3e7ad7086c4b8111685ced1769a4c19fc27151694d3", "previewModeEncryptionKey": "dd60c92502b718d1de42037cc5ea0b463cbfa94690b3cedd1cce6c7b12429dbf" } };
 var MiddlewareManifest = { "version": 3, "middleware": {}, "functions": {}, "sortedMiddleware": [] };
-var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/api/create-example-data/route": "/api/create-example-data", "/api/admin/login/route": "/api/admin/login", "/api/order/route": "/api/order", "/api/sanity/route": "/api/sanity", "/api/signup/route": "/api/signup", "/api/table/update-table-seat-status/route": "/api/table/update-table-seat-status", "/api/approve-order/route": "/api/approve-order", "/api/cancel-order/route": "/api/cancel-order", "/favicon.ico/route": "/favicon.ico", "/api/tables/route": "/api/tables", "/(home)/blog/page": "/blog", "/(home)/blog/[slug]/page": "/blog/[slug]", "/(home)/event/page": "/event", "/(home)/event/[slug]/page": "/event/[slug]", "/(home)/bar-menu/page": "/bar-menu", "/admin/login/page": "/admin/login", "/admin/dashboard/page": "/admin/dashboard", "/(home)/team/[id]/page": "/team/[id]", "/(home)/page": "/", "/(home)/book-table/page": "/book-table" };
+var AppPathRoutesManifest = { "/_not-found/page": "/_not-found", "/api/admin/login/route": "/api/admin/login", "/api/approve-order/route": "/api/approve-order", "/api/cancel-order/route": "/api/cancel-order", "/api/order/route": "/api/order", "/api/create-example-data/route": "/api/create-example-data", "/favicon.ico/route": "/favicon.ico", "/api/sanity/route": "/api/sanity", "/api/table/update-table-seat-status/route": "/api/table/update-table-seat-status", "/api/signup/route": "/api/signup", "/api/tables/route": "/api/tables", "/(home)/event/page": "/event", "/(home)/blog/page": "/blog", "/(home)/page": "/", "/(home)/book-table/page": "/book-table", "/(home)/blog/[slug]/page": "/blog/[slug]", "/(home)/team/[id]/page": "/team/[id]", "/(home)/bar-menu/page": "/bar-menu", "/(home)/event/[slug]/page": "/event/[slug]", "/admin/login/page": "/admin/login", "/admin/dashboard/page": "/admin/dashboard" };
 var FunctionsConfigManifest = { "version": 1, "functions": {} };
 var PagesManifest = { "/_app": "pages/_app.js", "/_error": "pages/_error.js", "/_document": "pages/_document.js", "/404": "pages/404.html" };
 process.env.NEXT_BUILD_ID = BuildId;
+process.env.NEXT_PREVIEW_MODE_ID = PrerenderManifest?.preview?.previewModeId;
 
 // ../../../../../private/tmp/bunx-501-@opennextjs/cloudflare@latest/node_modules/@opennextjs/aws/dist/http/openNextResponse.js
 init_logger();
@@ -1269,9 +1354,12 @@ init_logger();
 var CACHE_ONE_YEAR = 60 * 60 * 24 * 365;
 var CACHE_ONE_MONTH = 60 * 60 * 24 * 30;
 var VARY_HEADER = "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch, Next-Url";
+var NEXT_SEGMENT_PREFETCH_HEADER = "next-router-segment-prefetch";
+var NEXT_PRERENDER_HEADER = "x-nextjs-prerender";
+var NEXT_POSTPONED_HEADER = "x-nextjs-postponed";
 async function computeCacheControl(path3, body, host, revalidate, lastModified) {
   let finalRevalidate = CACHE_ONE_YEAR;
-  const existingRoute = Object.entries(PrerenderManifest.routes).find((p) => p[0] === path3)?.[1];
+  const existingRoute = Object.entries(PrerenderManifest?.routes ?? {}).find((p) => p[0] === path3)?.[1];
   if (revalidate === void 0 && existingRoute) {
     finalRevalidate = existingRoute.initialRevalidateSeconds === false ? CACHE_ONE_YEAR : existingRoute.initialRevalidateSeconds;
   } else if (revalidate !== void 0) {
@@ -1324,22 +1412,45 @@ async function computeCacheControl(path3, body, host, revalidate, lastModified) 
     etag
   };
 }
+function getBodyForAppRouter(event, cachedValue) {
+  if (cachedValue.type !== "app") {
+    throw new Error("getBodyForAppRouter called with non-app cache value");
+  }
+  try {
+    const segmentHeader = `${event.headers[NEXT_SEGMENT_PREFETCH_HEADER]}`;
+    const isSegmentResponse = Boolean(segmentHeader) && segmentHeader in (cachedValue.segmentData || {});
+    const body = isSegmentResponse ? cachedValue.segmentData[segmentHeader] : cachedValue.rsc;
+    return {
+      body,
+      additionalHeaders: isSegmentResponse ? { [NEXT_PRERENDER_HEADER]: "1", [NEXT_POSTPONED_HEADER]: "2" } : {}
+    };
+  } catch (e) {
+    error("Error while getting body for app router from cache:", e);
+    return { body: cachedValue.rsc, additionalHeaders: {} };
+  }
+}
 async function generateResult(event, localizedPath, cachedValue, lastModified) {
   debug("Returning result from experimental cache");
   let body = "";
   let type = "application/octet-stream";
   let isDataRequest = false;
-  switch (cachedValue.type) {
-    case "app":
-      isDataRequest = Boolean(event.headers.rsc);
-      body = isDataRequest ? cachedValue.rsc : cachedValue.html;
-      type = isDataRequest ? "text/x-component" : "text/html; charset=utf-8";
-      break;
-    case "page":
-      isDataRequest = Boolean(event.query.__nextDataReq);
-      body = isDataRequest ? JSON.stringify(cachedValue.json) : cachedValue.html;
-      type = isDataRequest ? "application/json" : "text/html; charset=utf-8";
-      break;
+  let additionalHeaders = {};
+  if (cachedValue.type === "app") {
+    isDataRequest = Boolean(event.headers.rsc);
+    if (isDataRequest) {
+      const { body: appRouterBody, additionalHeaders: appHeaders } = getBodyForAppRouter(event, cachedValue);
+      body = appRouterBody;
+      additionalHeaders = appHeaders;
+    } else {
+      body = cachedValue.html;
+    }
+    type = isDataRequest ? "text/x-component" : "text/html; charset=utf-8";
+  } else if (cachedValue.type === "page") {
+    isDataRequest = Boolean(event.query.__nextDataReq);
+    body = isDataRequest ? JSON.stringify(cachedValue.json) : cachedValue.html;
+    type = isDataRequest ? "application/json" : "text/html; charset=utf-8";
+  } else {
+    throw new Error("generateResult called with unsupported cache value type, only 'app' and 'page' are supported");
   }
   const cacheControl = await computeCacheControl(localizedPath, body, event.headers.host, cachedValue.revalidate, lastModified);
   return {
@@ -1356,7 +1467,8 @@ async function generateResult(event, localizedPath, cachedValue, lastModified) {
       ...cacheControl,
       "content-type": type,
       ...cachedValue.meta?.headers,
-      vary: VARY_HEADER
+      vary: VARY_HEADER,
+      ...additionalHeaders
     }
   };
 }
@@ -1388,7 +1500,7 @@ async function cacheInterceptor(event) {
   localizedPath = localizedPath.replace(/\/$/, "");
   localizedPath = decodePathParams(localizedPath);
   debug("Checking cache for", localizedPath, PrerenderManifest);
-  const isISR = Object.keys(PrerenderManifest.routes).includes(localizedPath ?? "/") || Object.values(PrerenderManifest.dynamicRoutes).some((dr) => new RegExp(dr.routeRegex).test(localizedPath));
+  const isISR = Object.keys(PrerenderManifest?.routes ?? {}).includes(localizedPath ?? "/") || Object.values(PrerenderManifest?.dynamicRoutes ?? {}).some((dr) => new RegExp(dr.routeRegex).test(localizedPath));
   debug("isISR", isISR);
   if (isISR) {
     try {
@@ -2133,7 +2245,7 @@ function fixDataPage(internalEvent, buildId) {
 }
 function handleFallbackFalse(internalEvent, prerenderManifest) {
   const { rawPath } = internalEvent;
-  const { dynamicRoutes, routes } = prerenderManifest;
+  const { dynamicRoutes = {}, routes = {} } = prerenderManifest ?? {};
   const prerenderedFallbackRoutes = Object.entries(dynamicRoutes).filter(([, { fallback }]) => fallback === false);
   const routeFallback = prerenderedFallbackRoutes.some(([, { routeRegex }]) => {
     const routeRegexExp = new RegExp(routeRegex);
@@ -2185,7 +2297,7 @@ function defaultMiddlewareLoader() {
 }
 async function handleMiddleware(internalEvent, initialSearch, middlewareLoader = defaultMiddlewareLoader) {
   const headers = internalEvent.headers;
-  if (headers["x-isr"] && headers["x-prerender-revalidate"] === PrerenderManifest.preview.previewModeId)
+  if (headers["x-isr"] && headers["x-prerender-revalidate"] === PrerenderManifest?.preview?.previewModeId)
     return internalEvent;
   const normalizedPath = localizePath(internalEvent);
   const hasMatch = middleMatch.some((r) => r.test(normalizedPath));

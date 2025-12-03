@@ -1,5 +1,3 @@
-import type { Metadata } from "next";
-
 import "../globals.css";
 import { cn } from "@/lib/utils";
 import fonts from "@/constants/fonts";
@@ -8,10 +6,6 @@ import { FooterParallax } from "@/components/common";
 import { Toaster } from "sonner";
 import { QueryProvider } from "@/hook/provider";
 import { Navbar } from "@/components/common/navbar/navbar";
-export const metadata: Metadata = {
-  title: "FourSenses",
-  description: "Nomad-ability bar ",
-};
 
 export default function RootLayout({
   children,
@@ -21,7 +15,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head>
-        <title>{`${metadata.title}`}</title>
+        {/* <title>{`${metadata.title}`}</title>
         <meta content={`${metadata.description}`} name="description" />
         <meta property="og:type" content={"website"} />
         <meta property="og:site_name" content={"Four Sense"} />
@@ -29,7 +23,7 @@ export default function RootLayout({
         <meta property="og:title" content={`${metadata.title}`} />
         <meta
           property="og:image"
-          content={"https://four-sense.vercel.app/cover.jpg"}
+          content={"https://www.foursenses.mn/cover.jpg"}
         />
         <meta property="og:url" content="https://four-sense.vercel.app" />
         <meta property="fb:app_id" content="your_fb_app_id_here" />
@@ -39,7 +33,7 @@ export default function RootLayout({
         <meta name="twitter:description" content={`${metadata.description}`} />
         <meta
           name="twitter:image"
-          content={"https://four-sense.vercel.app/cover.jpg"}
+          content={"https://www.foursenses.mn/cover.jpg"}
         />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -54,7 +48,7 @@ export default function RootLayout({
           href="/favicon.ico"
           type="image/<generated>"
           sizes="<generated>"
-        />
+        /> */}
       </head>
       <body
         suppressHydrationWarning

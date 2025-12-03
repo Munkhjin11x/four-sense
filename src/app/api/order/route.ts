@@ -153,6 +153,10 @@ export async function GET(request: Request) {
     const allOrders = await db.select().from(Orders);
     const total = allOrders.length;
 
+    // Calculate total unique customers (by email)
+    const uniqueEmails = new Set(allOrders.map((order) => order.email));
+    const totalCustomers = uniqueEmails.size;
+
     const orders = await db
       .select()
       .from(Orders)
@@ -185,6 +189,7 @@ export async function GET(request: Request) {
         currentPage: validPage,
         totalPages,
         total,
+        totalCustomers,
         limit: validLimit,
         hasNext,
         hasPrev,

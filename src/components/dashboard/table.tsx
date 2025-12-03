@@ -10,19 +10,20 @@ interface TOrderListTableProps {
   invoices: Order[] | undefined;
   page: number;
   totalRows?: number;
+  totalCustomers?: number;
   pageCount?: number;
   refetch: () => void;
 }
 
 export default function OrderTable({
   invoices,
+  totalRows,
+  totalCustomers,
   pageCount,
   refetch,
 }: TOrderListTableProps) {
-  const totalOrders = invoices?.length || 0;
-  const totalCustomers = invoices
-    ? new Set(invoices.map((order) => order.email)).size
-    : 0;
+  const totalOrders = totalRows || 0;
+  const uniqueCustomers = totalCustomers || 0;
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: approveOrder } = useApproveOrder(refetch);
   const { mutate: cancelOrder } = useCancelOrder(refetch);
@@ -88,7 +89,7 @@ export default function OrderTable({
                   Unique Customers
                 </p>
                 <p className="text-2xl font-bold text-green-900">
-                  {totalCustomers}
+                  {uniqueCustomers}
                 </p>
               </div>
             </div>

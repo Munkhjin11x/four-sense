@@ -175,6 +175,8 @@ const AdminDashboardContent = () => {
                   refetch={recall}
                   invoices={orderList?.orders ?? []}
                   page={page}
+                  totalRows={orderList?.pagination?.total}
+                  totalCustomers={orderList?.pagination?.totalCustomers}
                   pageCount={orderList?.pagination?.totalPages}
                 />
               )}

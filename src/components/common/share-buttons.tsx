@@ -13,10 +13,10 @@ export const ShareButtons = () => {
   const [copied, setCopied] = useState(false);
 
   const handleCopyPath = () => {
-    const currentPath = window.location.pathname;
+    const currentUrl = window.location.href;
 
     navigator.clipboard
-      .writeText(currentPath)
+      .writeText(currentUrl)
       .then(() => {
         setCopied(true);
         setTimeout(() => {

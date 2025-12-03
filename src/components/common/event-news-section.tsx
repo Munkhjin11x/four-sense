@@ -139,7 +139,9 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
       ? imageUrlBuilder({ projectId, dataset }).image(source)
       : null;
 
-  const eventEnd = data.eventDate > new Date() ? "Дууссан" : "Тун удахгүй";
+  const eventEnd =
+    new Date(data.eventDate) < new Date() ? "Дууссан" : "Тун удахгүй";
+
   return (
     <div className="border min-w-[360px] rounded-md pb-2.5">
       <div className="flex justify-between items-center p-2">

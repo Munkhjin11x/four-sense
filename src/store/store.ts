@@ -67,6 +67,7 @@ export type OrderList = {
     currentPage: number;
     totalPages: number;
     total: number;
+    totalCustomers: number;
     limit: number;
     hasNext: boolean;
     hasPrev: boolean;
