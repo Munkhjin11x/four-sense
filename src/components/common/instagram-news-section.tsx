@@ -8,8 +8,7 @@ import { useEffect, useState } from "react";
 import Animation from "../ui/animation";
 import { client } from "@/lib/sanity/client";
 import { SanityDocument } from "next-sanity";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 
 import { Badge, Button } from "../ui";
 import { AnnouncementIcon } from "@/icons/announcement-icon";

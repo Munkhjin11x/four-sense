@@ -6,7 +6,7 @@ import { WideTable } from "./wide-table";
 import { ATable } from "./a-table";
 import Image from "next/image";
 import { Button } from "../ui";
-import { DownloadIcon } from "@/icons";
+
 import { Seat } from "./seat";
 import useScreenSize from "@/hook/use-screen";
 import { Key, useState } from "react";
@@ -15,6 +15,8 @@ import { OrderModal } from "./order-modal";
 import Animation from "../ui/animation";
 import { CalendarIcon } from "@/icons/calendar-icon";
 import { useTable } from "@/store/store";
+import { Phone } from "lucide-react";
+import { ComingSoonModal } from "./cominsoon-modal";
 
 export const TableSection = () => {
   const { width } = useScreenSize();
@@ -23,6 +25,7 @@ export const TableSection = () => {
   }>({});
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
   const [all, setAll] = useState(false);
 
   const { data: tables, isLoading, refetch } = useTable();
@@ -78,23 +81,27 @@ export const TableSection = () => {
       };
     });
   };
-  const currentData = width > 1580 ? data2 : data;
+  // const currentData = width > 1580 ? data2 : data;
 
-  const handleSelectAll = () => {
-    setAll(true);
-    const allSeatsSelected = {};
+  // const handleSelectAll = () => {
+  //   setAll(true);
+  //   const allSeatsSelected = {};
 
-    currentData.forEach((table) => {
-      if (table.seats && table.seats.length > 0) {
-        (allSeatsSelected as { [key: string]: string[] })[table.id] =
-          Array.from({ length: table.seats.length }, (_, index) =>
-            index.toString()
-          );
-      }
-    });
+  //   currentData.forEach((table) => {
+  //     if (table.seats && table.seats.length > 0) {
+  //       (allSeatsSelected as { [key: string]: string[] })[table.id] =
+  //         Array.from({ length: table.seats.length }, (_, index) =>
+  //           index.toString()
+  //         );
+  //     }
+  //   });
 
-    setSelectedSeats(allSeatsSelected);
-    setIsOpen(true);
+  //   setSelectedSeats(allSeatsSelected);
+  //   setIsOpen(true);
+  // };
+
+  const handleComingSoon = () => {
+    setIsComingSoonOpen((prev) => !prev);
   };
 
   const handleOrder = (tableId: string) => {
@@ -199,19 +206,20 @@ export const TableSection = () => {
 
         <div className="flex flex-col mb-24 gap-3 max-w-[300px] justify-center items-center w-full">
           <Button
-            onClick={() => handleSelectAll()}
+            onClick={handleComingSoon}
             variant="ghost"
-            className="w-full border hover:bg-white/50 text-white rounded-tl-3xl"
+            className="w-full border text-xl flex gap-2 items-center hover:bg-white/50 text-white rounded-tl-3xl"
           >
             <CalendarIcon color="white" /> Organizing events
           </Button>
           <Button
             variant="ghost"
-            className="w-full border hover:bg-white/50 text-white rounded-tl-3xl"
+            className="w-full border flex gap-2 text-xl hover:bg-white/50 text-white rounded-tl-3xl"
           >
-            <DownloadIcon color="white" /> Event spaces at four sense
+            <Phone /> 9066-9993
           </Button>
         </div>
+        <ComingSoonModal isOpen={isComingSoonOpen} onClose={handleComingSoon} />
       </div>
       <OrderModal
         refetch={refetch}

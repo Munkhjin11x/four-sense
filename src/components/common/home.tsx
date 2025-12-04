@@ -26,8 +26,8 @@ export const Home = () => {
           ? ["90%", "76%"]
           : ["90%", "90%"]
         : !loading
-        ? ["40%", "5%"]
-        : ["40%", "40%"]
+          ? ["40%", "5%"]
+          : ["40%", "40%"]
     ),
     smoothConfig
   );
@@ -40,8 +40,8 @@ export const Home = () => {
           ? ["40%", "5%"]
           : ["40%", "40%"]
         : !loading
-        ? ["120%", "-30%"]
-        : ["120%", "120%"]
+          ? ["120%", "-30%"]
+          : ["120%", "120%"]
     ),
     smoothConfigLogo
   );
@@ -54,8 +54,8 @@ export const Home = () => {
           ? ["80%", "88%"]
           : ["80%", "80%"]
         : !loading
-        ? ["10%", "15%"]
-        : ["10%", "10%"]
+          ? ["10%", "15%"]
+          : ["10%", "10%"]
     ),
     smoothConfig
   );
@@ -101,7 +101,7 @@ export const Home = () => {
           className="absolute top-1/2 left-[38%] flex justify-center -translate-x-1/2 -translate-y-1/2"
         >
           <Image
-            src={"/home/logo.webp"}
+            src={CDN_URL + "/home/logo.webp"}
             alt="Logo"
             width={480}
             height={480}

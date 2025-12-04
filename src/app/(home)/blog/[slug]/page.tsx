@@ -3,8 +3,7 @@ import { cn } from "@/lib/utils";
 import { PortableText, SanityDocument } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 import { Tilt } from "@/components/ui/tilt";
 import { ShareButtons } from "@/components/common/share-buttons";
 

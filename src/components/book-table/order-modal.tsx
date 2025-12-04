@@ -14,6 +14,7 @@ import { apiCreateOrder } from "@/store/api";
 import { UseTurnstile, useTurnstileStore } from "@/hook/use-turnstile";
 import { useSearchParams } from "next/navigation";
 import { format } from "date-fns";
+import { useEffect, useMemo } from "react";
 
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
@@ -42,15 +43,31 @@ export const OrderModal = ({
   refetch: () => void;
 }) => {
   const searchParams = useSearchParams();
-  const date = searchParams.get("date");
+  const dateParam = searchParams.get("date");
+
+  // Handle URL-encoded date string (+ becomes space in URL params)
+  const parsedDate = useMemo(() => {
+    const date = dateParam ? dateParam.replace(/ /g, "+") : null;
+    return date ? new Date(date) : new Date();
+  }, [dateParam]);
+
+  const isValidDate = dateParam && !isNaN(parsedDate.getTime());
+
   const form = useForm<OrderFormData>({
     defaultValues: {
       fullName: "",
       email: "",
       phone: "",
-      date: date ? new Date(date) : new Date(),
+      date: new Date(),
     },
   });
+
+  // Update form date when dateParam changes
+  useEffect(() => {
+    if (isValidDate) {
+      form.setValue("date", parsedDate);
+    }
+  }, [dateParam, isValidDate, parsedDate, form]);
 
   const { mutate: createOrder, isPending } = useMutation<
     unknown,
@@ -99,7 +116,7 @@ export const OrderModal = ({
       seatIds: seats,
       date: data.date,
       turnstileToken: token,
-      eventDate: date ? 1 : 0,
+      eventDate: dateParam ? 1 : 0,
     });
   };
 
@@ -162,6 +179,18 @@ export const OrderModal = ({
             </span>
           )}
 
+          {isValidDate && (
+            <div className="text-sm mb-2">
+              <p className="text-[#488457] font-semibold">
+                Event date pre-selected:{" "}
+                {format(parsedDate, "yyyy-MM-dd HH:mm")}
+              </p>
+              <p className="text-[#488457] text-xs mt-1">
+                You can change the date below if needed
+              </p>
+            </div>
+          )}
+
           <FormFieldDatePicker
             control={form.control}
             name="date"
@@ -181,14 +210,6 @@ export const OrderModal = ({
               />
             ))}
           </div>
-          {date && (
-            <div className="text-sm text-gray-500">
-              <p className="text-[#488457]">
-                You are selected event date:{" "}
-                {format(new Date(date), "yyyy-MM-dd HH:mm")}
-              </p>
-            </div>
-          )}
 
           <div className="flex flex-col gap-2">
             <label

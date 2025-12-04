@@ -9,8 +9,7 @@ import { useEffect, useState } from "react";
 import Animation from "../ui/animation";
 import { client } from "@/lib/sanity/client";
 import { SanityDocument } from "next-sanity";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 import { Badge, Button } from "../ui";
 import { format } from "date-fns";
 import { MarkerIcon } from "@/icons/marker-icon";
@@ -213,7 +212,7 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
         <div className="mt-1.5 grid grid-cols-2 gap-2">
           <Link
             target="_blank"
-            href={`posts/${data.slug.current}`}
+            href={`/book-table?date=${data.eventDate}`}
             className="w-full"
           >
             <Button
