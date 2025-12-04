@@ -210,7 +210,7 @@ export const Ability = () => {
             className="border hidden gap-2 lg:flex max-sm:text-sm max-sm:px-5 text-nowrap text-white border-white px-10 rounded-tl-full py-3"
           >
             <DownloadIcon />
-            BAR Menu
+            BAR Menu PDF Download
           </Button>
         </div>
       </div>
@@ -218,6 +218,7 @@ export const Ability = () => {
     </div>
   );
 };
+
 const BarMenuModal = ({
   isOpen,
   onClose,
@@ -225,22 +226,62 @@ const BarMenuModal = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
+  const [activeTab, setActiveTab] = useState<"fall" | "spring">("fall");
+
+  const menuData = {
+    fall: {
+      pdf: "/menufall.pdf",
+      label: "Fall Menu",
+    },
+    spring: {
+      pdf: "/menu-spring.pdf",
+      label: "Spring Menu",
+    },
+  };
+
+  const currentMenu = menuData[activeTab];
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Bar Menu">
-      <div className="flex flex-col gap-4 items-center">
-        <iframe
-          src={"/menufall.pdf"}
-          className=" h-[800px] w-full border-none sm:h-[700px]"
-          title="Bar Menu"
-        />
+      <div className="flex flex-col gap-6 items-center w-full">
+        {/* Header Tabs */}
+        <div className="flex gap-2 bg-[#F9DAB2] w-full justify-center border-b border-white/30 py-3 rounded-t-xl shadow-sm">
+          {(["fall", "spring"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-2 rounded-lg transition-all duration-300 font-medium
+                ${
+                  activeTab === tab
+                    ? "bg-[#308653] text-white shadow-md scale-[1.03]"
+                    : "text-white/70 hover:text-white hover:bg-white/20"
+                }`}
+            >
+              {menuData[tab].label}
+            </button>
+          ))}
+        </div>
+
+        {/* PDF Viewer Container */}
+        <div className="w-full rounded-xl overflow-hidden shadow-lg border border-white/20">
+          <iframe
+            src={currentMenu.pdf}
+            className="w-full h-[800px] sm:h-[650px]"
+            title={currentMenu.label}
+          />
+        </div>
+
+        {/* Download Button */}
         <Link
-          href={"/menufall.pdf"}
+          href={currentMenu.pdf}
           target="_blank"
-          download={"menufall.pdf"}
-          className="border bg-[#F9DAB2] text-center w-fit hidden gap-2 lg:flex max-sm:text-sm max-sm:px-5 text-nowrap text-white border-white px-10 rounded-tl-full py-3"
+          className="relative group flex items-center gap-3 px-10 py-3 rounded-full
+                     bg-[#F9DAB2] border border-white text-white font-medium
+                     shadow-md hover:shadow-lg transition-all duration-300"
         >
+          {/* Icon & Text */}
           <DownloadIcon />
-          BAR Menu
+          <span className="relative z-10">Download {currentMenu.label}</span>
         </Link>
       </div>
     </Modal>

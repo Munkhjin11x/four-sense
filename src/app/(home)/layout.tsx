@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/next-script-for-ga */
 import "../globals.css";
 import { cn } from "@/lib/utils";
 import fonts from "@/constants/fonts";
@@ -15,6 +16,10 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head>
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-CNX40BGFVL"
+        ></script>
         {/* <title>{`${metadata.title}`}</title>
         <meta content={`${metadata.description}`} name="description" />
         <meta property="og:type" content={"website"} />

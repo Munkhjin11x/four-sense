@@ -8,8 +8,7 @@ import { VerifyIcon } from "@/icons/verify-icon";
 import Marquee from "react-fast-marquee";
 import { SanityDocument } from "next-sanity";
 import { client } from "@/lib/sanity/client";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 
@@ -65,28 +64,29 @@ export const TeamSection = () => {
   return (
     <div
       id="team"
-      className="min-h-[120vh] flex flex-col w-full z-0 xl:bg-cover bg-center bg-no-repeat p-14"
+      className="min-h-[120vh] flex flex-col w-full z-0 xl:bg-cover bg-center bg-no-repeat "
       style={{
         backgroundImage: `url(${CDN_URL + "/images/team-photo-2.webp"})`,
       }}
     >
       <Animation className="flex flex-col flex-1 justify-between w-full  mx-auto">
-        <div className="flex relative flex-col max-w-5xl justify-start mx-auto items-center w-full gap-6 md:gap-12 backdrop-blur-sm bg-black/20 rounded-lg p-6 md:p-8">
-          <Image
-            src={CDN_URL + "/images/team-member-logo.png"}
-            alt="Team Logo"
-            width={215}
-            height={215}
-          />
-          <p className="text-white text-center max-w-5xl">
-            Our expert mixologists craft cocktails that engage four senses of
-            sight, sound, smell, and taste, using their fifth sense to create
-            truly unique experiences for our guests, which allows us to meet
-            your needs in the best way possible.
-          </p>
+        <div className="p-14">
+          <div className="flex relative flex-col max-w-5xl justify-start mx-auto items-center w-full gap-6 md:gap-12 backdrop-blur-sm bg-black/20 rounded-lg p-6 md:p-8">
+            <Image
+              src={CDN_URL + "/images/team-member-logo.png"}
+              alt="Team Logo"
+              width={215}
+              height={215}
+            />
+            <p className="text-white text-center max-w-5xl">
+              Our expert mixologists craft cocktails that engage four senses of
+              sight, sound, smell, and taste, using their fifth sense to create
+              truly unique experiences for our guests, which allows us to meet
+              your needs in the best way possible.
+            </p>
+          </div>
         </div>
-
-        <Marquee pauseOnHover className="flex gap-10  w-full max-w-full py-4">
+        <Marquee pauseOnHover className="flex gap-10  w-full py-4">
           {loading ? (
             <TeamMemberCardSkeleton />
           ) : (

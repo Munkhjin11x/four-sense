@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { NavbarItemsMobile } from "./navbar-item-mobile";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import {
   VolumeIcon,
 } from "@/icons";
 import Image from "next/image";
-import useBackgroundAudio from "@/hook/use-sound";
+
 import { Hamburger } from "./hamburger";
 import { usePathname } from "next/navigation";
 export const Navbar = () => {
@@ -21,10 +21,7 @@ export const Navbar = () => {
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [openIndex, setOpenIndex] = useState<number>();
   const [isScrolled, setIsScrolled] = useState(false);
-  const { play, pause } = useBackgroundAudio("/backsound.mp3", {
-    autoplay: pathname === "/" ? false : true,
-  });
-  const [isPlaying, setIsPlaying] = useState(false);
+
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [navTop, setNavTop] = useState("top-5");
   const [navTopBorder, setNavTopBorder] = useState("");
@@ -36,14 +33,29 @@ export const Navbar = () => {
     setIsScrolled(offset > 0);
   };
 
-  const toggleAudio = () => {
-    if (isPlaying) {
-      pause();
-    } else {
-      play();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [muted, setMuted] = useState(false);
+
+  useEffect(() => {
+    const audio = new Audio("/backsound.mp3");
+    audio.loop = true;
+    audio.muted = muted;
+    audio.volume = 0.05;
+
+    audioRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, [muted]);
+
+  const toggleMute = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = !audioRef.current.muted;
+      setMuted(audioRef.current.muted);
     }
-    setIsPlaying(!isPlaying);
-  };
+  }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -171,7 +183,7 @@ export const Navbar = () => {
 
     {
       title: "Volume",
-      onClick: toggleAudio,
+      onClick: toggleMute,
       icon: (
         <VolumeIcon
           color={

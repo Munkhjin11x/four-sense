@@ -1,11 +1,11 @@
 import { client } from "@/lib/sanity/client";
 import { PortableText, SanityDocument } from "next-sanity";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import { Tilt } from "@/components/ui/tilt";
+import Link from "next/link";
 
 const { projectId, dataset } = client.config();
 
@@ -58,13 +58,35 @@ const TeamMemberPage = async ({
 
           <div className="flex flex-col justify-center space-y-6">
             <div className="space-y-4">
-              {teamMember.role && (
-                <div className="inline-block">
-                  <span className="px-4 py-1.5 bg-orange-100 text-orange-700 text-sm font-medium rounded-full">
-                    {teamMember.role}
-                  </span>
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-2 py-0.5 px-6 bg-white text-[#E78140] font-semibold rounded-full transition-all duration-200"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
+                  </svg>
+                  Буцах
+                </Link>
+                {teamMember.role && (
+                  <div className="inline-block">
+                    <span className="px-4 py-1.5 bg-orange-100 text-orange-700 text-sm font-medium rounded-full">
+                      {teamMember.role}
+                    </span>
+                  </div>
+                )}
+              </div>
+
               <h1 className="text-4xl lg:text-6xl font-bold text-zinc-900 tracking-tight">
                 {teamMember.name || "Team Member"}
               </h1>

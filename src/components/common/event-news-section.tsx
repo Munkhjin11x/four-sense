@@ -9,8 +9,7 @@ import { useEffect, useState } from "react";
 import Animation from "../ui/animation";
 import { client } from "@/lib/sanity/client";
 import { SanityDocument } from "next-sanity";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 import { Badge, Button } from "../ui";
 import { format } from "date-fns";
 import { MarkerIcon } from "@/icons/marker-icon";
@@ -143,7 +142,7 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
     new Date(data.eventDate) < new Date() ? "Дууссан" : "Тун удахгүй";
 
   return (
-    <div className="border min-w-[360px] rounded-md pb-2.5">
+    <div className="border min-w-[360px] max-w-[360px] rounded-md pb-2.5">
       <div className="flex justify-between items-center p-2">
         <div className="flex gap-2 mb-2">
           <Image
@@ -196,7 +195,7 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
             )}
           </div>
         ) : (
-          <p className="text-black text-xl font-bold">{data.title}</p>
+          <p className="text-black text-xl font-bold truncate">{data.title}</p>
         )}
         <div className="flex items-center gap-2 justify-between">
           <div className="flex items-center gap-2">
@@ -210,20 +209,27 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
             <p className="text-lg text-gray-400">Altan joloo tower B1</p>
           </div>
         </div>
-        <div className="mt-1.5 grid grid-cols-2 gap-2">
-          <Link
-            target="_blank"
-            href={`posts/${data.slug.current}`}
-            className="w-full"
-          >
-            <Button
-              variant="outline"
-              className="w-full flex items-center gap-2 hover:bg-gray-100"
+        <div
+          className={cn(
+            "mt-1.5 grid grid-cols-2 gap-2",
+            eventEnd === "Дууссан" && "grid-cols-1"
+          )}
+        >
+          {eventEnd !== "Дууссан" && (
+            <Link
+              target="_blank"
+              href={`/book-table?date=${data.eventDate}`}
+              className="w-full"
             >
-              <CalendarPlus2 color="#344054" size={20} />
-              Захиалга өгөх
-            </Button>
-          </Link>
+              <Button
+                variant="outline"
+                className="w-full flex items-center gap-2 hover:bg-gray-100"
+              >
+                <CalendarPlus2 color="#344054" size={20} />
+                Захиалга өгөх
+              </Button>
+            </Link>
+          )}
           <Link
             target="_blank"
             href={`/event/${data.slug.current}`}
