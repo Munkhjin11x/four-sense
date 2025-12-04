@@ -184,11 +184,7 @@ export const InstragramCard = ({ data }: { data: SanityDocument }) => {
         )}
         <p>{data.summary}</p>
         <div className="mt-1.5">
-          <Link
-            target="_blank"
-            href={`/blog/${data.slug.current}`}
-            className="w-full"
-          >
+          <Link href={`/blog/${data.slug.current}`} className="w-full">
             <Button variant="outline" className="w-full hover:bg-gray-100">
               Дэлгэрэнгүй
             </Button>

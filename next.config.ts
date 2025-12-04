@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     SANITY_API_TOKEN: process.env.SANITY_API_TOKEN,
   },
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",

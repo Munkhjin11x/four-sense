@@ -12,6 +12,7 @@ import { NavbarHome } from "@/components/common/navbar";
 import { ParallaxSection } from "@/components/common/parallax-section";
 
 import useLoading from "@/hook/use-loading";
+import { PodcastSection } from "./podcast-section";
 
 const HomePageClient = () => {
   const loading = useLoading(4000);
@@ -30,6 +31,7 @@ const HomePageClient = () => {
           <ExploreSection />
           <EventNewsSection />
           <InstagramNewsSection />
+          <PodcastSection />
         </>
       )}
       <FooterParallaxHome />
