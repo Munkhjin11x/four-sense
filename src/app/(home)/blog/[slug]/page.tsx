@@ -116,7 +116,7 @@ const BlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
                 </div>
                 <ShareButtons />
               </div>
-              <h1 className="text-4xl lg:text-6xl font-bold text-white tracking-tight">
+              <h1 className="text-4xl lg:text-6xl font-bold text-[#308653] tracking-tight">
                 {blog.title || "Blog"}
               </h1>
               <div className="h-1 w-20 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full" />

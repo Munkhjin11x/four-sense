@@ -108,8 +108,7 @@ export const Navbar = () => {
   const data = [
     {
       title: "Home",
-      href:
-        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#home",
+      href: pathname !== "/" ? "/" : "#home",
       icon: (
         <HomeIcon
           color={
@@ -120,8 +119,7 @@ export const Navbar = () => {
     },
     {
       title: "About",
-      href:
-        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#about",
+      href: pathname !== "/" ? "/" : "#about",
       icon: (
         <AboutIcon
           color={
@@ -134,8 +132,7 @@ export const Navbar = () => {
     },
     {
       title: "Team",
-      href:
-        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#team",
+      href: pathname !== "/" ? "/" : "#team",
       icon: (
         <TeamIcon
           color={
@@ -152,8 +149,7 @@ export const Navbar = () => {
     },
     {
       title: "Contact",
-      href:
-        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#contact",
+      href: pathname !== "/" ? "/" : "#contact",
       icon: (
         <HelpIcon
           color={
@@ -166,10 +162,7 @@ export const Navbar = () => {
     },
     {
       title: "Bar Menu",
-      href:
-        pathname == "/book-table" || pathname == "/bar-menu"
-          ? "/bar-menu"
-          : "/bar-menu",
+      href: pathname !== "/" ? "/bar-menu" : "/bar-menu",
       icon: (
         <BarIcon
           color={
@@ -208,8 +201,7 @@ export const Navbar = () => {
             isScrolled ? "!bg-white border" : "bg-transparent",
             "flex items-center justify-between  gap-6 rounded-br-[45px] px-3 pr-8",
             navTopBorder,
-            (pathname === "/bar-menu" || pathname === "/book-table") &&
-              "!bg-white"
+            pathname !== "/" && "!bg-white"
           )}
         >
           <div className="flex items-center gap-14">
