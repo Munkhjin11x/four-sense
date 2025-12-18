@@ -1,6 +1,5 @@
 import { Pagination } from "@/components/blog/pagination";
 import { client } from "@/lib/sanity/client";
-import { AnnouncementIcon } from "@/icons/announcement-icon";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import { PodcastList } from "@/components/common/podcast-list";
@@ -45,14 +44,11 @@ const EventsPage = async ({ searchParams }: EventsPageProps) => {
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <div className="flex justify-center bg-white min-h-screen">
-      <div className="w-full max-w-[1740px] px-6 md:px-10 py-10 pt-24">
+    <div className="flex justify-center bg-[#308653]  min-h-screen">
+      <div className="w-full max-w-[1740px] px-6 md:px-10 py-10 pt-28">
         <div className="mb-12">
           <div className="flex justify-between items-center gap-4 max-md:flex-col max-md:items-start mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 text-[#E78140]">
-                <AnnouncementIcon />
-              </div>
               <h1
                 className={cn(
                   font.className,
@@ -63,10 +59,10 @@ const EventsPage = async ({ searchParams }: EventsPageProps) => {
               </h1>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-600">
-              <span className="bg-[#E78140]/10 px-4 py-2 rounded-full">
+              <span className="bg-[#E78140] text-white px-4 py-2 rounded-full">
                 {total} Podcast
               </span>
-              <span className="bg-[#E78140]/10 px-4 py-2 rounded-full">
+              <span className="bg-[#E78140] text-white px-4 py-2 rounded-full">
                 Page {page} / {totalPages}
               </span>
             </div>

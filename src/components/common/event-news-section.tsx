@@ -142,7 +142,7 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
     new Date(data.eventDate) < new Date() ? "Дууссан" : "Тун удахгүй";
 
   return (
-    <div className="border min-w-[360px] max-w-[360px] rounded-md pb-2.5">
+    <div className="border min-w-[360px] max-w-[360px] rounded-md pb-2.5 bg-white">
       <div className="flex justify-between items-center p-2">
         <div className="flex gap-2 mb-2">
           <Image

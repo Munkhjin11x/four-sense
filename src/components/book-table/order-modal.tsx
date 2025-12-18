@@ -62,7 +62,6 @@ export const OrderModal = ({
     },
   });
 
-  // Update form date when dateParam changes
   useEffect(() => {
     if (isValidDate) {
       form.setValue("date", parsedDate);
@@ -105,6 +104,11 @@ export const OrderModal = ({
   const onSubmit = (data: OrderFormData) => {
     if (!token) {
       toast.error("Please complete the CAPTCHA verification");
+      return;
+    }
+
+    if (!seats || seats.length === 0) {
+      toast.error("Please select at least one seat");
       return;
     }
 
@@ -225,7 +229,7 @@ export const OrderModal = ({
 
           <Button
             type="submit"
-            disabled={isPending}
+            disabled={isPending || !token}
             className="bg-[#E78140] hover:bg-[#E78140]/90 text-white rounded-none rounded-tl-3xl"
           >
             {isPending ? "Processing..." : "Order"}

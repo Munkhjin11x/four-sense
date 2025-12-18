@@ -2,7 +2,6 @@ import { InstragramCard } from "@/components";
 import { Pagination } from "@/components/blog/pagination";
 import { client } from "@/lib/sanity/client";
 import { SanityDocument } from "next-sanity";
-import { AnnouncementIcon } from "@/icons/announcement-icon";
 import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 
@@ -47,14 +46,11 @@ const BlogsPage = async ({ searchParams }: BlogPageProps) => {
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <div className="flex justify-center to-white min-h-screen">
-      <div className="w-full max-w-[1740px] px-6 md:px-10  pt-24">
+    <div className="flex justify-center bg-[#308653] min-h-screen">
+      <div className="w-full max-w-[1740px] px-6 md:px-10  pt-28">
         <div className="mb-12">
           <div className="flex justify-between items-center gap-4 max-md:flex-col max-md:items-start mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 text-[#E78140]">
-                <AnnouncementIcon />
-              </div>
               <h1
                 className={cn(
                   font.className,
@@ -65,10 +61,10 @@ const BlogsPage = async ({ searchParams }: BlogPageProps) => {
               </h1>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-600">
-              <span className="bg-[#E78140]/10 px-4 py-2 rounded-full">
+              <span className="bg-[#E78140] text-white px-4 py-2 rounded-full">
                 {total} Нийтлэл
               </span>
-              <span className="bg-[#E78140]/10 px-4 py-2 rounded-full">
+              <span className="bg-[#E78140] text-white px-4 py-2 rounded-full">
                 Хуудас {page} / {totalPages}
               </span>
             </div>
@@ -86,9 +82,6 @@ const BlogsPage = async ({ searchParams }: BlogPageProps) => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20">
-            <div className="text-gray-400 mb-4 w-16 h-16">
-              <AnnouncementIcon />
-            </div>
             <p className="text-xl text-gray-500">Нийтлэл олдсонгүй</p>
           </div>
         )}

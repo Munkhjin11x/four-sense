@@ -23,7 +23,7 @@ export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const [navTop, setNavTop] = useState("top-5");
+  const [navTop, setNavTop] = useState(pathname === "/" ? "top-5" : "top-0");
   const [navTopBorder, setNavTopBorder] = useState("");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);

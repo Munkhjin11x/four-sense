@@ -35,7 +35,7 @@ export const GreenSection = () => {
               className=" absolute top-1/2 left-1/2 flex justify-center -translate-x-1/2 -translate-y-1/2"
               sizes="100vw"
             />
-            <div className="absolute -z-10 max-sm:hidden  w-full max-w-[1300px] top-1/2 max-sm:left-[39%] left-[41%] items-center flex justify-center -translate-x-1/2 -translate-y-1/2 ">
+            <div className="absolute max-xl:hidden -z-10 max-sm:hidden  w-full 2xl:max-w-[1300px] top-1/2 max-sm:left-[39%] left-[41%] items-center flex justify-center -translate-x-1/2 -translate-y-1/2 ">
               <Image
                 src={CDN_URL + "/images/arrow.png"}
                 alt=""

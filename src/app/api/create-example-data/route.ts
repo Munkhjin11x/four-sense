@@ -7,16 +7,14 @@ export async function POST() {
   try {
     const db = getDatabase();
 
-    // Create c1 table with 6 seats
-
-    const tableC1 = await createTable(db, "a3");
+    const tableC1 = await createTable(db, "long-table");
 
     const c1Seats = [];
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= 12; i++) {
       const seat = await createTableSeat(
         db,
         tableC1.id,
-        "a3",
+        "long-table",
         `Seat ${i}`,
         "available"
       );

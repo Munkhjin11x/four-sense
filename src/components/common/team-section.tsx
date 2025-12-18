@@ -71,12 +71,12 @@ export const TeamSection = () => {
     >
       <Animation className="flex flex-col flex-1 justify-between w-full  mx-auto">
         <div className="p-14">
-          <div className="flex relative flex-col max-w-5xl justify-start mx-auto items-center w-full gap-6 md:gap-12 backdrop-blur-sm bg-black/20 rounded-lg p-6 md:p-8">
+          <div className="flex relative flex-col max-lg:hidden max-w-5xl justify-start mx-auto items-center w-full gap-6 md:gap-12 backdrop-blur-sm bg-black/20 rounded-lg p-6 md:p-8">
             <Image
               src={CDN_URL + "/images/team-member-logo.png"}
               alt="Team Logo"
-              width={215}
-              height={215}
+              width={155}
+              height={155}
             />
             <p className="text-white text-center max-w-5xl">
               Our expert mixologists craft cocktails that engage four senses of
