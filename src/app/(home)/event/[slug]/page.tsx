@@ -3,8 +3,7 @@ import { cn } from "@/lib/utils";
 import { PortableText, SanityDocument } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 import { Tilt } from "@/components/ui/tilt";
 import { CalendarPlus2 } from "lucide-react";
 import { ShareButtons } from "@/components/common/share-buttons";
@@ -50,6 +49,9 @@ const BlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
 
   const blog = await client.fetch<SanityDocument>(EVENT_QUERY, { slug });
+
+  const eventEnd =
+    new Date(blog.eventDate) < new Date() ? "Дууссан" : "Тун удахгүй";
 
   if (!blog) {
     return (
@@ -120,7 +122,7 @@ const BlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
 
                 <ShareButtons />
               </div>
-              <h1 className="text-4xl lg:text-6xl font-bold text-white tracking-tight">
+              <h1 className="text-4xl lg:text-6xl font-bold text-[#308653] tracking-tight">
                 {blog.title || "Blog"}
               </h1>
               <div className="h-1 w-20 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full" />
@@ -161,13 +163,15 @@ const BlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
                 </svg>
                 Буцах
               </Link> */}
-              <Link
-                href={`/book-table?date=${blog.eventDate}`}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-100 text-black font-semibold rounded-full transition-all duration-200"
-              >
-                <CalendarPlus2 color="#344054" size={20} />
-                Захиалга өгөх
-              </Link>
+              {eventEnd !== "Дууссан" && (
+                <Link
+                  href={`/book-table?date=${blog.eventDate}`}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-100 text-black font-semibold rounded-full transition-all duration-200"
+                >
+                  <CalendarPlus2 color="#344054" size={20} />
+                  Захиалга өгөх
+                </Link>
+              )}
             </div>
           </div>
         </div>

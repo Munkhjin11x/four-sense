@@ -160,7 +160,7 @@ export async function GET(request: Request) {
     const orders = await db
       .select()
       .from(Orders)
-      .orderBy(desc(Orders.orderDate))
+      .orderBy(desc(Orders.id))
       .limit(validLimit)
       .offset(offset);
 

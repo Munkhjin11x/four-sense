@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { NavbarItemsMobile } from "./navbar-item-mobile";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -13,7 +13,7 @@ import {
 } from "@/icons";
 import Image from "next/image";
 import useLoading from "@/hook/use-loading";
-import useBackgroundAudio from "@/hook/use-sound";
+
 import { Hamburger } from "./hamburger";
 import { usePathname } from "next/navigation";
 export const NavbarHome = () => {
@@ -21,8 +21,7 @@ export const NavbarHome = () => {
   const [openIndex, setOpenIndex] = useState<number>();
   const [isScrolled, setIsScrolled] = useState(false);
   const loading = useLoading(4000);
-  const { play, pause } = useBackgroundAudio("/backsound.mp3");
-  const [isPlaying, setIsPlaying] = useState(false);
+
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [navTop, setNavTop] = useState("top-2");
   const [navTopBorder, setNavTopBorder] = useState("");
@@ -34,21 +33,37 @@ export const NavbarHome = () => {
     setIsScrolled(offset > 0);
   };
 
-  const toggleAudio = () => {
-    if (isPlaying) {
-      pause();
-    } else {
-      play();
-    }
-    setIsPlaying(!isPlaying);
-  };
-
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
+  }, []);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [muted, setMuted] = useState(false);
+
+  useEffect(() => {
+    const audio = new Audio("/backsound.mp3");
+    audio.loop = true;
+    audio.autoplay = true;
+    audio.muted = muted;
+    audio.volume = 0.05;
+
+    audioRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, [muted]);
+
+  const toggleMute = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = !audioRef.current.muted;
+      setMuted(audioRef.current.muted);
+    }
   }, []);
 
   useEffect(() => {
@@ -170,7 +185,7 @@ export const NavbarHome = () => {
 
     {
       title: "Volume",
-      onClick: toggleAudio,
+      onClick: toggleMute,
       icon: (
         <VolumeIcon
           color={
@@ -211,6 +226,8 @@ export const NavbarHome = () => {
                 alt="logo"
                 width={240}
                 height={50}
+                priority
+                unoptimized
               />
             </Link>
           </div>
@@ -221,7 +238,7 @@ export const NavbarHome = () => {
                 onMouseLeave={() => setHoveredIndex(null)}
                 className="group hidden lg:flex gap-3"
                 key={i}
-                href={e.href || ""}
+                href={e.href || "#"}
                 onClick={(event) => {
                   if (e.onClick) {
                     e.onClick(event);

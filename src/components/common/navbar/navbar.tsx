@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { NavbarItemsMobile } from "./navbar-item-mobile";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import {
   VolumeIcon,
 } from "@/icons";
 import Image from "next/image";
-import useBackgroundAudio from "@/hook/use-sound";
+
 import { Hamburger } from "./hamburger";
 import { usePathname } from "next/navigation";
 export const Navbar = () => {
@@ -21,12 +21,9 @@ export const Navbar = () => {
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
   const [openIndex, setOpenIndex] = useState<number>();
   const [isScrolled, setIsScrolled] = useState(false);
-  const { play, pause } = useBackgroundAudio("/backsound.mp3", {
-    autoplay: pathname === "/" ? false : true,
-  });
-  const [isPlaying, setIsPlaying] = useState(false);
+
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const [navTop, setNavTop] = useState("top-5");
+  const [navTop, setNavTop] = useState(pathname === "/" ? "top-5" : "top-0");
   const [navTopBorder, setNavTopBorder] = useState("");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
@@ -36,14 +33,29 @@ export const Navbar = () => {
     setIsScrolled(offset > 0);
   };
 
-  const toggleAudio = () => {
-    if (isPlaying) {
-      pause();
-    } else {
-      play();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [muted, setMuted] = useState(false);
+
+  useEffect(() => {
+    const audio = new Audio("/backsound.mp3");
+    audio.loop = true;
+    audio.muted = muted;
+    audio.volume = 0.05;
+
+    audioRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, [muted]);
+
+  const toggleMute = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.muted = !audioRef.current.muted;
+      setMuted(audioRef.current.muted);
     }
-    setIsPlaying(!isPlaying);
-  };
+  }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -96,8 +108,7 @@ export const Navbar = () => {
   const data = [
     {
       title: "Home",
-      href:
-        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#home",
+      href: pathname !== "/" ? "/" : "#home",
       icon: (
         <HomeIcon
           color={
@@ -108,8 +119,7 @@ export const Navbar = () => {
     },
     {
       title: "About",
-      href:
-        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#about",
+      href: pathname !== "/" ? "/" : "#about",
       icon: (
         <AboutIcon
           color={
@@ -122,8 +132,7 @@ export const Navbar = () => {
     },
     {
       title: "Team",
-      href:
-        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#team",
+      href: pathname !== "/" ? "/" : "#team",
       icon: (
         <TeamIcon
           color={
@@ -140,8 +149,7 @@ export const Navbar = () => {
     },
     {
       title: "Contact",
-      href:
-        pathname == "/book-table" || pathname == "/bar-menu" ? "/" : "#contact",
+      href: pathname !== "/" ? "/" : "#contact",
       icon: (
         <HelpIcon
           color={
@@ -154,10 +162,7 @@ export const Navbar = () => {
     },
     {
       title: "Bar Menu",
-      href:
-        pathname == "/book-table" || pathname == "/bar-menu"
-          ? "/bar-menu"
-          : "/bar-menu",
+      href: pathname !== "/" ? "/bar-menu" : "/bar-menu",
       icon: (
         <BarIcon
           color={
@@ -171,7 +176,7 @@ export const Navbar = () => {
 
     {
       title: "Volume",
-      onClick: toggleAudio,
+      onClick: toggleMute,
       icon: (
         <VolumeIcon
           color={
@@ -196,8 +201,7 @@ export const Navbar = () => {
             isScrolled ? "!bg-white border" : "bg-transparent",
             "flex items-center justify-between  gap-6 rounded-br-[45px] px-3 pr-8",
             navTopBorder,
-            (pathname === "/bar-menu" || pathname === "/book-table") &&
-              "!bg-white"
+            pathname !== "/" && "!bg-white"
           )}
         >
           <div className="flex items-center gap-14">

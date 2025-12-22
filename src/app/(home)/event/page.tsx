@@ -19,7 +19,7 @@ interface EventsPageProps {
 const EVENTS_QUERY = `*[
     _type == "event"
     && defined(slug.current)
-  ]|order(publishedAt desc) [($page - 1) * $limit...$page * $limit]{
+  ]|order(eventDate desc) [($page - 1) * $limit...$page * $limit]{
    _id,
   title,
   slug,
@@ -46,14 +46,11 @@ const EventsPage = async ({ searchParams }: EventsPageProps) => {
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <div className="flex justify-center bg-white min-h-screen">
-      <div className="w-full max-w-[1740px] px-6 md:px-10 py-10 md:py-16">
+    <div className="flex justify-center bg-[#308653] min-h-screen">
+      <div className="w-full max-w-[1740px] px-6 md:px-10 py-10 md:pt-28">
         <div className="mb-12">
           <div className="flex justify-between items-center gap-4 max-md:flex-col max-md:items-start mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 text-[#E78140]">
-                <AnnouncementIcon />
-              </div>
               <h1
                 className={cn(
                   font.className,
@@ -64,10 +61,10 @@ const EventsPage = async ({ searchParams }: EventsPageProps) => {
               </h1>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-600">
-              <span className="bg-[#E78140]/10 px-4 py-2 rounded-full">
+              <span className="bg-[#E78140] text-white px-4 py-2 rounded-full">
                 {total} Нийтлэл
               </span>
-              <span className="bg-[#E78140]/10 px-4 py-2 rounded-full">
+              <span className="bg-[#E78140] text-white px-4 py-2 rounded-full">
                 Хуудас {page} / {totalPages}
               </span>
             </div>

@@ -140,7 +140,7 @@ export const FooterSection = () => {
         <Animation>
           <div className="grid grid-cols-1 sm:grid-cols-2 w-full gap-4 sm:gap-0">
             <div className="text-[#E78140] text-base sm:text-xl flex flex-col gap-2">
-              <p>Make a reservation: (+976) 9660-9993</p>
+              <p>Make a reservation: (+976) 88071190</p>
               <p>info@foursenses.mn</p>
             </div>
             <div className="flex flex-col gap-2">

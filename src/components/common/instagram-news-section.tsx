@@ -8,8 +8,7 @@ import { useEffect, useState } from "react";
 import Animation from "../ui/animation";
 import { client } from "@/lib/sanity/client";
 import { SanityDocument } from "next-sanity";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 
 import { Badge, Button } from "../ui";
 import { AnnouncementIcon } from "@/icons/announcement-icon";
@@ -139,7 +138,7 @@ export const InstragramCard = ({ data }: { data: SanityDocument }) => {
       : null;
 
   return (
-    <div className="border bg-white min-w-[360px] rounded-md pb-2.5">
+    <div className="border bg-white min-w-[360px] max-w-[360px] rounded-md pb-2.5">
       <div className="flex justify-between items-center p-2">
         <div className="flex gap-2 mb-2">
           <Image
@@ -180,7 +179,7 @@ export const InstragramCard = ({ data }: { data: SanityDocument }) => {
             )}
           </div>
         ) : (
-          <p className="text-black font-bold">{data.title}</p>
+          <p className="text-black font-bold truncate">{data.title}</p>
         )}
         <p>{data.summary}</p>
         <div className="mt-1.5">

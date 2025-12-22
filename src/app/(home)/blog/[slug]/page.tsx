@@ -3,8 +3,7 @@ import { cn } from "@/lib/utils";
 import { PortableText, SanityDocument } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 import { Tilt } from "@/components/ui/tilt";
 import { ShareButtons } from "@/components/common/share-buttons";
 
@@ -117,7 +116,7 @@ const BlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
                 </div>
                 <ShareButtons />
               </div>
-              <h1 className="text-4xl lg:text-6xl font-bold text-white tracking-tight">
+              <h1 className="text-4xl lg:text-6xl font-bold text-[#308653] tracking-tight">
                 {blog.title || "Blog"}
               </h1>
               <div className="h-1 w-20 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full" />
