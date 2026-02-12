@@ -11,6 +11,14 @@ import { client } from "@/lib/sanity/client";
 import imageUrlBuilder, { SanityImageSource } from "@sanity/image-url";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
+import { cn } from "@/lib/utils";
+import localFont from "next/font/local";
+
+const font = localFont({
+  src: "../../fonts/roba/Roba-Regular.otf",
+  style: "normal",
+  weight: "200",
+});
 
 const STAFF_QUERY = `*[
   _type == "staff"
@@ -69,15 +77,16 @@ export const TeamSection = () => {
         backgroundImage: `url(${CDN_URL + "/images/team-photo-2.webp"})`,
       }}
     >
-      <Animation className="flex flex-col flex-1 justify-between w-full  mx-auto">
-        <div className="p-14">
-          <div className="flex relative flex-col max-lg:hidden max-w-5xl justify-start mx-auto items-center w-full gap-6 md:gap-12 backdrop-blur-sm bg-black/20 rounded-lg p-6 md:p-8">
-            <Image
-              src={CDN_URL + "/images/team-member-logo.png"}
-              alt="Team Logo"
-              width={155}
-              height={155}
-            />
+      <Animation className="flex flex-col flex-1 justify-end w-full  mx-auto">
+        <div className="">
+          <div className="flex relative flex-col max-lg:hidden max-w-5xl justify-start mx-auto items-center w-full gap-2 backdrop-blur-sm bg-black/20 rounded-lg p-4">
+            <p
+              className={cn('text-white text-center  text-lg',
+                font.className
+              )}
+            >
+              Team  Member
+            </p>
             <p className="text-white text-center max-w-5xl">
               Our expert mixologists craft cocktails that engage four senses of
               sight, sound, smell, and taste, using their fifth sense to create

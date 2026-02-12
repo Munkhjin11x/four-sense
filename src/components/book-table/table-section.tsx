@@ -45,10 +45,10 @@ export const TableSection = () => {
               const newSeatData = newTableData.seats[index];
               return newSeatData
                 ? {
-                    ...seat,
-                    status: newSeatData.status,
-                    _id: newSeatData._id,
-                  }
+                  ...seat,
+                  status: newSeatData.status,
+                  _id: newSeatData._id,
+                }
                 : seat;
             }) || [],
         };
@@ -172,6 +172,7 @@ export const TableSection = () => {
                         selectedSeats={selectedSeats}
                         tableId={item.id as string}
                         seats={item.seats || []}
+                        notRenderedSeat={item.notRenderedSeat}
                       >
                         <div
                           className={cn(
@@ -200,15 +201,14 @@ export const TableSection = () => {
                               onClick={() =>
                                 handleSeatSelect(item.id as string, seat._id)
                               }
-                              className={`cursor-pointer ${
-                                item.notRenderedSeat
-                                  ? "hidden"
-                                  : selectedSeats[item.id as string]?.includes(
-                                        seat._id?.$oid || seat._id
-                                      ) || seat.status === "ordered"
-                                    ? "opacity-50"
-                                    : ""
-                              }`}
+                              className={`cursor-pointer ${item.notRenderedSeat
+                                ? "hidden"
+                                : selectedSeats[item.id as string]?.includes(
+                                  seat._id?.$oid || seat._id
+                                ) || seat.status === "ordered"
+                                  ? "opacity-50"
+                                  : ""
+                                }`}
                             >
                               <Seat seatNumber={i + 1} rotate={seat.rotate} />
                             </div>
@@ -223,17 +223,16 @@ export const TableSection = () => {
           </div>
         </Animation>
 
-        <div className="flex flex-col mb-24 gap-3 max-w-[300px] justify-center items-center w-full">
+        <div className="flex flex-col mb-10 mt-24 gap-3 max-w-[300px] justify-center items-center w-full">
           <Button
             onClick={handleComingSoon}
-            variant="ghost"
-            className="w-full border text-xl flex gap-2 items-center hover:bg-white/50 text-white rounded-tl-3xl"
+
+            className="w-full bg-white border text-xl flex gap-2 items-center hover:bg-white/50 text-[#E36C2C] rounded-tl-3xl"
           >
-            <CalendarIcon color="white" /> Organizing events
+            <CalendarIcon color="#E36C2C" /> Organizing events
           </Button>
           <Button
-            variant="ghost"
-            className="w-full border flex gap-2 text-xl hover:bg-white/50 text-white rounded-tl-3xl"
+            className="w-full bg-white border flex gap-2 text-xl hover:bg-white/50 text-[#E36C2C] rounded-tl-3xl"
           >
             <Phone />
             88071190
@@ -300,7 +299,7 @@ const data = [
     id: "c1",
     x: "400px",
     y: "53%",
-    children: <WideTable title="c1" width={180} height={96} />,
+    children: <WideTable title="Chinggis Khaan Station" width={180} height={96} />,
     seats: [
       {
         title: "Seat 1",
@@ -356,7 +355,7 @@ const data = [
     id: "c2",
     x: "590px",
     y: "50%",
-    children: <WideTable title="c2" width={180} height={96} />,
+    children: <WideTable title="Mazaalai Station" width={180} height={96} />,
     seats: [
       {
         title: "Seat 1",
@@ -388,7 +387,7 @@ const data = [
     id: "c3",
     x: "780px",
     y: "51.5%",
-    children: <WideTable title="c3" width={180} height={96} />,
+    children: <WideTable title="39th Station" width={180} height={96} />,
     seats: [
       {
         title: "Seat 1",
@@ -420,7 +419,7 @@ const data = [
     id: "c4",
     x: "970px",
     y: "41.5%",
-    children: <WideTable title="c4" width={60} height={180} />,
+    children: <WideTable title="39th Station" width={60} height={180} />,
     seats: [
       {
         title: "Seat 1",
@@ -452,7 +451,7 @@ const data = [
     id: "b1",
     x: "1210px",
     y: "5%",
-    children: <ATable title="B1" />,
+    children: <ATable title="X5" />,
     notRenderedSeat: true,
     seats: [
       {
@@ -470,7 +469,7 @@ const data = [
     x: "1340px",
     y: "0%",
     notRenderedSeat: true,
-    children: <ATable title="B2" />,
+    children: <ATable title="X4" />,
     seats: [
       {
         title: "B Table",
@@ -486,7 +485,7 @@ const data = [
     id: "b3",
     x: "1470px",
     y: "0%",
-    children: <ATable title="B3" />,
+    children: <ATable title="X3" />,
     notRenderedSeat: true,
     seats: [
       {
@@ -503,7 +502,7 @@ const data = [
     id: "b4",
     x: "1600px",
     y: "0%",
-    children: <ATable title="B4" />,
+    children: <ATable title="X2" />,
     notRenderedSeat: true,
     seats: [
       {
@@ -520,7 +519,8 @@ const data = [
     id: "a1",
     x: "1210px",
     y: "35%",
-    children: <ATable title="a1" />,
+    children: <ATable title="T4" />,
+    notRenderedSeat: true,
     seats: [
       {
         title: "Seat 1",
@@ -530,38 +530,14 @@ const data = [
         y: "25%",
         rotate: "-rotate-90",
       },
-      {
-        title: "Seat 2",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "-70%",
-        rotate: "rotate-180",
-      },
-      {
-        title: "Seat 3",
-        image: "/table/seat.png",
-        status: "available",
-        x: "-80%",
-        y: "25%",
-        rotate: "rotate-90",
-      },
-      {
-        title: "Seat 4",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "110%",
-        rotate: "rotate-0",
-      },
     ],
   },
-
   {
     id: "a2",
     x: "1210px",
     y: "75%",
-    children: <ATable title="a2" />,
+    children: <ATable title="T5" />,
+    notRenderedSeat: true,
     seats: [
       {
         title: "Seat 1",
@@ -570,30 +546,6 @@ const data = [
         x: "110%",
         y: "25%",
         rotate: "-rotate-90",
-      },
-      {
-        title: "Seat 2",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "-70%",
-        rotate: "rotate-180",
-      },
-      {
-        title: "Seat 3",
-        image: "/table/seat.png",
-        status: "available",
-        x: "-80%",
-        y: "25%",
-        rotate: "rotate-90",
-      },
-      {
-        title: "Seat 4",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "110%",
-        rotate: "rotate-0",
       },
     ],
   },
@@ -601,7 +553,8 @@ const data = [
     id: "a3",
     x: "1450px",
     y: "24%",
-    children: <ATable title="a3" />,
+    children: <ATable title="T3" />,
+    notRenderedSeat: true,
     seats: [
       {
         title: "Seat 1",
@@ -611,37 +564,15 @@ const data = [
         y: "25%",
         rotate: "-rotate-90",
       },
-      {
-        title: "Seat 2",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "-70%",
-        rotate: "rotate-180",
-      },
-      {
-        title: "Seat 3",
-        image: "/table/seat.png",
-        status: "available",
-        x: "-80%",
-        y: "25%",
-        rotate: "rotate-90",
-      },
-      {
-        title: "Seat 4",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "110%",
-        rotate: "rotate-0",
-      },
+
     ],
   },
   {
     id: "a4",
     x: "1450px",
     y: "62%",
-    children: <ATable title="a4" />,
+    children: <ATable title="T2" />,
+    notRenderedSeat: true,
     seats: [
       {
         title: "Seat 1",
@@ -651,37 +582,15 @@ const data = [
         y: "25%",
         rotate: "-rotate-90",
       },
-      {
-        title: "Seat 2",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "-70%",
-        rotate: "rotate-180",
-      },
-      {
-        title: "Seat 3",
-        image: "/table/seat.png",
-        status: "available",
-        x: "-80%",
-        y: "25%",
-        rotate: "rotate-90",
-      },
-      {
-        title: "Seat 4",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "110%",
-        rotate: "rotate-0",
-      },
+
     ],
   },
   {
     id: "a5",
     x: "1450px",
     y: "100%",
-    children: <ATable title="a5" />,
+    children: <ATable title="T1" />,
+    notRenderedSeat: true,
     seats: [
       {
         title: "Seat 1",
@@ -691,30 +600,7 @@ const data = [
         y: "25%",
         rotate: "-rotate-90",
       },
-      {
-        title: "Seat 2",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "-70%",
-        rotate: "rotate-180",
-      },
-      {
-        title: "Seat 3",
-        image: "/table/seat.png",
-        status: "available",
-        x: "-80%",
-        y: "25%",
-        rotate: "rotate-90",
-      },
-      {
-        title: "Seat 4",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "110%",
-        rotate: "rotate-0",
-      },
+
     ],
   },
   {
@@ -821,6 +707,142 @@ const data = [
       },
     ],
   },
+  {
+    id: "b2",
+    x: "1340px",
+    y: "0%",
+    notRenderedSeat: true,
+    children: <ATable title="X4" />,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "b3",
+    x: "1470px",
+    y: "0%",
+    children: <ATable title="X3" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "b4",
+    x: "1600px",
+    y: "0%",
+    children: <ATable title="X2" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "x11",
+    x: "270px",
+    y: "110%",
+    children: <ATable title="X11" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "x10",
+    x: "530px",
+    y: "100%",
+    children: <ATable title="X10" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "x9",
+    x: "680px",
+    y: "100%",
+    children: <ATable title="X9" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "x8",
+    x: "880px",
+    y: "100%",
+    children: <ATable title="X8" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "x7",
+    x: "1040px",
+    y: "100%",
+    children: <ATable title="X7" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
 ];
 
 const data2 = [
@@ -840,7 +862,7 @@ const data2 = [
     id: "c1",
     x: "22%",
     y: "53%",
-    children: <WideTable title="c1" width={180} height={96} />,
+    children: <WideTable title="Chinggis Khaan Station" width={180} height={96} />,
     seats: [
       {
         title: "Seat 1",
@@ -896,7 +918,7 @@ const data2 = [
     id: "c2",
     x: "32.5%",
     y: "50%",
-    children: <WideTable title="c2" width={180} height={96} />,
+    children: <WideTable title="Mazaalai Station" width={180} height={96} />,
     seats: [
       {
         title: "Seat 1",
@@ -928,7 +950,7 @@ const data2 = [
     id: "c3",
     x: "43.5%",
     y: "51.5%",
-    children: <WideTable title="c3" width={180} height={96} />,
+    children: <WideTable title="39th Station" width={180} height={96} />,
     seats: [
       {
         title: "Seat 1",
@@ -960,7 +982,7 @@ const data2 = [
     id: "c4",
     x: "54%",
     y: "41.5%",
-    children: <WideTable title="c4" width={60} height={180} />,
+    children: <WideTable title="39th Station" width={60} height={180} />,
     seats: [
       {
         title: "Seat 1",
@@ -992,7 +1014,7 @@ const data2 = [
     id: "b1",
     x: "64%",
     y: "5%",
-    children: <ATable title="B1" />,
+    children: <ATable title="X5" />,
     notRenderedSeat: true,
     seats: [
       {
@@ -1010,7 +1032,7 @@ const data2 = [
     x: "72%",
     y: "0%",
     notRenderedSeat: true,
-    children: <ATable title="B2" />,
+    children: <ATable title="X4" />,
     seats: [
       {
         title: "B Table",
@@ -1026,7 +1048,7 @@ const data2 = [
     id: "b3",
     x: "82%",
     y: "0%",
-    children: <ATable title="B3" />,
+    children: <ATable title="X3" />,
     notRenderedSeat: true,
     seats: [
       {
@@ -1043,7 +1065,7 @@ const data2 = [
     id: "b4",
     x: "88%",
     y: "0%",
-    children: <ATable title="B4" />,
+    children: <ATable title="X2" />,
     notRenderedSeat: true,
     seats: [
       {
@@ -1060,7 +1082,8 @@ const data2 = [
     id: "a1",
     x: "78%",
     y: "28%",
-    children: <ATable title="A1" />,
+    children: <ATable title="T3" />,
+    notRenderedSeat: true,
     seats: [
       {
         title: "Seat 1",
@@ -1070,37 +1093,15 @@ const data2 = [
         y: "25%",
         rotate: "-rotate-90",
       },
-      {
-        title: "Seat 2",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "-70%",
-        rotate: "rotate-180",
-      },
-      {
-        title: "Seat 3",
-        image: "/table/seat.png",
-        status: "available",
-        x: "-80%",
-        y: "25%",
-        rotate: "rotate-90",
-      },
-      {
-        title: "Seat 4",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "110%",
-        rotate: "rotate-0",
-      },
+
     ],
   },
   {
     id: "a2",
     x: "78%",
     y: "68%",
-    children: <ATable title="a2" />,
+    children: <ATable title="T2" />,
+    notRenderedSeat: true,
     seats: [
       {
         title: "Seat 1",
@@ -1110,37 +1111,15 @@ const data2 = [
         y: "25%",
         rotate: "-rotate-90",
       },
-      {
-        title: "Seat 2",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "-70%",
-        rotate: "rotate-180",
-      },
-      {
-        title: "Seat 3",
-        image: "/table/seat.png",
-        status: "available",
-        x: "-80%",
-        y: "25%",
-        rotate: "rotate-90",
-      },
-      {
-        title: "Seat 4",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "110%",
-        rotate: "rotate-0",
-      },
+
     ],
   },
   {
     id: "a3",
     x: "78%",
     y: "105%",
-    children: <ATable title="a3" />,
+    children: <ATable title="T1" />,
+    notRenderedSeat: true,
     seats: [
       {
         title: "Seat 1",
@@ -1150,37 +1129,15 @@ const data2 = [
         y: "25%",
         rotate: "-rotate-90",
       },
-      {
-        title: "Seat 2",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "-70%",
-        rotate: "rotate-180",
-      },
-      {
-        title: "Seat 3",
-        image: "/table/seat.png",
-        status: "available",
-        x: "-80%",
-        y: "25%",
-        rotate: "rotate-90",
-      },
-      {
-        title: "Seat 4",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "110%",
-        rotate: "rotate-0",
-      },
+
     ],
   },
   {
     id: "a4",
     x: "68%",
     y: "50%",
-    children: <ATable title="a4" />,
+    children: <ATable title="T4" />,
+    notRenderedSeat: true,
     seats: [
       {
         title: "Seat 1",
@@ -1190,37 +1147,15 @@ const data2 = [
         y: "25%",
         rotate: "-rotate-90",
       },
-      {
-        title: "Seat 2",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "-70%",
-        rotate: "rotate-180",
-      },
-      {
-        title: "Seat 3",
-        image: "/table/seat.png",
-        status: "available",
-        x: "-80%",
-        y: "25%",
-        rotate: "rotate-90",
-      },
-      {
-        title: "Seat 4",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "110%",
-        rotate: "rotate-0",
-      },
+
     ],
   },
   {
     id: "a5",
     x: "68%",
     y: "86%",
-    children: <ATable title="a5" />,
+    children: <ATable title="T5" />,
+    notRenderedSeat: true,
     seats: [
       {
         title: "Seat 1",
@@ -1230,30 +1165,7 @@ const data2 = [
         y: "25%",
         rotate: "-rotate-90",
       },
-      {
-        title: "Seat 2",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "-70%",
-        rotate: "rotate-180",
-      },
-      {
-        title: "Seat 3",
-        image: "/table/seat.png",
-        status: "available",
-        x: "-80%",
-        y: "25%",
-        rotate: "rotate-90",
-      },
-      {
-        title: "Seat 4",
-        image: "/table/seat.png",
-        status: "available",
-        x: "12%",
-        y: "110%",
-        rotate: "rotate-0",
-      },
+
     ],
   },
   {
@@ -1356,6 +1268,92 @@ const data2 = [
         status: "available",
         x: "100%",
         y: "83%",
+        rotate: "-rotate-90",
+      },
+    ],
+
+  },
+  {
+    id: "x11",
+    x: "270px",
+    y: "110%",
+    children: <ATable title="X11" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "x10",
+    x: "530px",
+    y: "100%",
+    children: <ATable title="X10" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "x9",
+    x: "680px",
+    y: "100%",
+    children: <ATable title="X9" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "x8",
+    x: "880px",
+    y: "100%",
+    children: <ATable title="X8" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
+        rotate: "-rotate-90",
+      },
+    ],
+  },
+  {
+    id: "x7",
+    x: "1040px",
+    y: "100%",
+    children: <ATable title="X7" />,
+    notRenderedSeat: true,
+    seats: [
+      {
+        title: "B Table",
+        image: "/table/seat.png",
+        status: "available",
+        x: "110%",
+        y: "25%",
         rotate: "-rotate-90",
       },
     ],

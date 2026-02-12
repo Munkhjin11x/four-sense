@@ -24,7 +24,7 @@ export const GreenSection = () => {
               loop
               muted
             >
-              <source src={CDN_URL + "/home/new.mp4"} type="video/mp4" />
+              <source src={CDN_URL + "/home/interior.webm"} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
             <Image

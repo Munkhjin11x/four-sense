@@ -1,231 +1,9 @@
 "use client";
 import { DownloadIcon } from "@/icons";
-import Image from "next/image";
-import { Position } from "../food/tool";
-import { Modal } from "./modal";
-import { Button } from "../ui";
 import { useState } from "react";
 import Link from "next/link";
 
 export const Ability = () => {
-  const position = [
-    {
-      x: "75%",
-      y: "39%",
-      title: "Cocktails form HERE-E TAL",
-      content: {
-        title: "OH-RUM (urum)",
-        desc: "A blend of flavors that roams freely like heher-e tal perfect for those  who love to live without  limits",
-        tag: "Food Pairing: Beef Donburi, Lamb Chops, Rolls,Nigirit",
-        price: "40,0",
-        abv: "16.38%",
-        sweet: 2,
-        sour: 2,
-        herbal: 2,
-        umami: 2,
-        img: ["/images/team/4.jpg"],
-        ingredients:
-          "Molasses, Maraschino cherry, Aromatic bitter, Pecan wood smoke, Sweet potato smoked paprika whiskey",
-        by: "Nomi",
-      },
-    },
-    {
-      x: "85%",
-      y: "50%",
-      content: {
-        title: "OH-RUM (urum)",
-        desc: "A blend of flavors that roams freely like heher-e tal perfect for those  who love to live without  limits",
-        tag: "Food Pairing: Beef Donburi, Lamb Chops, Rolls,Nigirit",
-        price: "40,0",
-        abv: "16.38%",
-        sweet: 2,
-        sour: 2,
-        herbal: 2,
-        umami: 2,
-        img: ["/images/team/4.jpg"],
-        ingredients:
-          "Molasses, Maraschino cherry, Aromatic bitter, Pecan wood smoke, Sweet potato smoked paprika whiskey",
-        by: "Nomi",
-      },
-    },
-    {
-      x: "39.8%",
-      y: "34%",
-      title: "Cocktails form KHANGAI",
-      content: {
-        title: "Wildflower",
-        desc: "A cocktail as fresh and colorful as a wildflower mead-ow-fruity, floral, and full of life. Зэрлэг цэцэгсээр дүүрэн нуга шиг шинэлэг, өнгөлөг-жимслэг, цэцэгсийн анхилам үнэрт коктейль.",
-        tag: "Food Pairing: Ceviche Salad, Yakitori Skewers",
-        price: "40,0",
-        abv: "18.32%",
-        sweet: 2,
-        sour: 2,
-        herbal: 2,
-        umami: 2,
-        img: ["/images/team/6.jpg", "/images/team/2.jpg"],
-        ingredients:
-          "Sour Whey, Curd Cordial, Vanil-la, Angostura Bitter, Onegin Vodka",
-        by: "Spicy & Bobby",
-      },
-    },
-    {
-      x: "46%",
-      y: "54%",
-      content: {
-        title: "Voila",
-        desc: "“Volia!!! More than a cocktail!-it’s traditional culinary adventure in a glass.“Volia!!! Зүгээр ч нэг коктейль биш! Энэ бол хундага дүүрэн Монголын хоолны урлагийн адал явдал юм.",
-        tag: "Food Pairing: Edamame, Nigiri, Rolls",
-        price: "40,0",
-        abv: "16.32%",
-        sweet: 2,
-        sour: 2,
-        herbal: 2,
-        umami: 2,
-        img: ["/images/team/1.jpg", "/images/team/3.jpg"],
-        ingredients: "Red Cabbage Shim, Pineapple skin Seltzer",
-        by: "Zorigoo & Boldoo",
-      },
-    },
-    {
-      x: "6%",
-      y: "35%",
-      title: "Cocktails form ALTAI",
-      content: {
-        title: "Tegri Eternal blue sky",
-        desc: "Хамаг бүгдээр чамайг Харааж нулимж байвч, тэнгэр шиг бай! Хамгийн сайн хүмүүс гэж  Хашгирч ерөөж байвч, тэнгэр шиг бай! Тэвчээр барагдаж, нөхөд чинь орхивч Тэнгэр шиг бай, мөнхөд амгалан…Тэргэнд суулгаж, алтан титэм өмсгөвч Тэнгэр шиг бай, юу ч болоогүй юм шиг… Хамгийн хайртай хүн чинь хаяж одсон ч Хан тэнгэр нурчхаагүй цагт, бүү зов! Гүтгэж, доромжилж бахаа ганц хангавч Гүн тэнгэр хэмхрээгүй цагт, бүү ай О.Дашбалбар",
-        tag: "Food Pairing: Rigatoni Pasta, Gyoza, Beef Donburi",
-        price: "40,0",
-        abv: "23.4%",
-        sweet: 2,
-        sour: 2,
-        herbal: 2,
-        umami: 2,
-        img: ["/images/team/3.jpg", "/images/team/1.jpg"],
-        ingredients: "Shim, Mongolian thyme vodka",
-        by: "Zorigoo & Boldoo",
-      },
-    },
-    {
-      x: "22%",
-      y: "52%",
-      content: {
-        title: "Mountain whisper",
-        desc: "Sip the serenity of the mountains-a drink that speaks to your soul Уулсын амгаланг шимнэ үү- таны сэтгэл рүү өнгийдөг ундаа.",
-        tag: "Food Pairing: Ceviche Salad, Deep Fried Lasagna",
-        price: "40,0",
-        abv: "15.35%",
-        sweet: 2,
-        sour: 2,
-        herbal: 2,
-        umami: 2,
-        img: ["/images/team/6.jpg", "/images/team/2.jpg"],
-        ingredients: "Local huckleberry juice, Maple, Whiskey",
-        by: "Bobby & Boldoo",
-      },
-    },
-    {
-      x: "46%",
-      y: "80%",
-      title: "Cocktails form GOBI",
-      content: {
-        title: "White bird",
-        desc: "A traditional delicacy reimagined as a liquid dish, full of surprises and the essence of the desert.Уламжлалт тансаг зоог, говийн охь амтыг хослуулсан гэнэтийн бэлэг мэт холимог ундаа.",
-        tag: "Food Pairing: Spring Rolls, Horse meat Carpaccio",
-        price: "40,0",
-        abv: "12.77%",
-        sweet: 2,
-        sour: 2,
-        herbal: 2,
-        umami: 2,
-        img: ["/images/team/4.jpg"],
-        ingredients:
-          "Molasses, Maraschino cherry, Aromatic bitter, Pecan wood smoke, Sweet potato smoked paprika whiskey",
-        by: "Nomi",
-      },
-    },
-    {
-      x: "62%",
-      y: "82%",
-      content: {
-        title: "OH-RUM (urum)",
-        desc: "This cocktial,inspired by the Mongolia nomad break-fast of fesh cream (urum),Blends smoky, savory fla-vors. Pronounce its name very fast,and leam a Mongo-lian word",
-        tag: "Food Pairing: Spring Rolls, Horse meat Carpaccio",
-        price: "40,0",
-        abv: "16.38%",
-        sweet: 2,
-        sour: 2,
-        herbal: 2,
-        umami: 2,
-        img: ["/images/team/3.jpg"],
-        ingredients:
-          "Molasses, Maraschino cherry, Aromatic bitter, Pecan wood smoke, Sweet potato smoked paprika whiskey",
-        by: "Boldoo",
-      },
-    },
-  ];
-  const [isOpen, setIsOpen] = useState(false);
-  const handleModal = () => {
-    setIsOpen((prev) => !prev);
-  };
-  return (
-    <div className="relative bg-[url('/menu/bg.png')]  bg-cover bg-center  bg-no-repeat w-full">
-      <div className="flex  flex-col gap-4 justify-center items-center">
-        <Image
-          src={"/menu/nomad.png"}
-          alt=""
-          width={1100}
-          height={700}
-          sizes="100vw"
-          className="mt-24"
-        />
-        <div className="relative">
-          <Image
-            src={"/menu/mongolia.png"}
-            alt=""
-            width={1500}
-            height={700}
-            sizes="100vw"
-            className=""
-          />
-          {position.map((item, index) => (
-            <Position key={index} {...item} />
-          ))}
-        </div>
-
-        <div className="pb-20 flex flex-col gap-2 items-center">
-          <Image
-            src={"/menu/logo.png"}
-            alt=""
-            width={180}
-            height={700}
-            sizes="100vw"
-            className=""
-          />
-          <p className="text-[#F9DAB2] text-center text-2xl font-bold">
-            Autumn Menu
-          </p>
-          <Button
-            variant={"ghost"}
-            onClick={handleModal}
-            className="border hidden gap-2 lg:flex max-sm:text-sm max-sm:px-5 text-nowrap text-white border-white px-10 rounded-tl-full py-3"
-          >
-            <DownloadIcon />
-            BAR Menu PDF Download
-          </Button>
-        </div>
-      </div>
-      <BarMenuModal isOpen={isOpen} onClose={handleModal} />
-    </div>
-  );
-};
-
-const BarMenuModal = ({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) => {
   const [activeTab, setActiveTab] = useState<"fall" | "spring">("fall");
 
   const menuData = {
@@ -242,48 +20,83 @@ const BarMenuModal = ({
   const currentMenu = menuData[activeTab];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Bar Menu">
-      <div className="flex flex-col gap-6 items-center w-full">
-        {/* Header Tabs */}
-        <div className="flex gap-2 bg-[#F9DAB2] w-full justify-center border-b border-white/30 py-3 rounded-t-xl shadow-sm">
-          {(["fall", "spring"] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-6 py-2 rounded-lg transition-all duration-300 font-medium
-                ${
-                  activeTab === tab
-                    ? "bg-[#308653] text-white shadow-md scale-[1.03]"
-                    : "text-white/70 hover:text-white hover:bg-white/20"
-                }`}
+    <div className="relative bg-[url('/menu/bg.png')] bg-cover bg-center bg-no-repeat w-full min-h-screen">
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
+
+      <div className="relative z-10 flex mt-10 flex-col items-center w-full py-12 md:py-20 px-4 md:px-6">
+        <div className="text-center mb-8 md:mb-12">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#F9DAB2] mb-3 drop-shadow-lg">
+            Bar Menu
+          </h1>
+          <p className="text-white/80 text-lg md:text-xl font-light">
+            Explore our seasonal cocktail collection
+          </p>
+        </div>
+
+        {/* Menu Card Container */}
+        <div className="w-full max-w-6xl bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+          {/* Tabs Section */}
+          <div className="bg-gradient-to-r from-[#F9DAB2]/90 via-[#F9DAB2] to-[#F9DAB2]/90 px-6 py-5">
+            <div className="flex gap-3 justify-center items-center flex-wrap">
+              {(["fall", "spring"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`
+                    px-8 py-3 rounded-full font-semibold text-lg
+                    transition-all duration-300 transform
+                    ${activeTab === tab
+                      ? "bg-[#308653] text-white shadow-xl scale-105 ring-4 ring-white/30"
+                      : "bg-white/30 text-[#308653] hover:bg-white/50 hover:scale-102 shadow-md"
+                    }
+                  `}
+                >
+                  {menuData[tab].label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* PDF Viewer Section */}
+          <div className="p-4 md:p-8 bg-white/5">
+            <div className="relative w-full rounded-xl overflow-hidden shadow-2xl border-2 border-white/10 bg-white">
+              <iframe
+                src={currentMenu.pdf}
+                className="w-full h-[500px] md:h-[700px] lg:h-[850px]"
+                title={currentMenu.label}
+              />
+            </div>
+          </div>
+
+          {/* Footer Section with Download */}
+          <div className="bg-gradient-to-r from-[#F9DAB2]/90 via-[#F9DAB2] to-[#F9DAB2]/90 px-6 py-6 flex justify-center">
+            <Link
+              href={currentMenu.pdf}
+              target="_blank"
+              className="
+                group relative flex items-center gap-3 
+                px-10 py-4 rounded-full
+                bg-[#308653] text-white font-semibold text-lg
+                shadow-xl hover:shadow-2xl
+                transform hover:scale-105 hover:-translate-y-0.5
+                transition-all duration-300
+                ring-4 ring-white/30 hover:ring-white/50
+              "
             >
-              {menuData[tab].label}
-            </button>
-          ))}
+              <DownloadIcon />
+              <span>Download {currentMenu.label}</span>
+
+              {/* Shine effect */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            </Link>
+          </div>
         </div>
 
-        {/* PDF Viewer Container */}
-        <div className="w-full rounded-xl overflow-hidden shadow-lg border border-white/20">
-          <iframe
-            src={currentMenu.pdf}
-            className="w-full h-[800px] sm:h-[650px]"
-            title={currentMenu.label}
-          />
-        </div>
-
-        {/* Download Button */}
-        <Link
-          href={currentMenu.pdf}
-          target="_blank"
-          className="relative group flex items-center gap-3 px-10 py-3 rounded-full
-                     bg-[#F9DAB2] border border-white text-white font-medium
-                     shadow-md hover:shadow-lg transition-all duration-300"
-        >
-          {/* Icon & Text */}
-          <DownloadIcon />
-          <span className="relative z-10">Download {currentMenu.label}</span>
-        </Link>
+        {/* Additional Info */}
+        <p className="text-white/60 text-sm mt-8 text-center max-w-2xl">
+          Our menu changes with the seasons to bring you the freshest flavors and innovative cocktails
+        </p>
       </div>
-    </Modal>
+    </div>
   );
 };

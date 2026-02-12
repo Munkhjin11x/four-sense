@@ -32,6 +32,19 @@ const POSTS_QUERY = `*[
   eventDate
 }`;
 
+const BLOG_QUERY = `*[
+  _type == "post"
+  && defined(slug.current)
+]|order(publishedAt desc)[0...5]{
+  _id,
+  title,
+  slug,
+  tags,
+  publishedAt,
+  image,
+  summary
+}`;
+
 export const EventNewsSection = () => {
   const [posts, setPosts] = useState<SanityDocument[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,20 +55,36 @@ export const EventNewsSection = () => {
       try {
         setLoading(true);
 
-        const response = await fetch("/api/sanity", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ query: POSTS_QUERY }),
-        });
+        // Fetch both events and blogs in parallel
+        const [eventResponse, blogResponse] = await Promise.all([
+          fetch("/api/sanity", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: POSTS_QUERY }),
+          }),
+          fetch("/api/sanity", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ query: BLOG_QUERY }),
+          })
+        ]);
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch events data");
+        if (!eventResponse.ok || !blogResponse.ok) {
+          throw new Error("Failed to fetch data");
         }
 
-        const fetchedPosts = (await response.json()) as SanityDocument[];
-        setPosts(fetchedPosts);
+        const fetchedEvents = (await eventResponse.json()) as SanityDocument[];
+        const fetchedBlogs = (await blogResponse.json()) as SanityDocument[];
+
+        const blogsWithFlag = fetchedBlogs.map(blog => ({ ...blog, isPost: true }));
+
+        const mergedData = [...fetchedEvents, ...blogsWithFlag];
+
+        setPosts(mergedData);
         setError(null);
       } catch (err) {
         console.error("Error fetching posts:", err);
@@ -91,7 +120,7 @@ export const EventNewsSection = () => {
                   "text-4xl text-[#E78140] font-roba"
                 )}
               >
-                foursenses Shifts EVENT
+                foursenses Shifts EVENT and Blogs
               </p>
               <Link
                 className="border max-md:w-full max-md:justify-center items-center hover:bg-[#F9DAB2]/20  text-center w-fit  gap-2 flex max-sm:text-sm max-sm:px-5 text-nowrap text-[#E78140] border-[#E78140] px-16 rounded-tl-full py-3"
@@ -104,8 +133,10 @@ export const EventNewsSection = () => {
           </div>
           <Animation>
             {loading && (
-              <div className="flex justify-center items-center p-4">
-                <div className="text-sm text-gray-500">Loading posts...</div>
+              <div className="flex gap-4 overflow-x-auto w-full max-w-full pb-4">
+                {[...Array(4)].map((_, i) => (
+                  <EventCardSkeleton key={i} />
+                ))}
               </div>
             )}
             {error && (
@@ -129,6 +160,35 @@ export const EventNewsSection = () => {
   );
 };
 
+const EventCardSkeleton = () => {
+  return (
+    <div className="border min-w-[360px] max-w-[360px] rounded-md pb-2.5 bg-white animate-pulse">
+      <div className="flex justify-between items-center p-2">
+        <div className="flex gap-2 mb-2">
+          <div className="w-8 h-8 bg-gray-200 rounded-full" />
+          <div className="flex flex-col gap-1">
+            <div className="h-3 w-24 bg-gray-200 rounded" />
+            <div className="h-2 w-16 bg-gray-200 rounded" />
+          </div>
+        </div>
+        <div className="h-6 w-20 bg-gray-200 rounded-sm" />
+      </div>
+      <div className="w-[360px] h-[400px] bg-gray-200" />
+      <div className="pt-3 px-2">
+        <div className="h-6 w-3/4 bg-gray-200 rounded mb-2" />
+        <div className="flex items-center gap-2 justify-between mb-3">
+          <div className="h-5 w-32 bg-gray-200 rounded" />
+          <div className="h-5 w-32 bg-gray-200 rounded" />
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="h-10 bg-gray-200 rounded" />
+          <div className="h-10 bg-gray-200 rounded" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const EventCard = ({ data }: { data: SanityDocument }) => {
   const isPost = "isPost" in data;
   const { projectId, dataset } = client.config();
@@ -138,8 +198,9 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
       ? imageUrlBuilder({ projectId, dataset }).image(source)
       : null;
 
-  const eventEnd =
-    new Date(data.eventDate) < new Date() ? "Дууссан" : "Тун удахгүй";
+  const eventEnd = !isPost && data.eventDate
+    ? new Date(data.eventDate) < new Date() ? "Дууссан" : "Тун удахгүй"
+    : null;
 
   return (
     <div className="border min-w-[360px] max-w-[360px] rounded-md pb-2.5 bg-white">
@@ -160,23 +221,33 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
             <span className="text-[10px]">Foursenses</span>
           </div>
         </div>
-        <Badge
-          className={cn(
-            "rounded-sm py-1.5 px-4",
-            eventEnd === "Дууссан"
-              ? "bg-gray-100 text-gray-800"
-              : "bg-[#12B76A] text-white"
-          )}
-          variant="outline"
-        >
-          {eventEnd}
-        </Badge>
+        {!isPost && eventEnd && (
+          <Badge
+            className={cn(
+              "rounded-sm py-1.5 px-4",
+              eventEnd === "Дууссан"
+                ? "bg-gray-100 text-gray-800"
+                : "bg-[#12B76A] text-white"
+            )}
+            variant="outline"
+          >
+            {eventEnd}
+          </Badge>
+        )}
+        {isPost && data.tags && data.tags.length > 0 && (
+          <Badge
+            className="rounded-sm py-1.5 px-4 bg-blue-100 text-blue-800"
+            variant="outline"
+          >
+            Мэдээ
+          </Badge>
+        )}
       </div>
       <Image
         src={urlFor(data?.image)?.url() || ""}
         width={800}
         height={200}
-        alt={isPost ? data.title || "" : ""}
+        alt={data.title || ""}
         className="object-cover w-[369px] h-[400px] "
       />
       <div className="pt-3 px-2 ">
@@ -197,25 +268,27 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
         ) : (
           <p className="text-black text-xl font-bold truncate">{data.title}</p>
         )}
-        <div className="flex items-center gap-2 justify-between">
-          <div className="flex items-center gap-2">
-            <Calendar color="#667085" />
-            <p className="text-lg text-gray-400">
-              {format(data.eventDate, "yyyy-MM-dd")}
-            </p>
+        {!isPost && data.eventDate && (
+          <div className="flex items-center gap-2 justify-between">
+            <div className="flex items-center gap-2">
+              <Calendar color="#667085" />
+              <p className="text-lg text-gray-400">
+                {format(data.eventDate, "yyyy-MM-dd")}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <MarkerIcon />
+              <p className="text-lg text-gray-400">Altan joloo tower B1</p>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <MarkerIcon />
-            <p className="text-lg text-gray-400">Altan joloo tower B1</p>
-          </div>
-        </div>
+        )}
         <div
           className={cn(
             "mt-1.5 grid grid-cols-2 gap-2",
-            eventEnd === "Дууссан" && "grid-cols-1"
+            (isPost || eventEnd === "Дууссан") && "grid-cols-1"
           )}
         >
-          {eventEnd !== "Дууссан" && (
+          {!isPost && eventEnd !== "Дууссан" && (
             <Link
               target="_blank"
               href={`/book-table?date=${data.eventDate}`}
@@ -232,7 +305,7 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
           )}
           <Link
             target="_blank"
-            href={`/event/${data.slug.current}`}
+            href={isPost ? `/blog/${data.slug.current}` : `/event/${data.slug.current}`}
             className="w-full"
           >
             <Button

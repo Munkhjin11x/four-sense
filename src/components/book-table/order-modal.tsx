@@ -101,6 +101,16 @@ export const OrderModal = ({
 
   const { token } = useTurnstileStore();
 
+  // Check if selected time is between 9pm and 11am
+  const isBlockedTime = (date: Date) => {
+    const hours = date.getHours();
+    // Blocked from 21:00 (9pm) to 10:59 (just before 11am)
+    return hours >= 21 || hours < 11;
+  };
+
+  const selectedDate = form.watch("date");
+  const isTimeBlocked = selectedDate ? isBlockedTime(selectedDate) : false;
+
   const onSubmit = (data: OrderFormData) => {
     if (!token) {
       toast.error("Please complete the CAPTCHA verification");
@@ -109,6 +119,11 @@ export const OrderModal = ({
 
     if (!seats || seats.length === 0) {
       toast.error("Please select at least one seat");
+      return;
+    }
+
+    if (isBlockedTime(data.date)) {
+      toast.error("Orders are not accepted between 9:00 PM and 11:00 AM");
       return;
     }
 
@@ -201,6 +216,12 @@ export const OrderModal = ({
             label="Date"
             className="w-full"
           />
+          {isTimeBlocked && (
+            <div className="text-red-500 text-sm font-semibold bg-red-50 p-3 rounded-lg border border-red-200">
+              ⚠️ Orders cannot be placed between 9:00 PM and 11:00 AM. Please
+              select a different time.
+            </div>
+          )}
 
           <div
             key={`${tableName}-${seats.join("-")}`}
@@ -229,7 +250,7 @@ export const OrderModal = ({
 
           <Button
             type="submit"
-            disabled={isPending || !token}
+            disabled={isPending || !token || isTimeBlocked}
             className="bg-[#E78140] hover:bg-[#E78140]/90 text-white rounded-none rounded-tl-3xl"
           >
             {isPending ? "Processing..." : "Order"}
