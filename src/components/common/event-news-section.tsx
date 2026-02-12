@@ -120,7 +120,7 @@ export const EventNewsSection = () => {
                   "text-4xl text-[#E78140] font-roba"
                 )}
               >
-                foursenses Shifts EVENT and Blogs
+                Foursenses Shifts Event and blog
               </p>
               <Link
                 className="border max-md:w-full max-md:justify-center items-center hover:bg-[#F9DAB2]/20  text-center w-fit  gap-2 flex max-sm:text-sm max-sm:px-5 text-nowrap text-[#E78140] border-[#E78140] px-16 rounded-tl-full py-3"
