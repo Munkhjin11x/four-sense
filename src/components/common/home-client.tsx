@@ -13,6 +13,7 @@ import { ParallaxSection } from "@/components/common/parallax-section";
 import useLoading from "@/hook/use-loading";
 import { PodcastSection } from "./podcast-section";
 import { CompimentsSection } from "./compiments";
+import { Ads } from "./ads";
 
 
 const HomePageClient = () => {
@@ -37,6 +38,7 @@ const HomePageClient = () => {
         </>
       )}
       <FooterParallaxHome />
+      <Ads />
     </div>
   );
 };

@@ -4,6 +4,11 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
+  getMongoliaTodayStart,
+  getMongoliaNowTimeString,
+  isMongoliaToday,
+} from "@/lib/date-utils";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -21,12 +26,15 @@ import { Input } from "@/components/ui/input"; // Assuming you have an Input com
 type FormFieldDatePickerWithRangeProps<T extends FieldValues> =
   CustomFormFieldType<T> & {
     label?: string;
+    /** When true, disables past dates and past times (Mongolia timezone) */
+    disablePast?: boolean;
   };
 
 export const FormFieldDatePicker = <T extends FieldValues>({
   control,
   name,
   label,
+  disablePast = false,
 }: FormFieldDatePickerWithRangeProps<T>) => {
   const safeDate = (value: unknown): Date | undefined =>
     value instanceof Date || typeof value === "string"
@@ -96,6 +104,9 @@ export const FormFieldDatePicker = <T extends FieldValues>({
                       }
                     }}
                     numberOfMonths={1}
+                    disabled={
+                      disablePast ? { before: getMongoliaTodayStart() } : undefined
+                    }
                   />
                   <div className="flex flex-col gap-2">
                     <FormLabel className="text-sm">Time</FormLabel>
@@ -114,6 +125,13 @@ export const FormFieldDatePicker = <T extends FieldValues>({
                         );
                         field.onChange(updatedDate || undefined);
                       }}
+                      min={
+                        disablePast &&
+                        field.value &&
+                        isMongoliaToday(safeDate(field.value)!)
+                          ? getMongoliaNowTimeString()
+                          : undefined
+                      }
                     />
                   </div>
                 </div>

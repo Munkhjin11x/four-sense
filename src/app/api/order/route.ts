@@ -1,5 +1,6 @@
 import { createOrderWithSeats } from "@/store/db";
 import { getDatabase } from "@/lib/db";
+import { toMongoliaDateTimeString } from "@/lib/date-utils";
 import { Orders, Tables, OrderSeats, TableSeats } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { eq, desc } from "drizzle-orm";
@@ -69,16 +70,9 @@ export async function POST(req: Request) {
     let formattedDate;
     if (date) {
       const parsedDate = new Date(date);
-
-      formattedDate = parsedDate
-        .toISOString()
-        .replace("T", " ")
-        .substring(0, 19);
+      formattedDate = toMongoliaDateTimeString(parsedDate);
     } else {
-      formattedDate = new Date()
-        .toISOString()
-        .replace("T", " ")
-        .substring(0, 19);
+      formattedDate = toMongoliaDateTimeString(new Date());
     }
 
     const processedSeatIds = seatIds.map((seatId: string | number) => {

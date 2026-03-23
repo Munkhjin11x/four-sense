@@ -50,6 +50,8 @@ export async function createOrderWithSeats(
   // Check eligibility first
   await checkOrderEligibility(db, orderData);
 
+  const now = new Date().toISOString();
+
   // Create the order
   const [order] = await db
     .insert(Orders)
@@ -62,6 +64,7 @@ export async function createOrderWithSeats(
       orderDate: orderData.date,
       status: "pending",
       eventDate: orderData.eventDate,
+      createdAt: now,
     })
     .returning();
 

@@ -1,5 +1,6 @@
 import { Order } from "@/store/store";
 import { ColumnDef } from "@tanstack/react-table";
+import { parseMongoliaDateTime } from "@/lib/date-utils";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import {
@@ -13,7 +14,6 @@ import {
   X,
   Sparkles,
 } from "lucide-react";
-import { format } from "date-fns";
 export const columns = (
   handleApprove: (orderId: number) => () => void,
   handleCancel: (orderId: number) => () => void
@@ -101,17 +101,28 @@ export const columns = (
         <div className="flex items-center space-x-2">
           <Calendar className="h-4 w-4 text-gray-500" />
           <span className="font-semibold text-gray-700 hidden sm:inline">
-            Order Date
+            Order date
           </span>
-          <span className="font-semibold text-gray-700 sm:hidden">Date</span>
+          <span className="font-semibold text-gray-700 sm:hidden">User order date</span>
         </div>
       ),
       accessorKey: "orderDate",
-      size: 120,
-      maxSize: 150,
-      minSize: 100,
+      size: 150,
+      maxSize: 180,
+      minSize: 120,
       cell: ({ row }) => {
-        const date = new Date(row.original.orderDate);
+        const raw = row.original.orderDate;
+        if (!raw) {
+          return (
+            <span className="text-xs sm:text-sm text-gray-400">—</span>
+          );
+        }
+        const date = parseMongoliaDateTime(raw);
+        if (isNaN(date.getTime())) {
+          return (
+            <span className="text-xs sm:text-sm text-gray-400">—</span>
+          );
+        }
         return (
           <div className="flex flex-col gap-1.5">
             {row.original.eventDate === 1 && (
@@ -124,13 +135,47 @@ export const columns = (
               </Badge>
             )}
             <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
-              <div className="font-medium">{format(date, "MMM dd")}</div>
-              <div className="text-xs text-gray-400 hidden sm:block">
-                {format(date, "hh:mm a")}
-              </div>
+              {date.toLocaleString("en-CA", {
+                timeZone: "Asia/Ulaanbaatar",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              })}
             </div>
           </div>
         );
+      },
+    },
+    {
+      header: () => (
+        <div className="flex items-center space-x-2">
+          <Calendar className="h-4 w-4 text-gray-500" />
+          <span className="font-semibold text-gray-700">Created  date</span>
+        </div>
+      ),
+      accessorKey: "createdAt",
+      cell: ({ row }) => {
+        const raw = row.original.createdAt;
+        if (!raw) {
+          return <span className="text-xs sm:text-sm text-gray-400">—</span>;
+        }
+        const date = new Date(raw);
+        if (isNaN(date.getTime())) {
+          return <span className="text-xs sm:text-sm text-gray-400">—</span>;
+        }
+        return <span className="text-xs sm:text-sm text-gray-600">{date.toLocaleString("en-CA", {
+          timeZone: "Asia/Ulaanbaatar",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        })}</span>;
       },
     },
     {

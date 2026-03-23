@@ -13,8 +13,11 @@ import { useMutation } from "@tanstack/react-query";
 import { apiCreateOrder } from "@/store/api";
 import { UseTurnstile, useTurnstileStore } from "@/hook/use-turnstile";
 import { useSearchParams } from "next/navigation";
-import { format } from "date-fns";
 import { useEffect, useMemo } from "react";
+import {
+  toMongoliaISOString,
+  isMongoliaPast,
+} from "@/lib/date-utils";
 
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
@@ -51,7 +54,11 @@ export const OrderModal = ({
     return date ? new Date(date) : new Date();
   }, [dateParam]);
 
-  const isValidDate = dateParam && !isNaN(parsedDate.getTime());
+  // Only use URL date if valid and not in the past (Mongolia timezone)
+  const isValidDate =
+    dateParam &&
+    !isNaN(parsedDate.getTime()) &&
+    !isMongoliaPast(parsedDate);
 
   const form = useForm<OrderFormData>({
     defaultValues: {
@@ -77,7 +84,7 @@ export const OrderModal = ({
       email: string;
       tableName: string;
       seatIds: { $oid: string; seatNumber?: number }[];
-      date: Date;
+      date: string;
       turnstileToken: string;
       eventDate: number;
     }
@@ -101,15 +108,21 @@ export const OrderModal = ({
 
   const { token } = useTurnstileStore();
 
-  // Check if selected time is between 9pm and 11am
+  // Check if selected time is between 9pm and 11am (Mongolia timezone)
   const isBlockedTime = (date: Date) => {
-    const hours = date.getHours();
+    const formatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Ulaanbaatar",
+      hour: "numeric",
+      hour12: false,
+    });
+    const hours = parseInt(formatter.format(date), 10);
     // Blocked from 21:00 (9pm) to 10:59 (just before 11am)
     return hours >= 21 || hours < 11;
   };
 
   const selectedDate = form.watch("date");
   const isTimeBlocked = selectedDate ? isBlockedTime(selectedDate) : false;
+  const isPastDateTime = selectedDate ? isMongoliaPast(selectedDate) : false;
 
   const onSubmit = (data: OrderFormData) => {
     if (!token) {
@@ -119,6 +132,11 @@ export const OrderModal = ({
 
     if (!seats || seats.length === 0) {
       toast.error("Please select at least one seat");
+      return;
+    }
+
+    if (isMongoliaPast(data.date)) {
+      toast.error("Cannot place orders for past dates or times");
       return;
     }
 
@@ -133,7 +151,7 @@ export const OrderModal = ({
       email: data.email,
       tableName: tableName,
       seatIds: seats,
-      date: data.date,
+      date: toMongoliaISOString(data.date),
       turnstileToken: token,
       eventDate: dateParam ? 1 : 0,
     });
@@ -202,7 +220,15 @@ export const OrderModal = ({
             <div className="text-sm mb-2">
               <p className="text-[#488457] font-semibold">
                 Event date pre-selected:{" "}
-                {format(parsedDate, "yyyy-MM-dd HH:mm")}
+                {parsedDate.toLocaleString("en-CA", {
+                  timeZone: "Asia/Ulaanbaatar",
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                })}
               </p>
               <p className="text-[#488457] text-xs mt-1">
                 You can change the date below if needed
@@ -215,8 +241,15 @@ export const OrderModal = ({
             name="date"
             label="Date"
             className="w-full"
+            disablePast
           />
-          {isTimeBlocked && (
+          {isPastDateTime && (
+            <div className="text-red-500 text-sm font-semibold bg-red-50 p-3 rounded-lg border border-red-200">
+              ⚠️ This date and time has already passed. Please select a future
+              date and time.
+            </div>
+          )}
+          {isTimeBlocked && !isPastDateTime && (
             <div className="text-red-500 text-sm font-semibold bg-red-50 p-3 rounded-lg border border-red-200">
               ⚠️ Orders cannot be placed between 9:00 PM and 11:00 AM. Please
               select a different time.
@@ -250,7 +283,7 @@ export const OrderModal = ({
 
           <Button
             type="submit"
-            disabled={isPending || !token || isTimeBlocked}
+            disabled={isPending || !token || isTimeBlocked || isPastDateTime}
             className="bg-[#E78140] hover:bg-[#E78140]/90 text-white rounded-none rounded-tl-3xl"
           >
             {isPending ? "Processing..." : "Order"}

@@ -1,7 +1,7 @@
 "use client";
 import { CDN_URL } from "@/constants/contant";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import Animation from "../ui/animation";
 import { VerifyIcon } from "@/icons/verify-icon";
@@ -13,6 +13,8 @@ import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
+
+const CAROUSEL_INTERVAL_MS = 5000;
 
 const font = localFont({
   src: "../../fonts/roba/Roba-Regular.otf",
@@ -31,53 +33,107 @@ const STAFF_QUERY = `*[
   bio
 }`;
 
+const TEAM_PHOTO_QUERY = `*[
+  _type == "teamPhoto"
+] | order(publishedAt desc){
+  _id,
+  image,
+  publishedAt,
+}`;
+
+const DEFAULT_BACKGROUNDS = [
+  CDN_URL + "/images/team-photo-2.webp",
+  CDN_URL + "/images/team-photo.png",
+];
+
 export const TeamSection = () => {
   const [staff, setStaff] = useState<SanityDocument[]>([]);
+  const [teamPhotos, setTeamPhotos] = useState<SanityDocument[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeBgIndex, setActiveBgIndex] = useState(0);
+
+  const { projectId, dataset } = client.config();
+
+  const backgroundImages = useMemo(() => {
+    if (teamPhotos.length > 0 && projectId && dataset) {
+      const builder = imageUrlBuilder({ projectId, dataset });
+      return teamPhotos
+        .map((p) => builder.image(p?.image as SanityImageSource)?.url())
+        .filter((url): url is string => !!url);
+    }
+    return DEFAULT_BACKGROUNDS;
+  }, [teamPhotos, projectId, dataset]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
 
-        const response = await fetch("/api/sanity", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ query: STAFF_QUERY }),
-        });
+        const [staffRes, photosRes] = await Promise.all([
+          fetch("/api/sanity", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query: STAFF_QUERY }),
+          }),
+          fetch("/api/sanity", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query: TEAM_PHOTO_QUERY }),
+          }),
+        ]);
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch staff data");
+        if (staffRes.ok) {
+          const fetchedStaff = (await staffRes.json()) as SanityDocument[];
+          setStaff(fetchedStaff);
         }
-
-        const fetchedStaff = (await response.json()) as SanityDocument[];
-        setStaff(fetchedStaff);
+        if (photosRes.ok) {
+          const fetchedPhotos = (await photosRes.json()) as SanityDocument[];
+          setTeamPhotos(fetchedPhotos);
+        }
       } catch (err) {
-        console.error("Error fetching posts:", err);
+        console.error("Error fetching data:", err);
         const errorMessage =
-          err instanceof Error ? err.message : "Failed to load posts";
-
-        if (errorMessage.includes("403") || errorMessage.includes("Forbidden"))
+          err instanceof Error ? err.message : "Failed to load";
+        if (errorMessage.includes("403") || errorMessage.includes("Forbidden")) {
           setStaff([]);
+        }
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPosts();
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    if (backgroundImages.length <= 1) return;
+    const interval = setInterval(() => {
+      setActiveBgIndex((i) => (i + 1) % backgroundImages.length);
+    }, CAROUSEL_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [backgroundImages.length]);
 
   return (
     <div
       id="team"
-      className="min-h-[120vh] flex flex-col w-full z-0 xl:bg-cover bg-center bg-no-repeat "
-      style={{
-        backgroundImage: `url(${CDN_URL + "/images/team-photo-2.webp"})`,
-      }}
+      className="min-h-[120vh] flex flex-col w-full z-0 relative overflow-hidden"
     >
-      <Animation className="flex flex-col flex-1 justify-end w-full  mx-auto">
+      {/* Background carousel */}
+      <div className="absolute inset-0 z-0">
+        {backgroundImages.map((url, index) => (
+          <div
+            key={index}
+            className={cn(
+              "absolute inset-0 xl:bg-cover bg-center bg-no-repeat transition-opacity duration-1000",
+              index === activeBgIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+            )}
+            style={{ backgroundImage: `url(${url})` }}
+          />
+        ))}
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-black/20 z-[5]" />
+      </div>
+      <Animation className="relative z-10 flex flex-col flex-1 justify-end w-full mx-auto">
         <div className="">
           <div className="flex relative flex-col max-lg:hidden max-w-5xl justify-start mx-auto items-center w-full gap-2 backdrop-blur-sm bg-black/20 rounded-lg p-4">
             <p

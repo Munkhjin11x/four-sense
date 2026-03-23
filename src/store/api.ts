@@ -97,7 +97,7 @@ export async function apiCreateOrder<T>(data: {
   email: string;
   tableName: string;
   seatIds: string[];
-  date: Date;
+  date: string;
   turnstileToken: string;
   eventDate: number;
 }): Promise<T> {

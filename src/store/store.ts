@@ -84,6 +84,7 @@ export type Order = {
   email: string;
   orderDate: string;
   status: "pending" | "approved" | "cancelled";
+  createdAt?: string;
   seats?: Seat[];
 };
 

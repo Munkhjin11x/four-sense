@@ -42,6 +42,7 @@ export const Orders = sqliteTable("Orders", {
     .notNull()
     .default("pending"),
   eventDate: integer("event_date").notNull().default(0),
+  createdAt: text("created_at"),
 });
 
 export const OrderSeats = sqliteTable("OrderSeats", {

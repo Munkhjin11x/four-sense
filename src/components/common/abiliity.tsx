@@ -1,23 +1,34 @@
 "use client";
 import { DownloadIcon } from "@/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
+const BAR_MENU_QUERY = `*[_type == "barMenu"] | order(publishedAt desc) {
+  _id,
+  title,
+  "pdfUrl": pdf.asset->url
+}`;
+
+type BarMenuItem = { _id: string; title: string; pdfUrl: string };
+
 export const Ability = () => {
-  const [activeTab, setActiveTab] = useState<"fall" | "spring">("fall");
+  const [menus, setMenus] = useState<BarMenuItem[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
-  const menuData = {
-    fall: {
-      pdf: "/menufall.pdf",
-      label: "Fall Menu",
-    },
-    spring: {
-      pdf: "/menu-spring.pdf",
-      label: "Spring Menu",
-    },
-  };
+  useEffect(() => {
+    fetch("/api/sanity", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: BAR_MENU_QUERY }),
+    })
+      .then((res) => res.json() as Promise<BarMenuItem[]>)
+      .then((data) => {
+        setMenus(data);
+        if (data.length > 0) setActiveId(data[0]._id);
+      });
+  }, []);
 
-  const currentMenu = menuData[activeTab];
+  const currentMenu = menus.find((m) => m._id === activeId) ?? null;
 
   return (
     <div className="relative bg-[url('/menu/bg.png')] bg-cover bg-center bg-no-repeat w-full min-h-screen">
@@ -33,64 +44,69 @@ export const Ability = () => {
           </p>
         </div>
 
-        {/* Menu Card Container */}
-        <div className="w-full max-w-6xl bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
-          {/* Tabs Section */}
-          <div className="bg-gradient-to-r from-[#F9DAB2]/90 via-[#F9DAB2] to-[#F9DAB2]/90 px-6 py-5">
-            <div className="flex gap-3 justify-center items-center flex-wrap">
-              {(["fall", "spring"] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`
-                    px-8 py-3 rounded-full font-semibold text-lg
-                    transition-all duration-300 transform
-                    ${activeTab === tab
-                      ? "bg-[#308653] text-white shadow-xl scale-105 ring-4 ring-white/30"
-                      : "bg-white/30 text-[#308653] hover:bg-white/50 hover:scale-102 shadow-md"
-                    }
-                  `}
-                >
-                  {menuData[tab].label}
-                </button>
-              ))}
+        {menus.length > 0 && (
+          <div className="w-full max-w-6xl bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+            {/* Tabs Section */}
+            <div className="bg-gradient-to-r from-[#F9DAB2]/90 via-[#F9DAB2] to-[#F9DAB2]/90 px-6 py-5">
+              <div className="flex gap-3 justify-center items-center flex-wrap">
+                {menus.map((menu) => (
+                  <button
+                    key={menu._id}
+                    onClick={() => setActiveId(menu._id)}
+                    className={`
+                      px-8 py-3 rounded-full font-semibold text-lg
+                      transition-all duration-300 transform
+                      ${activeId === menu._id
+                        ? "bg-[#308653] text-white shadow-xl scale-105 ring-4 ring-white/30"
+                        : "bg-white/30 text-[#308653] hover:bg-white/50 hover:scale-102 shadow-md"
+                      }
+                    `}
+                  >
+                    {menu.title}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* PDF Viewer Section */}
-          <div className="p-4 md:p-8 bg-white/5">
-            <div className="relative w-full rounded-xl overflow-hidden shadow-2xl border-2 border-white/10 bg-white">
-              <iframe
-                src={currentMenu.pdf}
-                className="w-full h-[500px] md:h-[700px] lg:h-[850px]"
-                title={currentMenu.label}
-              />
-            </div>
-          </div>
+            {/* PDF Viewer Section */}
+            {currentMenu && (
+              <>
+                <div className="p-4 md:p-8 bg-white/5">
+                  <div className="relative w-full rounded-xl overflow-hidden shadow-2xl border-2 border-white/10 bg-white">
+                    <iframe
+                      src={currentMenu.pdfUrl ?? undefined}
+                      className="w-full h-[500px] md:h-[700px] lg:h-[850px]"
+                      title={currentMenu.title}
+                    />
+                  </div>
+                </div>
 
-          {/* Footer Section with Download */}
-          <div className="bg-gradient-to-r from-[#F9DAB2]/90 via-[#F9DAB2] to-[#F9DAB2]/90 px-6 py-6 flex justify-center">
-            <Link
-              href={currentMenu.pdf}
-              target="_blank"
-              className="
-                group relative flex items-center gap-3 
-                px-10 py-4 rounded-full
-                bg-[#308653] text-white font-semibold text-lg
-                shadow-xl hover:shadow-2xl
-                transform hover:scale-105 hover:-translate-y-0.5
-                transition-all duration-300
-                ring-4 ring-white/30 hover:ring-white/50
-              "
-            >
-              <DownloadIcon />
-              <span>Download {currentMenu.label}</span>
+                {/* Footer Section with Download */}
+                <div className="bg-gradient-to-r from-[#F9DAB2]/90 via-[#F9DAB2] to-[#F9DAB2]/90 px-6 py-6 flex justify-center">
+                  <Link
+                    href={currentMenu.pdfUrl ?? "#"}
+                    target="_blank"
+                    className="
+                      group relative flex items-center gap-3 
+                      px-10 py-4 rounded-full
+                      bg-[#308653] text-white font-semibold text-lg
+                      shadow-xl hover:shadow-2xl
+                      transform hover:scale-105 hover:-translate-y-0.5
+                      transition-all duration-300
+                      ring-4 ring-white/30 hover:ring-white/50
+                    "
+                  >
+                    <DownloadIcon />
+                    <span>Download {currentMenu.title}</span>
 
-              {/* Shine effect */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-            </Link>
+                    {/* Shine effect */}
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
-        </div>
+        )}
 
         {/* Additional Info */}
         <p className="text-white/60 text-sm mt-8 text-center max-w-2xl">
