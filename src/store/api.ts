@@ -54,8 +54,11 @@ export async function apiSignup<T>(data: {
   return response.json();
 }
 
-export async function apiTables<T>(): Promise<T> {
-  const response = await fetch(`${baseUrl}/api/tables`);
+export async function apiTables<T>(date?: string): Promise<T> {
+  const url = date
+    ? `${baseUrl}/api/tables?date=${encodeURIComponent(date)}`
+    : `${baseUrl}/api/tables`;
+  const response = await fetch(url);
   return response.json();
 }
 

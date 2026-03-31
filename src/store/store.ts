@@ -7,8 +7,11 @@ import {
 } from "./api";
 import { toast } from "sonner";
 
-export const useTable = () => {
-  return useQuery<Table[]>({ queryKey: ["tables"], queryFn: apiTables });
+export const useTable = (date?: string) => {
+  return useQuery<Table[]>({
+    queryKey: ["tables", date],
+    queryFn: () => apiTables(date),
+  });
 };
 
 export const useOrderList = (params?: { page?: number; limit?: number }) => {

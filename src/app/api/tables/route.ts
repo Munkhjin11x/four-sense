@@ -1,7 +1,7 @@
 import { getDatabase } from "@/lib/db";
-import { Tables, TableSeats } from "@/db/schema";
+import { Tables, TableSeats, Orders, OrderSeats } from "@/db/schema";
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { and, eq, like, ne } from "drizzle-orm";
 
 interface CreateTableRequest {
   tableName: string;
@@ -16,9 +16,26 @@ interface UpdateTableRequest {
   tableName: string;
 }
 
-export async function GET() {
+function getMongoliaDateString(date?: string): string {
+  const d = date ? new Date(date) : new Date();
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Ulaanbaatar",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  return formatter.format(d); // Returns "YYYY-MM-DD"
+}
+
+export async function GET(request: Request) {
   try {
     const db = getDatabase();
+    const url = new URL(request.url);
+    const dateParam = url.searchParams.get("date");
+
+    // Resolve the target date in Mongolia timezone (YYYY-MM-DD)
+    const targetDate = getMongoliaDateString(dateParam ?? undefined);
+
     const tables = await db.select().from(Tables);
 
     const tablesWithSeats = await Promise.all(
@@ -28,15 +45,36 @@ export async function GET() {
           .from(TableSeats)
           .where(eq(TableSeats.tableId, table.id));
 
+        const seatsWithDateStatus = await Promise.all(
+          seats.map(async (seat) => {
+            // A seat is "ordered" for targetDate if there is at least one
+            // non-cancelled order whose orderDate starts with targetDate.
+            const bookedRows = await db
+              .select()
+              .from(OrderSeats)
+              .innerJoin(Orders, eq(OrderSeats.orderId, Orders.id))
+              .where(
+                and(
+                  eq(OrderSeats.seatId, seat.id),
+                  ne(Orders.status, "cancelled"),
+                  like(Orders.orderDate, `${targetDate}%`)
+                )
+              )
+              .limit(1);
+
+            return {
+              title: seat.title,
+              status: bookedRows.length > 0 ? "ordered" : "available",
+              _id: { $oid: `seat_${seat.id}_${Date.now().toString(36)}` },
+            };
+          })
+        );
+
         return {
           _id: { $oid: `table_${table.id}_${Date.now().toString(36)}` },
           tableId: { $oid: `table_${table.id}_${Date.now().toString(36)}` },
           tableName: table.tableName,
-          seats: seats.map((seat) => ({
-            title: seat.title,
-            status: seat.status,
-            _id: { $oid: `seat_${seat.id}_${Date.now().toString(36)}` },
-          })),
+          seats: seatsWithDateStatus,
           __v: { $numberInt: "0" },
         };
       })

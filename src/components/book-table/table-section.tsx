@@ -15,9 +15,17 @@ import { OrderModal } from "./order-modal";
 import Animation from "../ui/animation";
 import { CalendarIcon } from "@/icons/calendar-icon";
 import { useTable } from "@/store/store";
-import { Phone } from "lucide-react";
+import { Phone, CalendarIcon as LucideCalendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { ComingSoonModal } from "./cominsoon-modal";
 import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { getMongoliaTodayStart } from "@/lib/date-utils";
 
 export const TableSection = () => {
   const { width } = useScreenSize();
@@ -29,8 +37,13 @@ export const TableSection = () => {
   const [isComingSoonOpen, setIsComingSoonOpen] = useState(false);
   const [all, setAll] = useState(false);
   const [orderingTableId, setOrderingTableId] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
-  const { data: tables, isLoading, refetch } = useTable();
+  // Format date as YYYY-MM-DD for the API
+  const dateString = format(selectedDate, "yyyy-MM-dd");
+
+  const { data: tables, isLoading, refetch } = useTable(dateString);
 
   const mapSeatData = (existingTables: any, newData: any) => {
     return existingTables.map((table: { id: any; seats: any[] }) => {
@@ -147,6 +160,64 @@ export const TableSection = () => {
         />
       </Animation>
       <div className="flex flex-col justify-between h-full gap-24 items-center w-full">
+        {/* Date selector */}
+        <Animation className="w-full flex justify-center items-center mt-4">
+          <div className="flex items-center gap-3 bg-black/40 backdrop-blur-sm border border-white/20 rounded-2xl px-4 py-3">
+            <button
+              onClick={() => {
+                const prev = new Date(selectedDate);
+                prev.setDate(prev.getDate() - 1);
+                if (prev >= getMongoliaTodayStart()) {
+                  setSelectedDate(prev);
+                  setSelectedSeats({});
+                }
+              }}
+              className="text-white/70 hover:text-white transition-colors disabled:opacity-30"
+              disabled={format(selectedDate, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd")}
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+              <PopoverTrigger asChild>
+                <button className="flex items-center gap-2 text-white font-semibold text-base hover:text-[#E36C2C] transition-colors min-w-[160px] justify-center">
+                  <LucideCalendar size={18} className="text-[#E36C2C]" />
+                  {format(selectedDate, "MMM dd, yyyy") === format(new Date(), "MMM dd, yyyy")
+                    ? `Today — ${format(selectedDate, "MMM dd, yyyy")}`
+                    : format(selectedDate, "MMM dd, yyyy")}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="center">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => {
+                    if (date) {
+                      setSelectedDate(date);
+                      setSelectedSeats({});
+                      setIsDatePickerOpen(false);
+                    }
+                  }}
+                  disabled={{ before: getMongoliaTodayStart() }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+
+            <button
+              onClick={() => {
+                const next = new Date(selectedDate);
+                next.setDate(next.getDate() + 1);
+                setSelectedDate(next);
+                setSelectedSeats({});
+              }}
+              className="text-white/70 hover:text-white transition-colors"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        </Animation>
+
         <Animation>
           <div className="flex justify-center relative items-center w-full h-[500px]">
             <div className="relative  w-full h-full max-2xl:overflow-auto">
@@ -244,6 +315,7 @@ export const TableSection = () => {
         refetch={refetch}
         tableName={all ? " Organizing events" : orderingTableId || ""}
         isOpen={isOpen}
+        preselectedDate={selectedDate}
         onClose={() => {
           setIsOpen(false);
           setSelectedSeats({});

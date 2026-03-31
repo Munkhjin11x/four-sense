@@ -13,6 +13,8 @@ import {
   UsersIcon,
   TableIcon,
   CheckCircleIcon,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 import { useSearchParamsWithDefaults } from "@/hook/use-search-params";
@@ -22,9 +24,23 @@ import { useEffect, useState, Suspense, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getValidToken, removeToken } from "@/lib/token-utils";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { getMongoliaTodayStart } from "@/lib/date-utils";
 
 const AdminDashboardContent = () => {
-  const { data, refetch } = useTable();
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const dateString = format(selectedDate, "yyyy-MM-dd");
+  const isToday =
+    format(selectedDate, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
+
+  const { data, refetch } = useTable(dateString);
   const { page, pageLimit } = useSearchParamsWithDefaults();
   const { data: orderList, refetch: refetchOrderList } = useOrderList({
     page: page,
@@ -73,14 +89,18 @@ const AdminDashboardContent = () => {
       title: "Ordered Seats",
       value: orderedSeats,
       icon: UsersIcon,
-      description: "Currently ordered",
+      description: isToday
+        ? "Ordered today"
+        : `Ordered on ${format(selectedDate, "MMM dd")}`,
       color: "bg-orange-500",
     },
     {
       title: "Available Seats",
       value: availableSeats,
       icon: CheckCircleIcon,
-      description: "Ready for booking",
+      description: isToday
+        ? "Available today"
+        : `Available on ${format(selectedDate, "MMM dd")}`,
       color: "bg-green-500",
     },
   ];
@@ -116,6 +136,62 @@ const AdminDashboardContent = () => {
             Logout
           </Button>
         </nav>
+
+        {/* Date selector for seat stats */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-gray-600">
+            Viewing seat availability for:
+          </span>
+          <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg px-3 py-1.5 shadow-sm">
+            <button
+              onClick={() => {
+                const prev = new Date(selectedDate);
+                prev.setDate(prev.getDate() - 1);
+                if (prev >= getMongoliaTodayStart()) setSelectedDate(prev);
+              }}
+              disabled={isToday}
+              className="text-gray-400 hover:text-gray-700 disabled:opacity-30 transition-colors"
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+              <PopoverTrigger asChild>
+                <button className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 hover:text-[#D9864E] transition-colors px-2 min-w-[130px] justify-center">
+                  <CalendarIcon size={14} className="text-[#D9864E]" />
+                  {isToday
+                    ? `Today — ${format(selectedDate, "MMM dd")}`
+                    : format(selectedDate, "MMM dd, yyyy")}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => {
+                    if (date) {
+                      setSelectedDate(date);
+                      setIsDatePickerOpen(false);
+                    }
+                  }}
+                  disabled={{ before: getMongoliaTodayStart() }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+
+            <button
+              onClick={() => {
+                const next = new Date(selectedDate);
+                next.setDate(next.getDate() + 1);
+                setSelectedDate(next);
+              }}
+              className="text-gray-400 hover:text-gray-700 transition-colors"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (

@@ -49,12 +49,12 @@ export const Modal: React.FC<ModalProps> = ({
       <Dialog open={isOpen} onOpenChange={onChange}>
         <DialogContent
           className={cn(
-            "flex h-screen flex-col !p-0 sm:grid sm:h-auto",
+            "flex max-h-[100dvh] min-h-0 w-[calc(100%-1rem)] max-w-lg flex-col overflow-hidden !p-0 sm:max-h-[min(90dvh,800px)] sm:w-full",
             className
           )}
           onWheel={onWheel} // Pass the onWheel prop
         >
-          <DialogHeader className="flex h-fit w-full flex-row items-center justify-between gap-1.5 space-y-0 border-b border-gray-200 p-4">
+          <DialogHeader className="flex h-fit w-full min-w-0 shrink-0 flex-row items-center justify-between gap-1.5 space-y-0 border-b border-gray-200 p-3 sm:p-4">
             <div>
               <div className="flex items-center gap-2 ">
                 {closeActive && (
@@ -70,8 +70,8 @@ export const Modal: React.FC<ModalProps> = ({
           </DialogHeader>
           <div
             className={cn(
-              "overflow-auto",
-              defaultPadding && `p-4`,
+              "min-h-0 flex-1 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]",
+              defaultPadding && `p-3 sm:p-4`,
               containerClassname
             )}
           >
