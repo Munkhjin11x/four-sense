@@ -33,26 +33,33 @@ export const ImagesSlider = ({
   };
 
   useEffect(() => {
-    loadImages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!images.length) {
+      setLoadedImages([]);
+      return;
+    }
 
-  const loadImages = () => {
-    const loadPromises = images.map((image) => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = image;
-        img.onload = () => resolve(image);
-        img.onerror = reject;
-      });
+    let cancelled = false;
+
+    const loadPromises = images.map(
+      (src) =>
+        new Promise<string | null>((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve(src);
+          img.onerror = () => resolve(null);
+          img.src = src;
+        })
+    );
+
+    Promise.all(loadPromises).then((results) => {
+      if (cancelled) return;
+      const ok = results.filter((u): u is string => u != null);
+      setLoadedImages(ok);
     });
 
-    Promise.all(loadPromises)
-      .then((loadedImages) => {
-        setLoadedImages(loadedImages as string[]);
-      })
-      .catch((error) => console.error('Failed to load images', error));
-  };
+    return () => {
+      cancelled = true;
+    };
+  }, [images.join('|')]);
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'ArrowRight') {

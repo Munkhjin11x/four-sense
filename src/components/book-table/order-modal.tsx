@@ -27,6 +27,15 @@ const font = localFont({
   weight: "200",
 });
 
+/** Allowed booking window: local time on the chosen calendar day (19:00–21:00 inclusive). */
+const BOOKING_TIME_RANGE: {
+  start: [number, number];
+  end: [number, number];
+} = {
+  start: [19, 0],
+  end: [21, 0],
+};
+
 function InlineAlert({ children }: { children: ReactNode }) {
   return (
     <div
@@ -129,27 +138,7 @@ export const OrderModal = ({
 
   const { token } = useTurnstileStore();
 
-  /** Restaurant time (Mongolia): no orders between 12:00 AM and 12:00 PM (midnight–noon; hours 0–11 in Asia/Ulaanbaatar). */
-  const isBlockedTime = (date: Date) => {
-    const formatter = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Asia/Ulaanbaatar",
-      hour: "numeric",
-      hour12: false,
-    });
-    const hours = parseInt(formatter.format(date), 10);
-    return hours < 12;
-  };
-
-  /** 9:00 PM–11:59 PM in the user's local timezone (device clock only — not the chosen reservation time). */
-  const isLocalNightHours = (date: Date) => date.getHours() >= 21;
-
   const selectedDate = form.watch("date");
-  const isMongoliaBlockedSelected = selectedDate
-    ? isBlockedTime(selectedDate)
-    : false;
-  /** Cannot place orders while device clock is between 9 PM and 11:59 PM local. */
-  const isOrderingClosedNow = isLocalNightHours(new Date());
-  const isTimeBlocked = isMongoliaBlockedSelected || isOrderingClosedNow;
   const isPastDateTime = selectedDate ? isMongoliaPast(selectedDate) : false;
 
   const seatRowKey = useMemo(
@@ -176,19 +165,6 @@ export const OrderModal = ({
 
     if (isMongoliaPast(data.date)) {
       toast.error("Cannot place orders for past dates or times");
-      return;
-    }
-
-    if (isBlockedTime(data.date)) {
-      toast.error(
-        "Orders are not accepted between 12:00 AM and 12:00 PM (restaurant time)"
-      );
-      return;
-    }
-    if (isLocalNightHours(new Date())) {
-      toast.error(
-        "Ordering is not available between 9:00 PM and 11:59 PM in your local time"
-      );
       return;
     }
 
@@ -339,6 +315,7 @@ export const OrderModal = ({
                   className="w-full"
                   disablePast
                   lockedDate={preselectedDate}
+                  timeRange={BOOKING_TIME_RANGE}
                 />
               </div>
             ) : (
@@ -348,6 +325,7 @@ export const OrderModal = ({
                 label="Date & time"
                 className="w-full"
                 disablePast
+                timeRange={BOOKING_TIME_RANGE}
               />
             )}
 
@@ -358,20 +336,6 @@ export const OrderModal = ({
                   date and time.
                 </InlineAlert>
               )}
-              {isOrderingClosedNow && !isPastDateTime && (
-                <InlineAlert>
-                  Ordering is not available between 9:00 PM and 11:59 PM in
-                  your local time. Please try again after midnight.
-                </InlineAlert>
-              )}
-              {isMongoliaBlockedSelected &&
-                !isPastDateTime &&
-                !isOrderingClosedNow && (
-                  <InlineAlert>
-                    Orders cannot be placed between 12:00 AM and 12:00 PM
-                    (restaurant time). Please pick a different time.
-                  </InlineAlert>
-                )}
             </div>
           </section>
 
@@ -436,7 +400,7 @@ export const OrderModal = ({
 
             <Button
               type="submit"
-              disabled={isPending || !token || isTimeBlocked || isPastDateTime}
+              disabled={isPending || !token || isPastDateTime}
               size="lg"
               className="h-12 w-full min-h-12 shrink-0 rounded-xl bg-[#E78140] text-base font-semibold text-white shadow-md transition hover:bg-[#d97335] hover:shadow-lg disabled:opacity-60 sm:h-11 sm:min-h-11 sm:text-sm"
             >

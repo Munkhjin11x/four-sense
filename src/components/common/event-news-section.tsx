@@ -127,7 +127,7 @@ export const EventNewsSection = () => {
                 href="/event"
               >
                 <CalendarPlus2 />
-                Бүх event
+                All events
               </Link>
             </Animation>
           </div>
@@ -199,7 +199,7 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
       : null;
 
   const eventEnd = !isPost && data.eventDate
-    ? new Date(data.eventDate) < new Date() ? "Дууссан" : "Тун удахгүй"
+    ? new Date(data.eventDate) < new Date() ? "Expired" : "Coming Soon"
     : null;
 
   return (
@@ -225,7 +225,7 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
           <Badge
             className={cn(
               "rounded-sm py-1.5 px-4",
-              eventEnd === "Дууссан"
+              eventEnd === "Expired"
                 ? "bg-gray-100 text-gray-800"
                 : "bg-[#12B76A] text-white"
             )}
@@ -239,7 +239,7 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
             className="rounded-sm py-1.5 px-4 bg-blue-100 text-blue-800"
             variant="outline"
           >
-            Мэдээ
+            Blog
           </Badge>
         )}
       </div>
@@ -285,10 +285,10 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
         <div
           className={cn(
             "mt-1.5 grid grid-cols-2 gap-2",
-            (isPost || eventEnd === "Дууссан") && "grid-cols-1"
+            (isPost || eventEnd === "Expired") && "grid-cols-1"
           )}
         >
-          {!isPost && eventEnd !== "Дууссан" && (
+          {!isPost && eventEnd !== "Expired" && (
             <Link
               target="_blank"
               href={`/book-table?date=${data.eventDate}`}
@@ -312,7 +312,7 @@ export const EventCard = ({ data }: { data: SanityDocument }) => {
               variant="outline"
               className="w-full text-white hover:text-white hover:bg-[#D55421]/80 bg-[#D55421]"
             >
-              Дэлгэрэнгүй
+              Read More
             </Button>
           </Link>
         </div>

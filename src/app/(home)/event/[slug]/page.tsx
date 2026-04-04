@@ -33,13 +33,13 @@ export async function generateMetadata({
       description: post?.summary || "Read this interesting event on Event",
       images: post?.image
         ? [
-            {
-              url: urlFor(post.image)?.url(),
-              width: 1280,
-              height: 720,
-              alt: post.title,
-            },
-          ]
+          {
+            url: urlFor(post.image)?.url(),
+            width: 1280,
+            height: 720,
+            alt: post.title,
+          },
+        ]
         : [],
     },
   };
@@ -51,7 +51,7 @@ const BlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const blog = await client.fetch<SanityDocument>(EVENT_QUERY, { slug });
 
   const eventEnd =
-    new Date(blog.eventDate) < new Date() ? "Дууссан" : "Тун удахгүй";
+    new Date(blog.eventDate) < new Date() ? "Expired" : "Coming Soon";
 
   if (!blog) {
     return (
@@ -163,7 +163,7 @@ const BlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
                 </svg>
                 Буцах
               </Link> */}
-              {eventEnd !== "Дууссан" && (
+              {eventEnd !== "Expired" && (
                 <Link
                   href={`/book-table?date=${blog.eventDate}`}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-100 text-black font-semibold rounded-full transition-all duration-200"

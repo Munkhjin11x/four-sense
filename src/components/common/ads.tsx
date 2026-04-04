@@ -25,6 +25,7 @@ export const Ads = () => {
       .then(setAds);
   }, []);
 
+  console.log(ads);
 
 
   if (ads?.length === 0) return <></>;

@@ -5,6 +5,7 @@ import { client } from '@/lib/sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import { SanityImageSource } from '@sanity/image-url';
 import { SanityDocument } from 'next-sanity';
+import Link from 'next/link';
 import { X } from 'lucide-react';
 import { ImagesSlider } from './image-slider';
 
@@ -19,7 +20,7 @@ export const Ad = ({ ads }: { ads: SanityDocument[] }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setShow(true), 6000);
+    const timeout = setTimeout(() => setShow(true), 1000);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -33,13 +34,14 @@ export const Ad = ({ ads }: { ads: SanityDocument[] }) => {
     <AnimatePresence>
       {show && (
         <motion.div
+          key="ad-banner"
           initial={{ y: '110%', opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: '110%', opacity: 0 }}
           transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-          className="fixed bottom-2 left-2 z-50 hidden sm:block"
+          className="fixed bottom-0 left-0 z-50"
         >
-          <div className="relative size-[300px] overflow-hidden rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.18)] xl:h-[380px] xl:w-[320px]">
+          <div className="relative size-[300px] overflow-hidden rounded-t-2xl shadow-[0_8px_40px_rgba(0,0,0,0.18)] xl:h-[380px] xl:w-[380px]">
             {/* Close button */}
             <button
               id="ad-banner-button-close"
@@ -63,15 +65,15 @@ export const Ad = ({ ads }: { ads: SanityDocument[] }) => {
 
             <div className="pointer-events-none absolute inset-0 z-40 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-            <div className="absolute bottom-0 left-0 right-0 z-50 p-4">
+            <div className="absolute -bottom-2 left-0 right-0 z-50 flex flex-col gap-3 p-4 items-center">
               {currentAd.title && (
-                <p className="mb-2.5 line-clamp-2 text-sm font-semibold leading-snug text-white drop-shadow">
+                <p className="line-clamp-2 text-sm font-semibold leading-snug text-white drop-shadow">
                   {currentAd.title}
                 </p>
               )}
 
               {images.length > 1 && (
-                <div className="mt-3 flex justify-center gap-1.5">
+                <div className="flex justify-center gap-1.5">
                   {images.map((_, i) => (
                     <div
                       key={i}
@@ -81,6 +83,13 @@ export const Ad = ({ ads }: { ads: SanityDocument[] }) => {
                   ))}
                 </div>
               )}
+
+              <Link
+                href="/bar-menu"
+                className="pointer-events-auto w-full max-w-32 rounded-tl-3xl text-[#E36C2C] bg-white py-2.5 text-center text-sm font-semibold  shadow-md transition hover:bg-white/95"
+              >
+                Read More
+              </Link>
             </div>
           </div>
         </motion.div>

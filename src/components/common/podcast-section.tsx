@@ -100,7 +100,7 @@ export const PodcastSection = () => {
                 href="/podcast"
               >
                 <PodcastIcon />
-                Бүх podcast
+                All podcast
               </Link>
             </Animation>
           </div>
@@ -182,7 +182,7 @@ export const PodcastCard = ({
             className="w-full hover:bg-gray-100"
             onClick={handleOpen(data.url)}
           >
-            Үзэх
+            Watch
           </Button>
         </div>
       </div>

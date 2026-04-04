@@ -97,7 +97,7 @@ export const InstagramNewsSection = () => {
                 href="/blog"
               >
                 <AnnouncementIcon />
-                Бүх мэдээ
+                All blog
               </Link>
             </Animation>
           </div>
@@ -189,7 +189,7 @@ export const InstragramCard = ({ data }: { data: SanityDocument }) => {
             className="w-full"
           >
             <Button variant="outline" className="w-full hover:bg-gray-100">
-              Дэлгэрэнгүй
+              Read More
             </Button>
           </Link>
         </div>
